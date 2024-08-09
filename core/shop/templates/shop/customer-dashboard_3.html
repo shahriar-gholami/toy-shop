@@ -1,6 +1,6 @@
 {% extends "base_3.html" %}
 {% load static %}
-
+{% load humanize %}
 {% block meta %}
 <meta charset="UTF-8">
 <meta content='width=device-width, initial-scale=1.0, user-scalable=0' name='viewport'>
@@ -153,6 +153,7 @@
                             </div>
                             <div class="panel-meta-title d-flex flex-column ms-3">
                                 <a href="{% url 'shop:customer_dashboard_orders' store_name %}"><h5 class="h5">سفارشات</h5></a>
+                                <span>{{customer.get_orders_count}} سفارش</span>
                             </div>
                         </div>
                     </a>
@@ -185,10 +186,11 @@
                     <a href="">
                         <div class="panel-meta-item d-flex align-items-center">
                             <div class="panel-meta-item-icon bg-secondary">
-                                <a href="{% url 'shop:customer_dashboard_info' store_name %}"><i class="bi bi-info"></i></a>
+                                <a href="{% url 'shop:customer_dashboard_info' store_name %}"><i class="bi bi-bank"></i></a>
                             </div>
                             <div class="panel-meta-title ms-3 d-flex flex-column">
-                                <a href="{% url 'shop:customer_dashboard_info' store_name %}"><h5 class="h5">اطلاعات حساب</h5></a>
+                                <a href="{% url 'shop:customer_dashboard_info' store_name %}"><h5 class="h5">کیف پول</h5></a>
+                                <span>{{ customer.wallet_balance|intcomma }} تومان</span>
                             </div>
                         </div>
                     </a>

@@ -2945,6 +2945,7 @@ class OrderVerifyView(LoginRequiredMixin, View):
 					if order.get_final_payment() >= customer.wallet_balance:
 						customer.wallet_balance = 0
 						order.paid_by_wallet = customer.wallet_balance
+						
 					else:
 						customer.wallet_balance -= order.get_final_payment()
 						order.paid_by_wallet = order.get_final_payment()

@@ -1,6 +1,6 @@
 {% extends "base_3.html" %}
 {% load static %}
-
+{% load humanize %}
 {% block meta %}
 <meta charset="UTF-8">
 <meta content='width=device-width, initial-scale=1.0, user-scalable=0' name='viewport'>
@@ -329,22 +329,28 @@
                                         <ul class="nav">
                                             <li class="nav-item">
                                                 <span class="text-mute">مبلغ نهایی سفارش</span>
-                                                <strong>{{order.get_final_payment}} تومان</strong>
+                                                <strong>{{order.get_without_cashback_cost|intcomma}} تومان</strong>
                                             </li>
                                             <li class="nav-item">
-                                                <strong>پرداخت اینترنتی</strong>
+                                                <span class="text-mute">مبلغ پرداختی از کیف پول</span>
+                                                <strong>{{order.get_wallet_payment_volume|intcomma}} تومان</strong>
                                             </li>
+                                            <li class="nav-item">
+                                                <span class="text-mute">مبلغ پرداختی توسط درگاه پرداخت</span>
+                                                <strong>{{order.get_final_payment|intcomma}} تومان</strong>
+                                            </li>
+                                            
                                             <li class="nav-item w-100">
                                             </li>
                                             <li class="nav-item">
                                                 <span class="text-mute">کد تخفیف</span>
-                                                <strong>{{order.get_discount}} تومان</strong>
+                                                <strong>{{order.get_discount|intcomma}} تومان</strong>
                                             </li>
                                             <li class="nav-item">
                                                 <span class="text-mute">
                                                   شیوه ارسال
                                                 </span>
-                                                <strong>{{order.delivery_method.name}}</strong>
+                                                <strong>{{order.delivery_method.name}} + {{order.delivery_method.price|intcomma}} تومان</strong>
                                             </li>
                                         </ul>
                                     </div>

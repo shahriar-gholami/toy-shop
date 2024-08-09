@@ -166,6 +166,12 @@ class Customer(models.Model):
 		for order in orders:
 			total_purchase = total_purchase + order.total_price
 		return f'{total_purchase} تومان'
+
+	def get_orders_count(self):
+		status = OrderStatus.objects.get(id=1)
+		orders_count = Order.objects.filter(store=self.store, customer=self, status=status).count()
+		return orders_count
+
 	
 	def __str__(self):
 		return self.phone_number
@@ -618,6 +624,11 @@ class PackageOrder(models.Model):
 	status = models.ForeignKey(OrderStatus, on_delete = models.SET_NULL, null=True)
 	created_date = models.DateTimeField(auto_now_add = True)
 	status_updated_date = models.DateTimeField(auto_now_add = True)
+
+class Cashback(models.Model):
+	repetation = models.IntegerField(default=0)
+	percent = models.IntegerField(default=0)
+	const = models.IntegerField(default=0)
 
 class Order(models.Model):
 	store = models.ForeignKey(Store, on_delete=models.CASCADE)
