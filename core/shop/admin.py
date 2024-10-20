@@ -1,6 +1,5 @@
 from django.contrib import admin
-from.models import ProductRefClass, Announcement,Domain, Ticket, TicketReply, PackageOrder, Brand, Customer, Services, Subscription, FeaturedCategories, CategoryImage, UploadedImages, BlogPost, BlogCategory, WithdrawRecord, Comment, Faq, Banner, Slide, StoreLogoImage, ContactMessage, OtpCode, Package, Store, Owner, Delivery, Category, Variety, Product, Cart, OrderStatus, Order, Size, PriceRange, Coupon, Tag
-from utils import send_domain_warn_msg, send_gw_warn_msg
+from.models import ProductRefClass, Announcement,Domain, Ticket, TicketReply, Brand, Customer, Services, Subscription, FeaturedCategories, CategoryImage, UploadedImages, BlogPost, BlogCategory, WithdrawRecord, Comment, Faq, Banner, Slide, StoreLogoImage, ContactMessage, OtpCode, Store, Owner, Delivery, Category, Variety, Product, Cart, OrderStatus, Order, Size, PriceRange, Coupon, Tag
 # Register your models here.
 
 
@@ -11,38 +10,18 @@ class ProductRefClassAdmin(admin.ModelAdmin):
 class OtpCodeAdmin(admin.ModelAdmin):
     list_display = ('phone_number', 'code', 'created')
     search_fields = ('phone_number',)
-    # Add other configurations or customize as needed
 
 admin.site.register(OtpCode, OtpCodeAdmin)
 
-@admin.register(Package)
-class PackageAdmin(admin.ModelAdmin):
-    list_display = ('name', 'price', 'is_active', 'interval')
-
-def send_domain_warn_msg_to_stores(modeladmin, request, queryset):
-    for store in queryset:
-        send_domain_warn_msg(store.phone_number, store.get_owner_name())
-        store.domain_msg = True
-        store.save()
-    modeladmin.message_user(request, "SMS sent to selected stores.")
-
-def send_gw_warn_msg_to_stores(modeladmin, request, queryset):
-    for store in queryset:
-        send_gw_warn_msg(store.phone_number, store.get_owner_name())
-        store.gw_msg = True
-        store.save()
-    modeladmin.message_user(request, "SMS sent to selected stores.")
-
 @admin.register(Store)
 class StoreAdmin(admin.ModelAdmin):
-    list_display = ('name', 'get_owner_name', 'phone_number','package', 'shamsi_created_date', 'has_domain','domain_msg', 'has_payment_gw', 'gw_msg', 'has_notif')
-    fields = ('name', 'package', 'is_active', 'active_days', 'address', 'country', 'city', 
+    list_display = ('name', 'get_owner_name', 'phone_number', 'shamsi_created_date', 'has_domain','domain_msg', 'has_payment_gw', 'gw_msg', 'has_notif')
+    fields = ('name', 'is_active', 'active_days', 'address', 'country', 'city', 
               'about_description', 'instagram', 'telegram', 'linkedin', 'merchant', 
               'independent', 'phone_number', 'balance', 'email', 'Layout_body', 'layout_sticky', 
               'layout_container', 'color', 'meta_description', 'meta_keywords', 'meta_og_title', 
               'meta_og_description', 'meta_tc_title', 'meta_tc_description', 'has_domain', 'has_payment_gw',
-              'policies', 'template_index', 'package_expire_date', 'index_title', 'enamad_code')
-    actions = [send_domain_warn_msg_to_stores, send_gw_warn_msg_to_stores]
+              'policies', 'template_index', 'index_title', 'enamad_code')
 
 @admin.register(Owner)
 class OwnerAdmin(admin.ModelAdmin):
@@ -77,7 +56,6 @@ class ProductAdmin(admin.ModelAdmin):
         return obj.get_active_price()
     list_display = ('name', 'price','sales_price','ref_price','off_active', 'active_price','ref_class','stock_alarm_volume','stock_alarm', 'show_varieties')
     list_editable = ('ref_class','price','ref_price','stock_alarm_volume','off_active','sales_price')
-    # list_filter = ('store', 'category', 'tags','available', 'brand','off_active')
     search_fields = ['name', 'slug']
     prepopulated_fields = {'slug': ('name',)}  # تولید اتوماتیک اسلاگ از نام
 
@@ -94,12 +72,6 @@ class OrderStatusAdmin(admin.ModelAdmin):
 class OrderAdmin(admin.ModelAdmin):
     list_display = ('store', 'customer', 'total_price', 'status', 'created_date', 'used_coupon', 'status_updated_date')
     list_filter = ('store', 'status', 'used_coupon')
-    search_fields = ['store__name', 'customer__full_name', 'status__latest_status']
-
-@admin.register(PackageOrder)
-class PackageOrderAdmin(admin.ModelAdmin):
-    list_display = ('store', 'customer', 'total_price', 'status', 'created_date', 'status_updated_date')
-    list_filter = ('store', 'status')
     search_fields = ['store__name', 'customer__full_name', 'status__latest_status']
 
 @admin.register(Size)

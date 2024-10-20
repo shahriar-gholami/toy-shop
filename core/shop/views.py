@@ -1,5 +1,4 @@
 from django.shortcuts import render, redirect, get_object_or_404
-# from .models import Package
 from random import randint
 from django import forms
 from django.utils import timezone
@@ -35,7 +34,6 @@ from .forms import (NewSiteForm,
 					RequestNumberForm,
 					CouponApplyForm,
 					CouponForm,
-					PackageForm,
 					OrderStatusForm,
 					VarietyUpdateForm,
 					FilterProductsForm,
@@ -68,7 +66,6 @@ from shop.models import (PriceRange,
 						 Announcement,
 						 Size, 
 						 Store, 
-						 Package, 
 						 Owner, 
 						 OtpCode, 
 						 Customer, 
@@ -99,7 +96,6 @@ from shop.models import (PriceRange,
 						 Subscription,
 						 Services,
 						 Brand,
-						 PackageOrder,
 						 TicketReply,
 						 Ticket,
 						 Filter,
@@ -107,8 +103,6 @@ from shop.models import (PriceRange,
 						 )
 import random
 from accounts.models import User
-from manager.models import ToysAndKidsProductImage, ToysAndKidsProduct, ToysAndKidsCategoryImage,CosmeticProductImage, CosmeticProduct, CosmeticCategoryImage, PerfumeProductImage, PerfumeProduct, PerfumeCategoryImage,FashionProduct, FashionProductImage, FashionCategoryImage, FashionCategory, BankImage, PerfumeCategory, CosmeticCategory, ArtAndCultureCategory, ArtAndCultureCategoryImage, ToysAndKidsCategory, GeneralCategory
-from manager.models import FashionSlide, FashionBanner, PerfumeSlide, PerfumeBanner, CosmeticSlide, CosmeticBanner, ArtAndCultureSlide, ArtAndCultureBanner, GiftAndCelebrationSlide, ArtAndCultureProduct, ToysAndKidsSlide, ToysAndKidsBanner, GeneralSlide, GeneralBanner, ArtAndCultureProductImage
 from utils import send_otp_code
 from django.contrib.auth import authenticate, login
 from django.urls import reverse_lazy
@@ -135,539 +129,6 @@ store_name = 'فروشگاه اسباب بازی ایرانیان'
 
 current_app_name = apps.get_containing_app_config(__name__).name
 
-class NewSiteView(View):
-
-	form_class = NewSiteForm
-	template_name = f'{current_app_name}/new_site.html'
-
-	def get(self, request, *args, **kwargs):
-		form = self.form_class()
-		return render(request, self.template_name, {'form':form, 'message':''})
-
-	def post(self, request, *args, **kwargs):
-		form = self.form_class(request.POST)
-		if form.is_valid():
-			data = {}
-			
-			new_shop_name = form.cleaned_data['site_name']
-			if new_shop_name == '':
-				return render(request, self.template_name, {'form':form, 'message':'لطفا نام فروشگاه خود را انتخاب کنید'})
-			recommender = form.cleaned_data['recommender']
-			store = Store.objects.filter(name=new_shop_name).first()
-			if store is not None:
-				return render(request, self.template_name, {'form':form, 'message':'نام انتخاب شده تکراری است'})
-			package = Package.objects.get(id=1)
-			store = Store.objects.create(name=new_shop_name, recommender = recommender, package=package)
-			services = Services.objects.create(
-				store=store
-			)
-			featured_categories = FeaturedCategories.objects.create(store=store)
-			
-			if form.cleaned_data['store_field'] == '1':
-				default_featured_category_names = ['لباس مردانه', 'لباس زنانه', 'اکسسوری مردانه', 'اکسسوری زنانه', 'کیف و کفش مردانه' ,'کیف و کفش زنانه']
-				categories = FashionCategory.objects.all()
-				if categories.first() != None:
-					for category in FashionCategory.objects.all():
-						category_image = FashionCategoryImage.objects.filter(category=category).first()
-
-						new_category = Category.objects.create(store=store,
-												name = category.name,
-												slug = category.slug,
-												is_sub = category.is_sub
-												)
-						
-						if new_category.name in default_featured_category_names:
-							featured_categories.categories.add(new_category)
-						
-						if category_image != None:
-							
-							image = category_image.image
-							new_category_image = CategoryImage.objects.create(
-								store=store,
-								alt_name = category.name,
-								image = image,
-								category = new_category
-							)
-
-					shop_categories = Category.objects.filter(store=store)
-					for shop_category in shop_categories:
-						if shop_category.is_sub==True:
-							fashion_category = FashionCategory.objects.filter(
-								name=shop_category.name,
-							).first()
-							parent_fashion_cat_name = fashion_category.parent.name
-							shop_parent_cat = Category.objects.get(store=store, name=parent_fashion_cat_name)
-							shop_category.parent = shop_parent_cat
-							shop_category.save()
-				
-				cat_names = ['لباس مردانه', 'لباس زنانه', 'اکسسوری مردانه', 'اکسسوری زنانه']
-				for index in [1,2,3,4]:
-					default_slide = FashionSlide.objects.get(index=index)
-					slide_category = shop_categories.get(name = cat_names[index-1])
-					new_slide = Slide.objects.create(
-						store=store,
-						alt_name = f'{store.name}-slide-{index}',
-						image = default_slide.image,
-						index = index,
-						source = f'category-{shop_categories.get(id=slide_category.id).id}',
-					)
-
-				banner_names = ['کیف و کفش مردانه', 'کیف و کفش زنانه', 'لباس مردانه']
-				for index in [1,2,3]:
-					default_banner = FashionBanner.objects.get(index=index)
-					banner_category = shop_categories.get(name = banner_names[index-1])
-					if index == 1 or index == 2:
-						size = 'small'
-					else:
-						size = 'big'
-					new_banner = Banner.objects.create(
-						store=store,
-						alt_name = f'{store.name}-banner-{index}',
-						image = default_banner.image,
-						index = index,
-						source = f'category-{shop_categories.get(id=banner_category.id).id}',
-						size = size,
-					)
-			
-				demo_products = FashionProduct.objects.all()
-				for demo_product in demo_products:
-					new_product = Product.objects.create(
-						store = store, 
-						name = demo_product.name,
-						slug = demo_product.slug,
-						description = demo_product.description,
-						price = demo_product.price,
-						sales_price = demo_product.sales_price,
-						available = demo_product.available,
-						off_active = demo_product.off_active
-					)
-					new_product.save()
-					initial_cat_name = demo_product.category.all().first().name
-					new_product.category.add(Category.objects.get(name=initial_cat_name, store=store))
-					new_product.save()
-					new_variety = Variety.objects.create(
-											store = store,
-											name = 'default variety',
-											product = new_product, 
-											stock = 2,
-										)
-
-				demo_product_images = FashionProductImage.objects.all()
-				products = Product.objects.all()
-				for demo_product_image in demo_product_images:
-					product = products.get(name = demo_product_image.product.name, store=store)
-					new_product_image = ProductImage.objects.create(
-						store=store,
-						alt_name = demo_product_image.alt_name,
-						product = product,
-						image = demo_product_image.image
-					)
-
-			if form.cleaned_data['store_field'] == '2' or form.cleaned_data['store_field'] == '7':
-				default_featured_category_names = ['عطر مردانه','عطر زنانه','عطر مردانه و زنانه','عطر نیش','ست هدیه','عطر و ادکلن ایرانی']
-				categories = PerfumeCategory.objects.all()
-				if categories.first() != None:
-					for category in PerfumeCategory.objects.all():
-						category_image = PerfumeCategoryImage.objects.filter(category=category).first()
-
-						new_category = Category.objects.create(store=store,
-												name = category.name,
-												slug = category.slug,
-												is_sub = category.is_sub
-												)
-						
-						if new_category.name in default_featured_category_names:
-							featured_categories.categories.add(new_category)
-						
-						if category_image != None:
-							
-							image = category_image.image
-							new_category_image = CategoryImage.objects.create(
-								store=store,
-								alt_name = category.name,
-								image = image,
-								category = new_category
-							)
-
-					shop_categories = Category.objects.filter(store=store)
-					for shop_category in shop_categories:
-						if shop_category.is_sub==True:
-							source_category = PerfumeCategory.objects.filter(
-								name=shop_category.name,
-							).first()
-							parent_source_cat_name = source_category.parent.name
-							shop_parent_cat = Category.objects.get(store=store, name=parent_source_cat_name)
-							shop_category.parent = shop_parent_cat
-							shop_category.save()
-				
-				cat_names = ['عطر مردانه', 'عطر زنانه', 'عطر مردانه و زنانه', 'عطر نیش']
-				for index in [1,2,3,4]:
-					default_slide = PerfumeSlide.objects.get(index=index)
-					slide_category = shop_categories.get(name = cat_names[index-1])
-					new_slide = Slide.objects.create(
-						store=store,
-						alt_name = f'{store.name}-slide-{index}',
-						image = default_slide.image,
-						index = index,
-						source = f'category-{shop_categories.get(id=slide_category.id).id}',
-					)
-
-				banner_names = ['عطر گرم مردانه', 'عطر گرم زنانه', 'عطر معتدل مردانه و زنانه']
-				for index in [1,2,3]:
-					default_banner = PerfumeBanner.objects.get(index=index)
-					banner_category = shop_categories.get(name = banner_names[index-1])
-					if index == 1 or index == 2:
-						size = 'small'
-					else:
-						size = 'big'
-					new_banner = Banner.objects.create(
-						store=store,
-						alt_name = f'{store.name}-banner-{index}',
-						image = default_banner.image,
-						index = index,
-						source = f'category-{shop_categories.get(id=banner_category.id).id}',
-						size = size,
-					)
-			
-				demo_products = PerfumeProduct.objects.all()
-				for demo_product in demo_products:
-					new_product = Product.objects.create(
-						store = store, 
-						name = demo_product.name,
-						slug = demo_product.slug,
-						description = demo_product.description,
-						price = demo_product.price,
-						sales_price = demo_product.sales_price,
-						available = demo_product.available,
-						off_active = demo_product.off_active
-					)
-					new_product.save()
-					initial_cat_name = demo_product.category.all().first().name
-					new_product.category.add(Category.objects.get(name=initial_cat_name, store=store))
-					new_product.save()
-					new_variety = Variety.objects.create(
-											store = store,
-											name = 'default variety',
-											product = new_product, 
-											stock = 2,
-										)
-
-				demo_product_images = PerfumeProductImage.objects.all()
-				products = Product.objects.all()
-				for demo_product_image in demo_product_images:
-					product = products.get(name = demo_product_image.product.name, store=store)
-					new_product_image = ProductImage.objects.create(
-						store=store,
-						alt_name = demo_product_image.alt_name,
-						product = product,
-						image = demo_product_image.image
-					)
-			
-			if form.cleaned_data['store_field'] == '3':
-				default_featured_category_names = ['رنگ مو و ملزومات','رژ لب','لاک ناخن', 'سایه چشم','ضد آفتاب','ریمل']
-				categories = CosmeticCategory.objects.all()
-				if categories.first() != None:
-					for category in CosmeticCategory.objects.all():
-						category_image = CosmeticCategoryImage.objects.filter(category=category).first()
-
-						new_category = Category.objects.create(store=store,
-												name = category.name,
-												slug = category.slug,
-												is_sub = category.is_sub
-												)
-						
-						if new_category.name in default_featured_category_names:
-							featured_categories.categories.add(new_category)
-						
-						if category_image != None:
-							
-							image = category_image.image
-							new_category_image = CategoryImage.objects.create(
-								store=store,
-								alt_name = category.name,
-								image = image,
-								category = new_category
-							)
-
-					shop_categories = Category.objects.filter(store=store)
-					for shop_category in shop_categories:
-						if shop_category.is_sub==True:
-							source_category = CosmeticCategory.objects.filter(
-								name=shop_category.name,
-							).first()
-							parent_source_cat_name = source_category.parent.name
-							shop_parent_cat = Category.objects.get(store=store, name=parent_source_cat_name)
-							shop_category.parent = shop_parent_cat
-							shop_category.save()
-				
-				cat_names = ['مراقبت از صورت', 'آرایش ناخن', 'رنگ مو و ملزومات', 'لوازم برقی']
-				for index in [1,2,3,4]:
-					default_slide = CosmeticSlide.objects.get(index=index)
-					slide_category = shop_categories.get(name = cat_names[index-1])
-					new_slide = Slide.objects.create(
-						store=store,
-						alt_name = f'{store.name}-slide-{index}',
-						image = default_slide.image,
-						index = index,
-						source = f'category-{shop_categories.get(id=slide_category.id).id}',
-					)
-
-				banner_names = ['ماسک و اسکراب', 'پنکیک','اسپری آب']
-				for index in [1,2,3]:
-					default_banner = CosmeticBanner.objects.get(index=index)
-					banner_category = shop_categories.get(name = banner_names[index-1])
-					if index == 1 or index == 2:
-						size = 'small'
-					else:
-						size = 'big'
-					new_banner = Banner.objects.create(
-						store=store,
-						alt_name = f'{store.name}-banner-{index}',
-						image = default_banner.image,
-						index = index,
-						source = f'category-{shop_categories.get(id=banner_category.id).id}',
-						size = size,
-					)
-			
-				demo_products = CosmeticProduct.objects.all()
-				for demo_product in demo_products:
-					new_product = Product.objects.create(
-						store = store, 
-						name = demo_product.name,
-						slug = demo_product.slug,
-						description = demo_product.description,
-						price = demo_product.price,
-						sales_price = demo_product.sales_price,
-						available = demo_product.available,
-						off_active = demo_product.off_active
-					)
-					new_product.save()
-					initial_cat_name = demo_product.category.all().first().name
-					new_product.category.add(Category.objects.get(name=initial_cat_name, store=store))
-					new_product.save()
-					new_variety = Variety.objects.create(
-											store = store,
-											name = 'default variety',
-											product = new_product, 
-											stock = 2,
-										)
-
-				demo_product_images = CosmeticProductImage.objects.all()
-				products = Product.objects.all()
-				for demo_product_image in demo_product_images:
-					product = products.get(name = demo_product_image.product.name, store=store)
-					new_product_image = ProductImage.objects.create(
-						store=store,
-						alt_name = demo_product_image.alt_name,
-						product = product,
-						image = demo_product_image.image
-					)
-
-			if form.cleaned_data['store_field'] == '4':
-				default_featured_category_names = ['ساختنی و آموزشی', 'تفنگ و مبارزه', 'ماشین، هواپیما و قطار', 'عروسک، ربات و اکشن فیگور', 'اسباب بازی نوزاد','لباس و ماسک']
-				categories = ToysAndKidsCategory.objects.all()
-				if categories.first() != None:
-					for category in ToysAndKidsCategory.objects.all():
-						category_image = ToysAndKidsCategoryImage.objects.filter(category=category).first()
-
-						new_category = Category.objects.create(store=store,
-												name = category.name,
-												slug = category.slug,
-												is_sub = category.is_sub
-												)
-						
-						if new_category.name in default_featured_category_names:
-							featured_categories.categories.add(new_category)
-						
-						if category_image != None:
-							
-							image = category_image.image
-							new_category_image = CategoryImage.objects.create(
-								store=store,
-								alt_name = category.name,
-								image = image,
-								category = new_category
-							)
-
-					shop_categories = Category.objects.filter(store=store)
-					for shop_category in shop_categories:
-						if shop_category.is_sub==True:
-							source_category = ToysAndKidsCategory.objects.filter(
-								name=shop_category.name,
-							).first()
-							parent_source_cat_name = source_category.parent.name
-							shop_parent_cat = Category.objects.get(store=store, name=parent_source_cat_name)
-							shop_category.parent = shop_parent_cat
-							shop_category.save()
-				
-				cat_names = ['ساختنی و آموزشی', 'ماشین، هواپیما و قطار', 'عروسک، ربات و اکشن فیگور', 'تفنگ و مبارزه']
-				for index in [1,2,3,4]:
-					default_slide = ToysAndKidsSlide.objects.get(index=index)
-					slide_category = shop_categories.get(name = cat_names[index-1])
-					new_slide = Slide.objects.create(
-						store=store,
-						alt_name = f'{store.name}-slide-{index}',
-						image = default_slide.image,
-						index = index,
-						source = f'category-{shop_categories.get(id=slide_category.id).id}',
-					)
-
-				banner_names = ['نقاشی', 'خمیر بازی، هنر و کاردستی', 'لگو و بلوک‌های ساختنی']
-				for index in [1,2,3]:
-					default_banner = ToysAndKidsBanner.objects.get(index=index)
-					banner_category = shop_categories.get(name = banner_names[index-1])
-					if index == 1 or index == 2:
-						size = 'small'
-					else:
-						size = 'big'
-					new_banner = Banner.objects.create(
-						store=store,
-						alt_name = f'{store.name}-banner-{index}',
-						image = default_banner.image,
-						index = index,
-						source = f'category-{shop_categories.get(id=banner_category.id).id}',
-						size = size,
-					)
-			
-				demo_products = ToysAndKidsProduct.objects.all()
-				for demo_product in demo_products:
-					new_product = Product.objects.create(
-						store = store, 
-						name = demo_product.name,
-						slug = demo_product.slug,
-						description = demo_product.description,
-						price = demo_product.price,
-						sales_price = demo_product.sales_price,
-						available = demo_product.available,
-						off_active = demo_product.off_active
-					)
-					new_product.save()
-					initial_cat_name = demo_product.category.all().first().name
-					new_product.category.add(Category.objects.get(name=initial_cat_name, store=store))
-					new_product.save()
-					new_variety = Variety.objects.create(
-											store = store,
-											name = 'default variety',
-											product = new_product, 
-											stock = 2,
-										)
-
-				demo_product_images = ToysAndKidsProductImage.objects.all()
-				products = Product.objects.all()
-				for demo_product_image in demo_product_images:
-					product = products.get(name = demo_product_image.product.name, store=store)
-					new_product_image = ProductImage.objects.create(
-						store=store,
-						alt_name = demo_product_image.alt_name,
-						product = product,
-						image = demo_product_image.image
-					)
-
-			if form.cleaned_data['store_field'] == '5':
-				default_featured_category_names = ['مکرومه و گره','صنایع دستی', 'فیروزه کوبی','فرش دستباف','سازهای ایرانی', 'کاغذ کادو، پاکت و کارت هدیه', 'مینا کاری']
-				categories = ArtAndCultureCategory.objects.all()
-				if categories.first() != None:
-					for category in ArtAndCultureCategory.objects.all():
-						category_image = ArtAndCultureCategoryImage.objects.filter(category=category).first()
-
-						new_category = Category.objects.create(store=store,
-												name = category.name,
-												slug = category.slug,
-												is_sub = category.is_sub
-												)
-						
-						if new_category.name in default_featured_category_names:
-							featured_categories.categories.add(new_category)
-						
-						if category_image != None:
-							
-							image = category_image.image
-							new_category_image = CategoryImage.objects.create(
-								store=store,
-								alt_name = category.name,
-								image = image,
-								category = new_category
-							)
-
-					shop_categories = Category.objects.filter(store=store)
-					for shop_category in shop_categories:
-						if shop_category.is_sub==True:
-							source_category = ArtAndCultureCategory.objects.filter(
-								name=shop_category.name,
-							).first()
-							parent_source_cat_name = source_category.parent.name
-							shop_parent_cat = Category.objects.get(store=store, name=parent_source_cat_name)
-							shop_category.parent = shop_parent_cat
-							shop_category.save()
-				
-				cat_names = ['مکرومه و گره', 'صنایع دستی', 'فیروزه کوبی', 'ابزار نقاشی و رنگ آمیزی']
-				for index in [1,2,3,4]:
-					default_slide = ArtAndCultureSlide.objects.get(index=index)
-					slide_category = shop_categories.get(name = cat_names[index-1])
-					new_slide = Slide.objects.create(
-						store=store,
-						alt_name = f'{store.name}-slide-{index}',
-						image = default_slide.image,
-						index = index,
-						source = f'category-{shop_categories.get(id=slide_category.id).id}',
-					)
-
-				banner_names = ['مکرومه و گره', 'کیبرد و ارگ','پیانو دیجیتال']
-				for index in [1,2,3]:
-					default_banner = ArtAndCultureBanner.objects.get(index=index)
-					banner_category = shop_categories.get(name = banner_names[index-1])
-					if index == 1 or index == 2:
-						size = 'small'
-					else:
-						size = 'big'
-					new_banner = Banner.objects.create(
-						store=store,
-						alt_name = f'{store.name}-banner-{index}',
-						image = default_banner.image,
-						index = index,
-						source = f'category-{shop_categories.get(id=banner_category.id).id}',
-						size = size,
-					)
-			
-				demo_products = ArtAndCultureProduct.objects.all()
-				for demo_product in demo_products:
-					new_product = Product.objects.create(
-						store = store, 
-						name = demo_product.name,
-						slug = demo_product.slug,
-						description = demo_product.description,
-						price = demo_product.price,
-						sales_price = demo_product.sales_price,
-						available = demo_product.available,
-						off_active = demo_product.off_active
-					)
-					new_product.save()
-					initial_cat_name = demo_product.category.all().first().name
-					new_product.category.add(Category.objects.get(name=initial_cat_name, store=store))
-					new_product.save()
-					new_variety = Variety.objects.create(
-											store = store,
-											name = 'default variety',
-											product = new_product, 
-											stock = 2,
-										)
-
-				demo_product_images = ArtAndCultureProductImage.objects.all()
-				products = Product.objects.all()
-				for demo_product_image in demo_product_images:
-					product = products.get(name = demo_product_image.product.name, store=store)
-					new_product_image = ProductImage.objects.create(
-						store=store,
-						alt_name = demo_product_image.alt_name,
-						product = product,
-						image = demo_product_image.image
-					)
-			store.package = Package.objects.get(id=1)
-			store.package_expire_date = datetime.now() + timedelta(days=7)
-			store.save()
-			
-			return redirect(f'shop:owner', new_shop_name)
-		return render(request, self.template_name, {'message':'ورودی‌ نامعتبر'})
 
 class IndexView(View):
 
@@ -683,8 +144,6 @@ class IndexView(View):
 		products = Product.objects.filter(store=store)
 		to_products = f'{current_app_name}:product_detail'
 		featured_categories = FeaturedCategories.objects.filter(store = store).first()
-		if store.package_expire_date - timedelta(days=1) <= timezone.now():
-			return render(request, 'shop/package-expire.html')
 		return render(request, f'{current_app_name}/index_{store.template_index}.html', {'services':services,'posts':posts,'featured_categories':featured_categories,'to_products':to_products ,'products':products ,'store_name':store_name, 'slides':slides, 'small_banners':small_banners, 'big_banners':big_banners})
 
 class OwnerView(View):
@@ -823,16 +282,11 @@ class OwnerDashboardView(IsOwnerUserMixin, View):
 		customers = Customer.objects.filter(store=store)
 		customers_number = customers.count()
 
-		warning = False
-		if store.package_expire_date - timedelta(days=6) <= timezone.now():
-			warning = True
+		
 
-		expire = False
-		if store.package_expire_date - timedelta(days=1) <= timezone.now():
-			expire = True
+		
 
-		return render(request, self.template_name, {'warning': warning,
-													'expire': expire,
+		return render(request, self.template_name, {
 													'store_name':store_name,
 											  		'number_of_waiting_orders':number_of_waiting_orders,
 											  		'number_of_paid_orders':number_of_delivered_orders,
@@ -1004,10 +458,7 @@ class StoreUpdateView(IsOwnerUserMixin, View):
 		store = get_object_or_404(Store, name=store_name)
 		form = StoreForm
 		store_update_url = f'{current_app_name}:store_update'
-		expire = False
-		if store.package_expire_date <= timezone.now():
-			expire = True
-		return render(request, self.template_name, {'expire':expire, 'form': form, 'store': store, 'store_update':store_update_url})
+		return render(request, self.template_name, {'form': form, 'store': store, 'store_update':store_update_url})
 
 	def post(self, request, store_name):
 		store = Store.objects.get(name=store_name)
@@ -1035,10 +486,8 @@ class IndexTitleUpdateView(View):
 		store = get_object_or_404(Store, name=store_name)
 		form = StoreForm
 		store_update_url = f'{current_app_name}:store_update'
-		expire = False
-		if store.package_expire_date <= timezone.now():
-			expire = True
-		return render(request, self.template_name, {'expire':expire, 'form': form, 'store': store, 'store_update':store_update_url, 'wrong_input_message':'اطلاعات ورودی نا معتبر'})
+		
+		return render(request, self.template_name, {'form': form, 'store': store, 'store_update':store_update_url, 'wrong_input_message':'اطلاعات ورودی نا معتبر'})
 
 class EnamadUpdateView(View):
 
@@ -1052,10 +501,8 @@ class EnamadUpdateView(View):
 		store = get_object_or_404(Store, name=store_name)
 		form = StoreForm
 		store_update_url = f'{current_app_name}:store_update'
-		expire = False
-		if store.package_expire_date <= timezone.now():
-			expire = True
-		return render(request, self.template_name, {'expire':expire, 'form': form, 'store': store, 'store_update':store_update_url, 'wrong_input_message':'اطلاعات ورودی نا معتبر'})
+		
+		return render(request, self.template_name, {'form': form, 'store': store, 'store_update':store_update_url, 'wrong_input_message':'اطلاعات ورودی نا معتبر'})
 		
 
 class MetaDataView(IsOwnerUserMixin, View):
@@ -2434,35 +1881,6 @@ class DeleteCouponView(IsOwnerUserMixin, View):
 		coupon.delete()
 		return redirect(f'{current_app_name}:owner_dashboard_coupons', store_name)
 
-# class PackagePurchaseView(IsOwnerUserMixin, View):
-	
-# 	template_name = f'{current_app_name}/package.html'
-
-# 	def get(self, request, store_name):
-# 		store = Store.objects.get(name=store_name)
-# 		if store.package == None:
-# 			active_package = "there isn't any active package for this store"
-# 			active_days = 0
-# 		else:
-# 			active_package = store.package.name
-# 			active_days = store.active_days
-# 		form = PackageForm()
-# 		return render(request, self.template_name, {'form': form, 'active_package':active_package, 'active_days':active_days})
-
-# 	def post(self, request, store_name, *args, **kwargs):
-# 		form = PackageForm(request.POST)
-# 		if form.is_valid():
-# 			store = Store.objects.get(name=store_name)
-# 			purchased_pack = form.cleaned_data['package']
-# 			package = Package.objects.filter(id =purchased_pack ).first()
-# 			store.active_days = store.active_days + package.interval
-# 			store.package = package
-# 			active_package = store.package.name
-# 			active_days = store.active_days
-# 			store.save()
-# 			return render(request, self.template_name, {'form': form, 'active_package':active_package, 'active_days':active_days})
-# 		return render(request, self.template_name, {'form': form, 'active_package':active_package, 'active_days':active_days})
-
 class OrderListView(IsOwnerUserMixin, View):
 
 	template_name = f'{current_app_name}/order_list.html'
@@ -2739,53 +2157,6 @@ class LogoUpdateView(IsOwnerUserMixin, View):
 			)
 		return redirect(f'{current_app_name}:owner_dashboard_store_update', store_name)
 
-class CreatePackageOrder(IsOwnerUserMixin, View):
-
-	template_name = f'{current_app_name}/purchase-package.html'
-
-	def get(self, request, store_name, package_id, *args, **kwargs):
-		store = Store.objects.get(name=store_name)
-		package = Package.objects.get(id=package_id)
-		price = package.price
-		customer = Customer.objects.get(phone_number = request.user.phone_number, store=store)
-		status = OrderStatus.objects.get(id=2)
-		new_order = PackageOrder.objects.create(
-			package=package,
-			store=store,
-			customer=customer,
-			total_price=price,
-			status = status,
-		)
-		return render(request, self.template_name, {'store_name':store_name, 'price':price, 'package':package, 'order':new_order})
-
-class PackageOrderPayView(IsCustomerUserMixin, View):
-	
-	def get(self, request, store_name, order_id):
-
-		order = PackageOrder.objects.get(id=order_id)
-
-		request.session['order_pay'] = {
-			'order_id': order.id,
-		}
-		req_data = {
-			"merchant_id": MERCHANT,
-			"amount": order.total_price*10,
-			"callback_url": f'https://picosite.ir/shop/{store_name}/package-orders/verify/',
-			"description": description,
-			"metadata": {"mobile": request.user.phone_number, "email": request.user.email}
-		}
-		req_header = {"accept": "application/json",
-					  "content-type": "application/json'"}
-		req = requests.post(url=ZP_API_REQUEST, data=json.dumps(
-			req_data), headers=req_header)
-		authority = req.json()['data']['authority']
-		if len(req.json()['errors']) == 0:
-			return redirect(ZP_API_STARTPAY.format(authority=authority))
-		else:
-			e_code = req.json()['errors']['code']
-			e_message = req.json()['errors']['message']
-			return HttpResponse(f"Error code: {e_code}, Error Message: {e_message}")
-
 class OrderPayView(IsCustomerUserMixin, View):
 	
 	def get(self, request, store_name, order_id):
@@ -2964,59 +2335,6 @@ class OrderVerifyView(LoginRequiredMixin, View):
 				return HttpResponse(f"Error code: {e_code}, Error Message: {e_message}")
 		else:
 			return render(request, self.template_name, {'message':'پرداخت ناموفق ', 'store_name':store_name})
-
-class PackageOrderVerifyView(LoginRequiredMixin, View):
-
-	template_name = f'{current_app_name}/owner-dashboard-store-settings.html'
-
-	def get(self, request, store_name):
-		paid_status = OrderStatus.objects.get(id=1)
-		order_id = request.session['order_pay']['order_id']
-		order = PackageOrder.objects.get(id=int(order_id))
-		store = order.store
-		store_name = order.store.name
-		t_status = request.GET.get('Status')
-		t_authority = request.GET['Authority']
-		if request.GET.get('Status') == 'OK':
-			req_header = {"accept": "application/json",
-						  "content-type": "application/json'"}
-			req_data = {
-				"merchant_id": MERCHANT,
-				"amount": order.total_price*10,
-				"authority": t_authority
-			}
-			req = requests.post(url=ZP_API_VERIFY, data=json.dumps(req_data), headers=req_header)
-			if len(req.json()['errors']) == 0:
-				t_status = req.json()['data']['code']
-				if t_status == 100:
-					order.status = paid_status
-					order.save()
-					store.package_expire_date = store.package_expire_date + timedelta(days=30)
-					store.package = order.package
-					store.save()
-					
-					return render(request, self.template_name, {'message':'پرداخت شما موفقیت آمیز بود. بسته مورد نظر فعال گردید ', 'ref_id':req.json()['data']['ref_id'], 'store_name':store_name})
-				elif t_status == 101:
-					return render(request, self.template_name, {'message':str(req.json()['data']['message']), 'store_name':store_name})
-				else:
-					return render(request, self.template_name, {'message':'پرداخت ناموفق ', 'store_name':store_name})
-			else:
-				e_code = req.json()['errors']['code']
-				e_message = req.json()['errors']['message']
-				return HttpResponse(f"Error code: {e_code}, Error Message: {e_message}")
-		else:
-			return render(request, self.template_name, {'message':'پرداخت ناموفق ', 'store_name':store_name})
-
-class ActivateStarterPackage(IsOwnerUserMixin, View):
-
-	def get(self, request, store_name):
-		store = Store.objects.get(name = store_name)
-		package = Package.objects.get(name = 'استارتر')
-		store.active_days = store.active_days + package.interval
-		store.package = package
-		store.save()
-
-		return redirect(f'{current_app_name}:owner_dashboard_store_update', store_name)
 
 class OwnerDashboardFinanceView(IsOwnerUserMixin, View):
 	
@@ -3285,11 +2603,11 @@ class ImageBankView(IsOwnerUserMixin, View):
 		store = Store.objects.get(name=store_name)
 		image_class = image_class
 		uploaded_images = UploadedImages.objects.filter(store=store)
-		picosite_bank = BankImage.objects.all()
+		# picosite_bank = BankImage.objects.all()
 		form = ImageUploadForm
 		return render(request, self.template_name, {'store_name':store_name,
 											  'uploaded_images':uploaded_images,
-											  'picosite_bank':picosite_bank,
+											#   'picosite_bank':picosite_bank,
 											  'image_class':image_class,
 											  'index':index,
 											  'form':form,})
@@ -3298,14 +2616,14 @@ class ImageBankView(IsOwnerUserMixin, View):
 		store = Store.objects.get(name=store_name)
 		form = ImageUploadForm(request.POST, request.FILES)
 		uploaded_images = UploadedImages.objects.filter(store=store)
-		picosite_bank = BankImage.objects.all()
+		# picosite_bank = BankImage.objects.all()
 		if form.is_valid():
 			image = request.FILES.get('image')
 			new_image = UploadedImages.objects.create(image=image,store=store,alt_name=f'{store_name}-{image_class}-{index}')
 			return redirect(f'{current_app_name}:image_bank', store_name, image_class, index)
 		return render(request, self.template_name, {'store_name':store_name,
 											  'uploaded_images':uploaded_images,
-											  'picosite_bank':picosite_bank,
+											#   'picosite_bank':picosite_bank,
 											  'image_class':image_class,
 											  'index':index,
 											  'form':form,
@@ -3317,8 +2635,8 @@ class ApplyFromImageBankView(IsOwnerUserMixin, View):
 		store = Store.objects.get(name=store_name)
 		if source == 'uploaded_image':
 			image = UploadedImages.objects.get(id=image_id).image
-		if source == 'picosite_image':
-			image = BankImage.objects.get(id=image_id).image
+		# if source == 'picosite_image':
+		# 	image = BankImage.objects.get(id=image_id).image
 		if image_class == 'slide':
 			slide = Slide.objects.get(index = index, store=store)
 			slide.image = image
@@ -3642,13 +2960,11 @@ class OwnerDashboardAnnouncements(View):
 		announcements = []
 		store.has_notif = False
 		store.save()
-		warning = False
-		if store.package_expire_date - timedelta(days=6) <= timezone.now():
-			warning = True
+		
 		for item in Announcement.objects.all():
 			if store in item.store.all() and item.is_active == True:
 				announcements.append(item)
-		return render(request, self.template_name, {'warning':warning ,'store':store, 'store_name':store_name, 'announcements':announcements})
+		return render(request, self.template_name, {'store':store, 'store_name':store_name, 'announcements':announcements})
 
 
 

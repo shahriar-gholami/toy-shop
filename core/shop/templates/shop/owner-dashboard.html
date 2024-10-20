@@ -220,22 +220,7 @@
                                         <hr>
                                     {% endif %}
 
-                                    {% if expire != True %}
-                                        
-                                        <p class="{% if warning == True %}text-danger{% endif %}">پکیج‌ فعال‌سازی فروشگاه: پکیج فعلی ، {{store.package.name}}، تاریخ پایان اعتبار پکیج شما {{store.shamsi_package_expire_date}}</p>
-                                        {% if warning == True %}
-                                        <div class="container-login100-form-btn">
-                                            <a type="" class="login100-form-btn btn-primary" href="{% url 'shop:owner_dashboard_store_update' store_name %}">خرید پکیج جدید</a>    
-                                        </div>
-                                        {% endif %}
-                                    {% else %}
-                                        
-                                        <p class="text-danger">اعتبار پکیج فعال‌سازی سایت شما تمام شده است و سایت شما در وضعیت مسدود می‌باشد. برای تمدید اشتراک خود سریعا یک پکیج خریداری نمایید.</p>
-                                        
-                                        <div class="container-login100-form-btn">
-                                            <a type="" class="login100-form-btn btn-primary" href="{% url 'shop:owner_dashboard_store_update' store_name %}">خرید پکیج جدید</a>    
-                                        </div>
-                                    {% endif %}
+                                    
                                 </div>
                                 
                             </div>

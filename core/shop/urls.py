@@ -19,7 +19,6 @@ urlpatterns = [
     path('<str:store_name>/edit-home/add-slide/<int:index>', views.CreateSlideView.as_view(), name='add_slide'),
     path('<str:store_name>/edit-home/add-banner/<int:index>', views.CreateBannerView.as_view(), name='add_banner'),
     path('<str:store_name>/owner-login/', views.OwnerLoginView.as_view(), name='owner-login'),
-    path('', views.NewSiteView.as_view(), name='new-site'),
     path('<str:store_name>/owner/', views.OwnerView.as_view(), name='owner'),
     path('<str:store_name>/owner-login/verify/<str:phone_number>/', views.VerifyOwnerView.as_view(), name='verify-owner'),
     path('<str:store_name>/owner/dashboard/announcements/', views.OwnerDashboardAnnouncements.as_view(), name ='owner_dashboard_announcements'),
@@ -88,8 +87,6 @@ urlpatterns = [
     path('<str:store_name>/account/orders/', views.CustomerOrdersView.as_view(), name='customer-orders'),
     path('<str:store_name>/account/favorites/', views.CustomerFavoritesView.as_view(), name='customer-favorites'),
     # path('store-create/', views.StoreCreateView.as_view(), name='store-create'),
-    # path('<str:store_name>/package/', views.PackagePurchaseView.as_view(), name='package'),
-    path('<str:store_name>/activate-starter-package/', views.ActivateStarterPackage.as_view(), name='activate_starter_package'),
    
     path('<str:store_name>/welcome/', views.WelcomeView.as_view(), name='welcome'),
     
@@ -146,17 +143,9 @@ urlpatterns = [
     path('<str:store_name>/blog/<str:post_slug>/', views.BlogPostDetailView.as_view(), name='post_detail'),
     path('<str:store_name>/images/<str:image_class>/<int:index>/', views.ImageBankView.as_view(), name='image_bank'),
     path('<str:store_name>/images/<str:image_class>/<int:index>/<str:source>/<int:image_id>/', views.ApplyFromImageBankView.as_view(), name='apply_from_image_bank'),
-
     path('<str:store_name>/subscribe/', views.SubscribeView.as_view(), name='subscribe'),
-
-    path('<str:store_name>/package-order-payment/<int:order_id>/', views.PackageOrderPayView.as_view(), name='package_order_payment'),
-    path('<str:store_name>/package-order/<int:package_id>/', views.CreatePackageOrder.as_view(), name='create_package_order'),
-    path('<str:store_name>/package-orders/verify/', views.PackageOrderVerifyView.as_view(), name='package_order_verify'),
-
     path('<str:store_name>/order-payment/<int:order_id>/', views.OrderPayView.as_view(), name='order_payment'),
     path('<str:store_name>/orders/verify/', views.OrderVerifyView.as_view(), name='order_verify'),
-
-
 
     path('api/v1/', include('shop.api.v1.urls')),
     

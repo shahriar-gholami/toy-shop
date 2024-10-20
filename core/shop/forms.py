@@ -2,7 +2,7 @@
 from django import forms
 from django.utils import timezone
 from django.forms import modelformset_factory
-from .models import Store, Slide, Delivery, Category, Package, ProductImage, Comment, Product, Variety, Coupon, OrderStatus, Size
+from .models import Store, Slide, Delivery, Category, ProductImage, Comment, Product, Variety, Coupon, OrderStatus, Size
 from ckeditor.widgets import CKEditorWidget
 from django.core import validators
 
@@ -111,10 +111,6 @@ class CouponForm(forms.Form):
     discount = forms.IntegerField()
     from_time = forms.CharField()
     to_time = forms.CharField()
-
-class PackageForm(forms.Form):
-    package_choices = [(package.id, package.name) for package in Package.objects.all()]
-    package = forms.ChoiceField(choices=package_choices, label='Select a Package')
 
 class OrderStatusForm(forms.Form):
     order_status = forms.ModelChoiceField(queryset=OrderStatus.objects.all(), empty_label=None)

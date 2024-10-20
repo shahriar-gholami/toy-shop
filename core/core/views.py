@@ -1,8 +1,6 @@
 from django.shortcuts import render, redirect
 from django.views import View
 from shop.models import BlogCategory, BlogPost, ContactMessage, Store
-from manager.models import Subscription
-from manager.forms import SubscriptionForm
 from shop.forms import ContactUsForm
 from django.http import HttpResponsePermanentRedirect
 from shop.models import Domain
@@ -178,12 +176,3 @@ class FaqView(View):
 				return redirect('shop:faq_list', store_name)
 		return render(request, self.template_name)
 
-class SubscribeView(View):
-
-	def post(self, request, *args, **kwargs):
-		form = SubscriptionForm(request.POST)
-		if form.is_valid():
-			email = form.cleaned_data['email']
-			new_subscriber, create = Subscription.objects.get_or_create(email=email)
-			print(request.path)
-			return redirect('index')

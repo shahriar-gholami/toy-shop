@@ -52,7 +52,6 @@ INSTALLED_APPS = [
     'accounts',
     'core',
     'shop',
-    'manager',
     'ckeditor',]
 
 SITE_ID = config("SITE_ID", cast=int, default=1)

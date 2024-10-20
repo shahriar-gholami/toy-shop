@@ -197,7 +197,7 @@
                                             <div class="d-flex factor-item mb-3 align-items-center justify-content-between">
                                                 <h5 class="mb-0 h6">جمع کل:</h5>
                                                 
-                                                <p class="mb-0 font-17">{{order.get_final_payment|intcomma }} تومان</p>
+                                                <p class="mb-0 font-17">{{order.get_without_cashback_cost|intcomma }} تومان</p>
                                             </div>
 
                                             <div class="action mt-3 d-flex align-items-center justify-content-center w-100">
@@ -209,6 +209,7 @@
                                 </div>
                             </div>
                         </div>
+                        
                     </div>
                 </div>
             </div>

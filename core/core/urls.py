@@ -37,7 +37,6 @@ from . import views
 urlpatterns = [
     # path('', domain_redirect, name='domain_redirect'),
     path('',views.IndexView.as_view(),name='index'),
-    path('subscribe',views.SubscribeView.as_view(),name='subscribe'),
     path('products/', views.ProductListView.as_view(), name='product_list'),
     path('products/<str:product_slug>/', views.ProductDetailView.as_view(), name='product_detail'),
     path('blog/', views.BlogView.as_view(), name='blog'),
@@ -52,9 +51,8 @@ urlpatterns = [
     # path("api-auth/", include("rest_framework.urls")),
     path("accounts/", include("accounts.urls")),
     path("shop/", include("shop.urls")),
-    path("manager/", include("manager.urls")),
-    path('sitemap.xml', sitemap, {'sitemaps': sitemaps},name='django.contrib.sitemaps.views.sitemap'),
-    path('robots.txt', TemplateView.as_view(template_name="robots.txt", content_type="text/plain")),
+    # path('sitemap.xml', sitemap, {'sitemaps': sitemaps},name='django.contrib.sitemaps.views.sitemap'),
+    # path('robots.txt', TemplateView.as_view(template_name="robots.txt", content_type="text/plain")),
 ]
 
 # serving static and media for development

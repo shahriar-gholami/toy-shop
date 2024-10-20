@@ -11,18 +11,8 @@ import datetime
 from datetime import timedelta
 
 
-class Package(models.Model):
-	name = models.CharField(max_length=250)
-	price = models.PositiveIntegerField()
-	is_active = models.BooleanField(default=True)
-	interval = models.PositiveIntegerField(default=30)
-
-	def __str__(self):
-		return f'{self.name}'
-
 class Store(models.Model):
 	name = models.CharField(max_length=250, unique=True)
-	package = models.ForeignKey(Package, null=True, blank=True, on_delete=models.SET_NULL)
 	is_active = models.BooleanField(default = False)
 	active_days = models.PositiveIntegerField(default=0)
 	address = models.CharField(max_length = 500, null=True, blank=True)
@@ -52,30 +42,12 @@ class Store(models.Model):
 	has_payment_gw = models.BooleanField(default=False)
 	policies = RichTextField(default = "در این بخش مهم‌ترین سیاست‌های فروشگاه را ذکر نمایید. مهم‌ترین عناوین این بخش شامل سیاست‌های مرجوعی و شیوه‌ها و بازه زمانی ارسال کالا می‌باشند.")
 	template_index = models.IntegerField(default = 1)
-	package_expire_date = models.DateTimeField(null=True, blank=True)
 	index_title = models.CharField(max_length=250, null=True, blank=True, default='خانه')
 	enamad_code = models.CharField(max_length=1000, null=True, blank=True, default='none')
 	domain_msg = models.BooleanField(default=False)
 	gw_msg = models.BooleanField(default=False)
 	has_notif = models.BooleanField(default=False)
 
-	def get_ban_date(self):
-		ban_date = self.package_expire_date + datetime.timedelta(days=7)
-		return ban_date
-	
-	@property
-	def get_domain_warn_date(self):
-		domain_warn_date = JalaliDatetime(self.created + timedelta(days=7)).strftime('%Y/%m/%d')
-		return domain_warn_date
-	
-	@property
-	def get_payment_gw_warn_date(self):
-		payment_gw_warn_date = JalaliDatetime(self.created + timedelta(days=15)).strftime('%Y/%m/%d')
-		return payment_gw_warn_date
-	
-	@property
-	def shamsi_package_expire_date(self):
-		return JalaliDatetime(self.package_expire_date).strftime('%Y/%m/%d')
 	
 	@property
 	def shamsi_created_date(self):
@@ -616,14 +588,7 @@ class OrderStatus(models.Model):
 	def __str__(self):
 		return self.latest_status
 
-class PackageOrder(models.Model):
-	package = models.ForeignKey(Package, on_delete = models.CASCADE, null=True)
-	store = models.ForeignKey(Store, on_delete=models.CASCADE)
-	customer = models.ForeignKey(Customer, on_delete=models.CASCADE, null=True, blank=True)
-	total_price = models.IntegerField()
-	status = models.ForeignKey(OrderStatus, on_delete = models.SET_NULL, null=True)
-	created_date = models.DateTimeField(auto_now_add = True)
-	status_updated_date = models.DateTimeField(auto_now_add = True)
+
 
 class Cashback(models.Model):
 	repetation = models.IntegerField(default=0)
