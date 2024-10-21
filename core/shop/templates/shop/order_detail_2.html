@@ -42,7 +42,7 @@
     <div class="container-fluid">
         <nav aria-label="breadcrumb" class="my-lg-0 my-2">
             <ol class="breadcrumb mb-0">
-                <li class="breadcrumb-item"><a href="{% url 'shop:index' store_name %}" class="font-14 text-muted-two">خانه</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'shop:index' %}" class="font-14 text-muted-two">خانه</a></li>
                 <li class="breadcrumb-item"><a href="#" class="font-14 text-muted-two">جزئیات سفارش</a></li>
                 </li>
             </ol>
@@ -111,7 +111,7 @@
                                             
                                             <tr>
                                                 <td colspan="2" class="text-center align-middle">
-                                                    <a href="{% url 'shop:product_detail' store_name item.variety.product.slug %}"><img src="{{item.variety.product.get_main_image}}" width="80" class="rounded-3" alt=""></a>
+                                                    <a href="{% url 'shop:product_detail' item.variety.product.slug %}"><img src="{{item.variety.product.get_main_image}}" width="80" class="rounded-3" alt=""></a>
                                                 </td>
                                                 <td class="align-middle">
                                                     
@@ -172,7 +172,7 @@
                                 <div class="container-fluid">
                                     <div class="item">
                                         <div class="factor">
-                                            <form action="{% url 'shop:apply_coupon' store_name order.id %}" method="post">
+                                            <form action="{% url 'shop:apply_coupon' order.id %}" method="post">
                                             {% csrf_token %}
                                             <div class="form-group">
                                                 <label class="label-float fw-bold">کد تخفیف <span class="text-danger">*</span></label>
@@ -183,7 +183,7 @@
                                             <label class="col-md-9 form-label">{{message}}</label>
                                             </form>
                                             <div class="form-group mt-4">
-                                                <form method="post" action="{% url 'shop:apply_delivery' store_name order.id %}">
+                                                <form method="post" action="{% url 'shop:apply_delivery' order.id %}">
                                                 {% csrf_token %}
                                                 <label class="label-float fw-bold">شیوه ارسال <span class="text-danger">*</span></label>
             
@@ -205,7 +205,7 @@
                                             </div>
 
                                             <div class="action mt-3 d-flex align-items-center justify-content-center">
-                                                <a href="{% url 'shop:order_payment' store_name order.id %}"
+                                                <a href="{% url 'shop:order_payment' order.id %}"
                                                    class="btn-flat dark text-center lg w-100">تایید سفارش</a>
                                             </div>
                                         </div>

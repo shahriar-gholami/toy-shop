@@ -44,7 +44,7 @@
                 <div class="swiper-wrapper">
                     {% for slide in slides %}
                     <div class="swiper-slide">
-                        <a href="{% url 'shop:featured_products' store_name slide.source %}">
+                        <a href="{% url 'shop:featured_products' slide.source %}">
                             <img alt="" class="img-fluid" src="{{slide.image.url}}">
                         </a>
                     </div>
@@ -71,11 +71,7 @@
                         <div class="Dottedsquare"></div>
                     </div>
                 </div>
-                <!-- <div class="col-sm-4">
-                    <div class="section-title-link text-sm-end text-start">
-                        <a class="font-16 btn-flat dark" href="{% url 'shop:product_list' store_name %}"> مشاهده همه</a>
-                    </div>
-                </div> -->
+                
             </div>
         </div>
 
@@ -87,7 +83,7 @@
                     <div class="swiper-slide">
                         <div class="product-box">
                             <div>
-                                <a href="{% url 'shop:product_detail' store_name product.slug %}"><img class="rounded-3" src="{{ product.get_main_image }}" alt="{{product.name}}" ></a>
+                                <a href="{% url 'shop:product_detail' product.slug %}"><img class="rounded-3" src="{{ product.get_main_image }}" alt="{{product.name}}" ></a>
                                 
                                 <!-- <div class="color-box">
                                     <div class="color-box-item" data-hint="نام رنگ مورد نظر" data-toggle="tooltip">
@@ -106,7 +102,7 @@
                                 <span class="product-box-image-overlay"></span>
                             </div>
                             <div class="product-box-title">
-                                <a href="{% url 'shop:product_detail' store_name product.slug %}">
+                                <a href="{% url 'shop:product_detail' product.slug %}">
                                     <h5 class="text-overflow-2">{{product.name}}</h5>
                                 </a>
                             </div>
@@ -146,7 +142,7 @@
                                 </div> -->
                             </div>
                             <div class="product-box-action">
-                                <a class="btn rounded-0 main-color-three-bg border-0 w-100" href="{% url 'shop:product_detail' store_name product.slug %}">جزئیات محصول</a>
+                                <a class="btn rounded-0 main-color-three-bg border-0 w-100" href="{% url 'shop:product_detail' product.slug %}">جزئیات محصول</a>
                             </div>
                         </div>
                     </div>
@@ -174,7 +170,7 @@
             {% for banner in small_banners %}
             <div class="col-lg-6">
                 <div class="advert-item ">
-                    <a href="{% url 'shop:featured_products' store_name banner.source %}">
+                    <a href="{% url 'shop:featured_products' banner.source %}">
                         <img alt="" class="mb-2" src="{{banner.image.url}}" style="object-fit:contain">
 
                     </a>
@@ -217,7 +213,7 @@
                     {% for f_cat in featured_categories.categories.all %}
                     <div class="swiper-slide">
                         <div>
-                                <a href="{% url 'shop:category_products' store_name f_cat.slug %}">
+                                <a href="{% url 'shop:category_products' f_cat.slug %}">
                                     <img src="{{f_cat.get_image_url}}" alt="" width="180" height="180">
                                 </a>
                            
@@ -250,7 +246,7 @@
                 <span>
                     <!-- <div class="col-sm-4">
                         <div class="section-title-link text-sm-end text-start">
-                            <a class="font-16 btn-flat dark" href="{% url 'shop:product_list' store_name %}"> مشاهده همه</a>
+                            <a class="font-16 btn-flat dark" href="{% url 'shop:product_list' %}"> مشاهده همه</a>
                         </div>
                     </div> -->
                 </span>
@@ -266,7 +262,7 @@
                     <div class="swiper-slide">
                         <div class="product-box">
                             <div>
-                                <a href="{% url 'shop:product_detail' store_name product.slug %}"><img class="rounded-3" src="{{ product.get_main_image }}"  alt="{{product.name}}" ></a>
+                                <a href="{% url 'shop:product_detail' product.slug %}"><img class="rounded-3" src="{{ product.get_main_image }}"  alt="{{product.name}}" ></a>
                                 
                                 <!-- <div class="color-box">
                                     <div class="color-box-item" data-hint="نام رنگ مورد نظر" data-toggle="tooltip">
@@ -285,7 +281,7 @@
                                 <span class="product-box-image-overlay"></span>
                             </div>
                             <div class="product-box-title">
-                                <a href="{% url 'shop:product_detail' store_name product.slug %}">
+                                <a href="{% url 'shop:product_detail' product.slug %}">
                                     <h5 class="text-overflow-2">{{product.name}}</h5>
                                 </a>
                             </div>
@@ -325,7 +321,7 @@
                                 </div> -->
                             </div>
                             <div class="product-box-action">
-                                <a class="btn rounded-0 main-color-three-bg border-0 w-100" href="{% url 'shop:product_detail' store_name product.slug %}">جزئیات محصول</a>
+                                <a class="btn rounded-0 main-color-three-bg border-0 w-100" href="{% url 'shop:product_detail' product.slug %}">جزئیات محصول</a>
                             </div>
                         </div>
                     </div>
@@ -355,7 +351,7 @@
             {% for banner in big_banners %}
             <div class="col-lg-12">
                 <div class="advert-item ms-2">
-                    <a href="{% url 'shop:featured_products' store_name banner.source %}">
+                    <a href="{% url 'shop:featured_products' banner.source %}">
                         <img alt="" src="{{banner.image.url}}" style="object-fit: cover">
                     </a>
                 </div>
@@ -383,7 +379,7 @@
                 </div>
                 <div class="col-sm-4">
                     <div class="section-title-link text-sm-end text-start">
-                        <a class="btn-flat dark" href="{% url 'shop:post_list' store_name  %}"> مشاهده همه</a>
+                        <a class="btn-flat dark" href="{% url 'shop:post_list'  %}"> مشاهده همه</a>
                     </div>
                 </div>
             </div>
@@ -410,7 +406,7 @@
                                         </p>
                                     </div>
                                     <div class="blog-item-link">
-                                        <a href="{% url 'shop:post_detail' store_name post.slug %}">
+                                        <a href="{% url 'shop:post_detail' post.slug %}">
                                             <span>خواندن ادامه</span>
                                             <i class="bi bi-arrow-left"></i>
                                         </a>

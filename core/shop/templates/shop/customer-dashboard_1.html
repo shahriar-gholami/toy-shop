@@ -53,26 +53,26 @@
                         <div class="card">
                             <div class="list-group list-group-transparent mb-0 mail-inbox pb-3">
                                 <div class="mt-4 mx-4 mb-4 text-center">
-                                    <a class="btn btn-primary btn-lg d-grid" href="{% url 'shop:index' store_name %}">{{customer.full_name}} عزیز خوش‌آمدید</a>
+                                    <a class="btn btn-primary btn-lg d-grid" href="{% url 'shop:index' %}">{{customer.full_name}} عزیز خوش‌آمدید</a>
                                 </div>
                                 <a class="list-group-item d-flex align-items-center active mx-4"
-                                   href="{% url 'shop:customer_dashboard' store_name %}">
+                                   href="{% url 'shop:customer_dashboard' %}">
                                     <span class="icons"><i class="fa fa-bars"></i></span>داشبورد
                                 </a>
                                 <a class="list-group-item d-flex align-items-center  mx-4"
-                                   href="{% url 'shop:customer_dashboard_orders' store_name %}">
+                                   href="{% url 'shop:customer_dashboard_orders' %}">
                                     <span class="icons"><i class="fa fa-shopping-bag"></i></span>سفارشات                                
                                 </a>
                                 <a class="list-group-item d-flex align-items-center mx-4"
-                                   href="{% url 'shop:customer_dashboard_favorites' store_name %}">
+                                   href="{% url 'shop:customer_dashboard_favorites' %}">
                                     <span class="icons"><i class="fa fa-heart-o"></i></span> لیست علاقمندی‌ها 
                                 </a>
                                 <a class="list-group-item d-flex align-items-center mx-4"
-                                   href="{% url 'shop:customer_dashboard_info' store_name %}">
+                                   href="{% url 'shop:customer_dashboard_info' %}">
                                     <span class="icons"><i class="fa fa-user-o"></i></span> اطلاعات کاربری
                                 </a>
                                 <a class="list-group-item d-flex align-items-center mx-4"
-                                   href="{% url 'shop:customer_dashboard_comments' store_name %}">
+                                   href="{% url 'shop:customer_dashboard_comments' %}">
                                     <span class="icons"><i class="fa fa-comment-o"></i></span> دیدگاه‌ها
                                 </a>
                                 <!-- <a class="list-group-item d-flex align-items-center mx-4"
@@ -162,7 +162,7 @@
                                                 </td>
                                                 <td>{{order.get_final_payment}}</td>
                                                 <td>{{order.shamsi_created_date }}</td>
-                                                <td><a class="btn btn-success mt-2 mb-2" href="{% url 'shop:customer_dashboard_order_detail' store_name order.id %}">رفتن به جزییات سفارش</a></td>
+                                                <td><a class="btn btn-success mt-2 mb-2" href="{% url 'shop:customer_dashboard_order_detail' order.id %}">رفتن به جزییات سفارش</a></td>
                                                 
 
                                             </tr>

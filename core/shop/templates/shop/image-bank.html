@@ -80,7 +80,7 @@
                                                             {% if image.image.url != None %}
                                                                 <div class="col-xl-3 col-lg-3 col-md-4 col-sm-4 col-xxl-2">
                                                                     <div class="card overflow-hidden">
-                                                                        <a href="{% url 'shop:apply_from_image_bank' store_name image_class index 'uploaded_image' image.id %}"><img
+                                                                        <a href="{% url 'shop:apply_from_image_bank' image_class index 'uploaded_image' image.id %}"><img
                                                                                 alt="img" class="file-manager-list w-100"
                                                                                 src="{{ image.image.url }}"></a>
                                                                         <div class="card-footer">
@@ -108,7 +108,7 @@
                                                             {% for image in picosite_bank %}
                                                                 <div class="col-xl-3 col-lg-3 col-md-4 col-sm-4 col-xxl-2">
                                                                     <div class="card overflow-hidden">
-                                                                        <a href="{% url 'shop:apply_from_image_bank' store_name image_class index 'picosite_image' image.id %}"><img
+                                                                        <a href="{% url 'shop:apply_from_image_bank' image_class index 'picosite_image' image.id %}"><img
                                                                                 alt="img" class="file-manager-list w-100"
                                                                                 src="{% static 'assets/images/media/files/03.jpg' %}"></a>
                                                                         <div class="card-footer">

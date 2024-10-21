@@ -103,7 +103,7 @@
                                 <table class="table table-borderless text-nowrap mb-0">
                                     <tbody>
                                     <tr>
-                                        <form action="{% url 'shop:apply_coupon' store_name order.id %}" method="post">
+                                        <form action="{% url 'shop:apply_coupon' order.id %}" method="post">
                                         {% csrf_token %}
                                         <label class="col-md-12 form-label">کد تخفیف<br>
                                         کد تخفیف خود را وارد نمایید و بر روی دکمه اعمال کلیک نمایید.
@@ -124,7 +124,7 @@
                         </div>
                         
                         <div class="card-body">
-                        <form method="post" action="{% url 'shop:apply_delivery' store_name order.id %}">
+                        <form method="post" action="{% url 'shop:apply_delivery' order.id %}">
                             {% csrf_token %}
                             <label class="col-md-12 form-label">شیوه‌ی ارسال<br>
                             شیوه ارسال مورد نظر خود را انتخاب نمایید و روی دکمه اعمال کلیک نمایید.</label>
@@ -156,9 +156,9 @@
                         
                         <div class="card-footer">
                             <div class="btn-list">
-                                <a class="btn btn-primary" href="{% url 'shop:product_list' store_name %}"><i
+                                <a class="btn btn-primary" href="{% url 'shop:product_list' %}"><i
                                         class="fa fa-arrow-right me-1"></i>ادامه خرید</a>
-                                <a class="btn btn-success float-sm-end" href="{% url 'shop:order_payment' store_name order.id %}">تسویه حساب<i
+                                <a class="btn btn-success float-sm-end" href="{% url 'shop:order_payment' order.id %}">تسویه حساب<i
                                         class="fa fa-arrow-left ms-1"></i></a>
                             </div>
                         </div>

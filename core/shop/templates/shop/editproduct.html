@@ -32,7 +32,7 @@
                             <div class="card-header">
                                 <div class="card-title">ویرایش محصول</div>
                             </div>
-                            <form method="post" action="{% url 'shop:product_update' store_name product.id %}">
+                            <form method="post" action="{% url 'shop:product_update' product.id %}">
                                 {% csrf_token %}
 
                                 <div class="card-body">
@@ -181,7 +181,7 @@
                             <div class="card-header">
                                 <div class="card-title">تصاویر محصول</div>
                             </div>
-                            <form method="post" action="{% url 'shop:product_image_upload' store_name product.id %}" enctype="multipart/form-data">
+                            <form method="post" action="{% url 'shop:product_image_upload' product.id %}" enctype="multipart/form-data">
                                 {% csrf_token %}
 
                                 <div class="card-body">
@@ -203,7 +203,7 @@
                                         <div class="file-image-1">
                                                 <img alt="" class="br-5" src="{{image.image.url}}">
                                             <ul class="icons">
-                                                <li><a class="btn bg-danger" href="{% url 'shop:product_image_delete' store_name product.id image.id %}"><i
+                                                <li><a class="btn bg-danger" href="{% url 'shop:product_image_delete' product.id image.id %}"><i
                                                         class="fe fe-trash"></i></a></li>
                                                 
                                                 <li><a class="btn bg-primary" href="{{image.image.url}}"><i
@@ -235,7 +235,7 @@
                             <div class="card-header">
                                 <div class="card-title">تنوع محصول</div>
                             </div>
-                            <form method="post" action="{% url 'shop:add_variety' store_name product.id %}" enctype="multipart/form-data">
+                            <form method="post" action="{% url 'shop:add_variety' product.id %}" enctype="multipart/form-data">
                                 {% csrf_token %}
 
                                 <div class="card-body">
@@ -275,7 +275,7 @@
                                                 <tbody>
                                                     {% for variety in varieties %}
                                                         <tr>
-                                                            <form method="post" action="{% url update_variety_url store_name product.id variety.id %}">
+                                                            <form method="post" action="{% url update_variety_url product.id variety.id %}">
                                                                 {% csrf_token %}
                                                                 <td>{{variety.name}}</td>
                                                                 <td>
@@ -296,7 +296,7 @@
                                                                     <div class=" d-flex g-2">
                                                                         <button type="submit" class="login100-form-btn btn-primary">ذخیره</button> 
                                                                         
-                                                                        <a href="{% url delete_variety_url store_name product.id variety.id %}" class="btn text-danger bg-danger-transparent btn-icon py-1"
+                                                                        <a href="{% url delete_variety_url product.id variety.id %}" class="btn text-danger bg-danger-transparent btn-icon py-1"
                                                                         data-bs-original-title="حذف" data-bs-toggle="tooltip"><span
                                                                                 class="bi bi-trash fs-16"></span></a>
                                                                     </div>
@@ -323,7 +323,7 @@
                             <div class="card-header">
                                 <div class="card-title">فیلترهای جستجوی محصول</div>
                             </div>
-                            <form method="post" action="{% url 'shop:asign_filter' store_name product.id %}">
+                            <form method="post" action="{% url 'shop:asign_filter' product.id %}">
                                 {% csrf_token %}
                     
                                 <div class="card-body">
@@ -381,7 +381,7 @@
                                                                 </td>
                                                                 <td>{{filter_value.value}}</td>
                                                                 <td>
-                                                                   <a href="{% url 'shop:delete_filter_value' store_name product.id filter_value.id %}" class="btn text-danger bg-danger-transparent btn-icon py-1"
+                                                                   <a href="{% url 'shop:delete_filter_value' product.id filter_value.id %}" class="btn text-danger bg-danger-transparent btn-icon py-1"
                                                                     data-bs-original-title="حذف" data-bs-toggle="tooltip"><span
                                                                     class="bi bi-trash fs-16"></span></a>
                                                                 </td>
@@ -405,7 +405,7 @@
                                 <h3 class="card-title">ویرایش متاتگ‌ها</h3>
                             </div>
                             <div class="card-body">
-                                <form method="post" action="{% url 'shop:edit_product_meta_tags' store_name product.slug %}">
+                                <form method="post" action="{% url 'shop:edit_product_meta_tags' product.slug %}">
                                 {% csrf_token %}
                                 <div class="row">
                                     <div class="col-lg-12 col-md-12">

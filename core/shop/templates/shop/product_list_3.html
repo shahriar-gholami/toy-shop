@@ -43,7 +43,7 @@
     <div class="container-fluid">
         <nav aria-label="breadcrumb" class="my-lg-0 my-2">
             <ol class="breadcrumb mb-0">
-                <li class="breadcrumb-item"><a href="{% url 'shop:index' store_name %}" class="font-14 text-muted-two">خانه</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'shop:index'  %}" class="font-14 text-muted-two">خانه</a></li>
                 <li class="breadcrumb-item"><a href="#" class="font-14 text-muted-two">فروشگاه</a></li>
                 </li>
             </ol>
@@ -88,7 +88,7 @@
                             </div>
                             {% for active_filter in active_filters %}
                             <div class="desc collapse show" id="collapseItemBox1">
-                                <a href="{% url 'shop:clear_active_filter' store_name active_filter.filter.id active_filter.value.id %}"
+                                <a href="{% url 'shop:clear_active_filter'  active_filter.filter.id active_filter.value.id %}"
                                    class="btn btn-sm rounded-pill border-1 border-muted me-1 font-14 mb-2">
                                     <span>{{active_filter.filter.name}} : {{active_filter.value.value}}</span>
                                     <span class="ms-3"><i class="bi bi-x text-danger"></i></span></a>
@@ -108,7 +108,7 @@
                                 </div>
                             </div>
                             <div class="filter-item w-100">
-                                <form method="post" action="{% url 'shop:product_list' store_name %}">
+                                <form method="post" action="{% url 'shop:product_list'  %}">
                                 {% csrf_token %}
                                 <h5 class="filter-item-title">دسته بندی ها</h5>
                                 <div class="filter-item-content w-100 mt-4">
@@ -193,7 +193,7 @@
                                 <div class="filter-item align-items-center">
                                     <h5 class="filter-item-title">{{filter.name}}</h5>
                                     <div class="filter-item-content  justify-content-between form-check-label">
-                                        <form method="post" action="{% url 'shop:feature_filter' store_name category.slug form.name %}">
+                                        <form method="post" action="{% url 'shop:feature_filter'  category.slug form.name %}">
                                             {% csrf_token %}
                                             {{ form.as_p }}
                                             <input type="submit" class="btn main-color-green text-white rounded-pill px-5 py-2" value="اعمال فیلتر">
@@ -230,7 +230,7 @@
                             </div>
                             {% for active_filter in active_filters %}
                             <div class="desc collapse show" id="collapseItemBox1">
-                                <a href="{% url 'shop:clear_active_filter' store_name active_filter.filter.id active_filter.value.id %}"
+                                <a href="{% url 'shop:clear_active_filter'  active_filter.filter.id active_filter.value.id %}"
                                    class="btn btn-sm rounded-pill border-1 border-muted me-1 font-14 mb-2">
                                     <span>{{active_filter.filter.name}} : {{active_filter.value.value}}</span>
                                     <span class="ms-3"><i class="bi bi-x text-danger"></i></span></a>
@@ -250,7 +250,7 @@
                                 </div>
                             </div>
                             <div class="filter-item w-100">
-                                <form method="post" action="{% url 'shop:product_list' store_name %}">
+                                <form method="post" action="{% url 'shop:product_list'  %}">
                                 {% csrf_token %}
                                 <h5 class="filter-item-title">دسته بندی ها</h5>
                                 <div class="filter-item-content w-100 mt-4">
@@ -335,7 +335,7 @@
                                 <div class="filter-item align-items-center">
                                     <h5 class="filter-item-title">{{filter.name}}</h5>
                                     <div class="filter-item-content  justify-content-between form-check-label">
-                                        <form method="post" action="{% url 'shop:feature_filter' store_name category.slug form.name %}">
+                                        <form method="post" action="{% url 'shop:feature_filter'  category.slug form.name %}">
                                             {% csrf_token %}
                                             {{ form.as_p }}
                                             <input type="submit" class="btn main-color-green text-white rounded-pill px-5 py-2" value="اعمال فیلتر">
@@ -386,12 +386,12 @@
                         {% for product in products %}
                         <div class="col-lg-4">
                         <div class="product-box item-box shadow-box ">
-                            <a href="{% url 'shop:product_detail' store_name product.slug %}">
+                            <a href="{% url 'shop:product_detail'  product.slug %}">
                                 <div class="product-box-image">
                                     <img src="{{product.get_main_image}}" alt="">
                                 </div>
                                 <div class="product-box-title mt-4">
-                                    <a href="{% url 'shop:product_detail' store_name product.slug %}"><h5 class="text-overflow-2">{{ product.name }}</h5></a>
+                                    <a href="{% url 'shop:product_detail'  product.slug %}"><h5 class="text-overflow-2">{{ product.name }}</h5></a>
                                 </div>
                                 {% if product.off_active == True %}
                                     {% if product.ref_class != None %}
@@ -435,7 +435,7 @@
                                 <div class="product-box-hover">
                                     <nav class="navbar navbar-expand justify-content-center">
                                         <ul class="navbar-nav align-items-center">
-                                            <li class="nav-item"><a href="{% url 'shop:product_detail' store_name product.slug %}"
+                                            <li class="nav-item"><a href="{% url 'shop:product_detail'  product.slug %}"
                                                                     class="nav-item product-box-hover-item me-3">مشاهده
                                                 محصول</a></li>
                                             <!-- <li class="nav-item"><a href=""
@@ -443,7 +443,7 @@
                                                                     data-bs-toggle="tooltip" data-bs-placement="top"
                                                                     data-bs-title="افزودن به سبد خرید"><i
                                                     class="bi bi-basket"></i></a></li> -->
-                                            <li class="nav-item"><a href="{% url 'shop:add_to_favorites' store_name=store_name product_id=product.id ref='index' %}"
+                                            <li class="nav-item"><a href="{% url 'shop:add_to_favorites' product_id=product.id ref='index' %}"
                                                                     class="nav-item product-box-hover-item product-box-hover-item-btn"
                                                                     data-bs-toggle="tooltip" data-bs-placement="top"
                                                                     data-bs-title="افزودن به علاقه ها"><i

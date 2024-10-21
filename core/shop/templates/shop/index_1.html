@@ -59,12 +59,12 @@
                                     {% for slide in slides %}
                                         {% if slide.index == 1 %}
                                             <div class="carousel-item active">
-                                                <a href="{% url 'shop:featured_products' store_name slide.source %}"><img alt="" class="d-block w-100 br-5"
+                                                <a href="{% url 'shop:featured_products' slide.source %}"><img alt="" class="d-block w-100 br-5"
                                                     data-bs-holder-rendered="true" src="{{slide.image.url}}" ></a>
                                             </div>
                                         {% else %}
                                             <div class="carousel-item">
-                                                <a href="{% url 'shop:featured_products' store_name slide.source %}"><img alt="" class="d-block w-100 br-5"
+                                                <a href="{% url 'shop:featured_products' slide.source %}"><img alt="" class="d-block w-100 br-5"
                                                     data-bs-holder-rendered="true" src="{{slide.image.url}}" ></a>
                                             </div>
                                         {% endif %}
@@ -145,7 +145,7 @@
                             
                             <ul class="">
                                 {% for f_cat in featured_categories.categories.all|slice:":8" %}
-                                <a  href="{% url 'shop:category_products' store_name f_cat.slug %}"><img
+                                <a  href="{% url 'shop:category_products' f_cat.slug %}"><img
                                     alt="img" class="br-5 m-1" src="{{f_cat.get_image_url}}" width="140"></a>
                                 {% endfor %}
                             </ul>
@@ -159,7 +159,7 @@
             <div class="row">
                 {% for banner in small_banners %}
                     <div class="col-md-6  col-xl-6">
-                        <a class="thumbnail " href="{% url 'shop:featured_products' store_name banner.source %}">
+                        <a class="thumbnail " href="{% url 'shop:featured_products' banner.source %}">
                             <img alt="thumb1" class="thumbimg"
                                 src="{{banner.image.url}}">
                         </a>
@@ -176,7 +176,7 @@
                     <div class="btn-list">
                         <a class="btn btn-primary" href=""><i
                                 class="me-1"></i>جدیدترین محصولات</a>
-                        <a class="btn btn-success float-sm-end" href="{% url 'shop:product_list' store_name %}">مشاهده‌ی همه<i
+                        <a class="btn btn-success float-sm-end" href="{% url 'shop:product_list' %}">مشاهده‌ی همه<i
                                 class="fa fa-arrow-left ms-1"></i></a>
                     </div>
                 </div>
@@ -190,13 +190,13 @@
                                         <div class="product-image6 p-1">
                                             <ul class="icons">
                                                 <li>
-                                                    <a class="btn btn-primary" href="{% url 'shop:product_detail' store_name product.slug %}">
+                                                    <a class="btn btn-primary" href="{% url 'shop:product_detail' product.slug %}">
                                                         <i class="fe fe-eye"> </i> </a>
                                                 </li>
-                                                <li><a class="btn btn-danger" href="{% url 'shop:add_to_favorites' store_name=store_name product_id=product.id ref='index' %}"><i
+                                                <li><a class="btn btn-danger" href="{% url 'shop:add_to_favorites' product_id=product.id ref='index' %}"><i
                                                         class="fe fe-heart"></i></a></li>
                                             </ul>
-                                            <a href="{% url to_products store_name product.slug %}">
+                                            <a href="{% url to_products product.slug %}">
                                                 <img alt="img"
                                                      class="img-fluid br-2 w-100" src="{{product.get_main_image}}">
                                             </a>
@@ -204,7 +204,7 @@
                                         <div class="card-body pt-0">
                                             <div class="product-content text-center">
                                                 <h1 class="title fw-bold fs-14"><a
-                                                        href="{% url to_products store_name product.slug %}">{{ product.name }}</a>
+                                                        href="{% url to_products  product.slug %}">{{ product.name }}</a>
                                                 </h1>
                                                 <div class="mb-2 text-warning">
                                                     <i class="fa fa-star text-warning"></i>
@@ -227,7 +227,7 @@
                                             </div>
                                         </div>
                                         <div class="card-footer text-center">
-                                            <a class="btn btn-primary mb-1" href="{% url to_products store_name product.slug %}"><i
+                                            <a class="btn btn-primary mb-1" href="{% url to_products product.slug %}"><i
                                                     class="fe fe-shopping-cart mx-2"></i>جزییات محصول</a>
                                         </div>
                                     </div>
@@ -248,7 +248,7 @@
                         {% for banner in big_banners %}
                         <div class="col-lg-12">
                             <div class="advert-item">
-                                <a href="{% url 'shop:featured_products' store_name banner.source %}">
+                                <a href="{% url 'shop:featured_products' banner.source %}">
                                     <img alt="" src="{{banner.image.url}}" style="object-fit: cover">
                                 </a>
                             </div>
@@ -265,7 +265,7 @@
                     <div class="btn-list">
                         <a class="btn btn-primary" href=""><i
                                 class="me-1"></i>پربازدیدترین محصولات</a>
-                        <a class="btn btn-success float-sm-end" href="{% url 'shop:product_list' store_name %}">مشاهده‌ی همه<i
+                        <a class="btn btn-success float-sm-end" href="{% url 'shop:product_list' %}">مشاهده‌ی همه<i
                                 class="fa fa-arrow-left ms-1"></i></a>
                     </div>
                 </div>
@@ -279,13 +279,13 @@
                                         <div class="product-image6 p-1">
                                             <ul class="icons">
                                                 <li>
-                                                    <a class="btn btn-primary" href="{% url 'shop:product_detail' store_name product.slug %}">
+                                                    <a class="btn btn-primary" href="{% url 'shop:product_detail'  product.slug %}">
                                                         <i class="fe fe-eye"> </i> </a>
                                                 </li>
-                                                <li><a class="btn btn-danger" href="{% url 'shop:add_to_favorites' store_name=store_name product_id=product.id ref='index' %}"><i
+                                                <li><a class="btn btn-danger" href="{% url 'shop:add_to_favorites' product_id=product.id ref='index' %}"><i
                                                         class="fe fe-heart"></i></a></li>
                                             </ul>
-                                            <a href="{% url to_products store_name product.slug %}">
+                                            <a href="{% url to_products  product.slug %}">
                                                 <img alt="img"
                                                      class="img-fluid br-7 w-100" src="{{product.get_main_image}}">
                                             </a>
@@ -293,7 +293,7 @@
                                         <div class="card-body pt-0">
                                             <div class="product-content text-center">
                                                 <h1 class="title fw-bold fs-16"><a
-                                                        href="{% url to_products store_name product.slug %}">{{ product.name }}</a>
+                                                        href="{% url to_products product.slug %}">{{ product.name }}</a>
                                                 </h1>
                                                 <div class="mb-2 text-warning">
                                                     <i class="fa fa-star text-warning"></i>
@@ -316,7 +316,7 @@
                                             </div>
                                         </div>
                                         <div class="card-footer text-center">
-                                            <a class="btn btn-primary mb-1" href="{% url to_products store_name product.slug %}"><i
+                                            <a class="btn btn-primary mb-1" href="{% url to_products product.slug %}"><i
                                                     class="fe fe-shopping-cart mx-2"></i>جزییات محصول</a>
                                         </div>
                                     </div>
@@ -335,7 +335,7 @@
                     <div class="btn-list">
                         <a class="btn btn-primary" href="shop.html"><i
                                 class="me-1"></i>آخرین اخبار</a>
-                        <a class="btn btn-success float-sm-end" href="{% url 'shop:post_list' store_name %}">مشاهده‌ی همه<i
+                        <a class="btn btn-success float-sm-end" href="{% url 'shop:post_list' %}">مشاهده‌ی همه<i
                                 class="fa fa-arrow-left ms-1"></i></a>
                     </div>
                 </div>
@@ -344,11 +344,11 @@
                     {% for post in posts|slice:":4" %}
                     <div class="col-xl-3 col-md-12">
                         <div class="card overflow-hidden">
-                            <a href="{% url 'shop:post_detail' store_name post.slug %}"><img alt="img" class="card-img-top" src="{{post.get_thumbnail}}"></a>
+                            <a href="{% url 'shop:post_detail' post.slug %}"><img alt="img" class="card-img-top" src="{{post.get_thumbnail}}"></a>
                             <div class="card-body">
-                                <a href="{% url 'shop:post_detail' store_name post.slug %}"><h5 class="card-title">{{ post.title|truncatewords:10 }}</h5></a>
+                                <a href="{% url 'shop:post_detail' post.slug %}"><h5 class="card-title">{{ post.title|truncatewords:10 }}</h5></a>
                                 
-                                <a class="btn btn-primary mt-4" href="{% url 'shop:post_detail' store_name post.slug %}">مشاهده جزییات</a>
+                                <a class="btn btn-primary mt-4" href="{% url 'shop:post_detail' post.slug %}">مشاهده جزییات</a>
                             </div>
                         </div>
                     </div>

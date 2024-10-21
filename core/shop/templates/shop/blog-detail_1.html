@@ -84,10 +84,10 @@
                                     <div class="">
                                         {% for post in posts|slice:":10" %}
                                         <div class="d-flex overflow-visible mt-5">
-                                            <a href="{% url 'shop:post_detail' store_name post.slug %}"><img alt="" class=" avatar bradius avatar-xl me-3" src="{{post.get_thumbnail}}" height="65px"></a>
+                                            <a href="{% url 'shop:post_detail' post.slug %}"><img alt="" class=" avatar bradius avatar-xl me-3" src="{{post.get_thumbnail}}" height="65px"></a>
                                             <div class="ps-3 flex-column">
                                                 <span class="badge bg-primary me-1 mb-1 mt-1 text-white">{{post.category.name}}</span>
-                                                <h4><a href="{% url 'shop:post_detail' store_name post.slug %}">{{post.title|truncatewords:6}}</a></h4>
+                                                <h4><a href="{% url 'shop:post_detail' post.slug %}">{{post.title|truncatewords:6}}</a></h4>
                                                 
                                             </div>
                                         </div>

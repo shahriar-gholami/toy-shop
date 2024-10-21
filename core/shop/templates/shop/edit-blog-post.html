@@ -93,7 +93,7 @@
                             <div class="card-header">
                                 <h3 class="card-title">تصویر شاخص پست</h3>
                             </div>
-                            <form method="post" action="{% url 'shop:update_post_thumbnail' store_name post.id %}" enctype="multipart/form-data">
+                            <form method="post" action="{% url 'shop:update_post_thumbnail' post.id %}" enctype="multipart/form-data">
                             {% csrf_token %}
                             <div class="card-body">
                                 <div class="row">
@@ -125,7 +125,7 @@
                                 <h3 class="card-title">ویرایش متاتگ‌ها</h3>
                             </div>
                             <div class="card-body">
-                                <form method="post" action="{% url 'shop:edit_blog_post_meta_tags' store_name post.slug %}">
+                                <form method="post" action="{% url 'shop:edit_blog_post_meta_tags' post.slug %}">
                                 {% csrf_token %}
                                 <div class="row">
                                     <div class="col-lg-12 col-md-12">

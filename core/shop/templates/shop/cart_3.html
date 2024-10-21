@@ -42,7 +42,7 @@
     <div class="container-fluid">
         <nav aria-label="breadcrumb" class="my-lg-0 my-2">
             <ol class="breadcrumb mb-0">
-                <li class="breadcrumb-item"><a href="{% url 'shop:index' store_name %}" class="font-14 text-muted-two">خانه</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'shop:index' %}" class="font-14 text-muted-two">خانه</a></li>
                 <li class="breadcrumb-item"><a href="#" class="font-14 text-muted-two">سبد خرید</a></li>
                 </li>
             </ol>
@@ -105,11 +105,11 @@
                                         <tbody>
                                             {% for item in cart.items.all %}
                                             
-                                            <form method="post" action="{% url 'shop:cart_item_update' store_name cart.pk item.pk %}">
+                                            <form method="post" action="{% url 'shop:cart_item_update' cart.pk item.pk %}">
                                             {% csrf_token %}
                                             <tr>
                                                 <td colspan="2" class="text-center align-middle">
-                                                    <a href="{% url 'shop:product_detail' store_name item.variety.product.slug %}"><img src="{{item.variety.product.get_main_image}}" width="80" class="rounded-3" alt=""></a>
+                                                    <a href="{% url 'shop:product_detail' item.variety.product.slug %}"><img src="{{item.variety.product.get_main_image}}" width="80" class="rounded-3" alt=""></a>
                                                 </td>
                                                 <td class="align-middle">
                                                     
@@ -180,7 +180,7 @@
 
                                             <div class="action mt-3 d-flex align-items-center justify-content-center">
                                                 
-                                                   <a type="submit" href="{% url 'shop:create_order' store_name %}" class="btn  main-color-one-bg rounded-pill">
+                                                   <a type="submit" href="{% url 'shop:create_order' %}" class="btn  main-color-one-bg rounded-pill">
                                                 ادامه فرایند سفارش
                                             </a>
                                             </div>

@@ -48,7 +48,7 @@
                         <div class="swiper-wrapper">
                             {% for slide in slides %}
                             <div class="swiper-slide" style="object-fit: fill;">
-                                <a href="{% url 'shop:featured_products' store_name slide.source %}">
+                                <a href="{% url 'shop:featured_products' slide.source %}">
                                     <img src="{{slide.image.url}}" class="img-fluid" alt="" style="object-fit: inherit;">
                                 </a>
                             </div>
@@ -73,10 +73,10 @@
                                             <h6>پیشنهاد لحظه ای</h6>
                                         </div>
                                         <div class="product-box-image mt-3">
-                                            <a href="{% url 'shop:product_detail' store_name product.slug %}"><img src="{{product.get_main_image}}" width="30" alt=""></a>
+                                            <a href="{% url 'shop:product_detail' product.slug %}"><img src="{{product.get_main_image}}" width="30" alt=""></a>
                                         </div>
                                         <div class="product-box-title">
-                                            <a href="{% url 'shop:product_detail' store_name product.slug %}"><h5 class="text-overflow-2">{{ product.name }}</h5></a>
+                                            <a href="{% url 'shop:product_detail' product.slug %}"><h5 class="text-overflow-2">{{ product.name }}</h5></a>
                                         </div>
                                         {% if product.off_active == True %}
                                     {% if product.ref_class != None %}
@@ -120,11 +120,11 @@
                                         <div class="product-box-hover">
                                             <nav class="navbar navbar-expand justify-content-center">
                                                 <ul class="navbar-nav align-items-center">
-                                                    <li class="nav-item"><a href="{% url 'shop:product_detail' store_name product.slug %}"
+                                                    <li class="nav-item"><a href="{% url 'shop:product_detail' product.slug %}"
                                                                             class="nav-item product-box-hover-item me-3">مشاهده
                                                         محصول</a></li>
 
-                                                    <li class="nav-item"><a href="{% url 'shop:add_to_favorites' store_name=store_name product_id=product.id ref='index' %}"
+                                                    <li class="nav-item"><a href="{% url 'shop:add_to_favorites' product_id=product.id ref='index' %}"
                                                                             class="nav-item product-box-hover-item product-box-hover-item-btn"
                                                                             data-bs-toggle="tooltip"
                                                                             data-bs-placement="top"
@@ -236,7 +236,7 @@
                 {% for f_cat in featured_categories.categories.all %}
                 <div class="col-lg-2 col-sm-6">
                     <div class="site-category-items p-2 shadow-box rounded-3 mt-4">
-                        <a href="{% url 'shop:category_products' store_name f_cat.slug %}">
+                        <a href="{% url 'shop:category_products' f_cat.slug %}">
                             <div class="site-category-items-icon">
                                 <img class="rounded-4" src="{{f_cat.get_image_url}}" alt="">
                             </div>
@@ -279,7 +279,7 @@
                 </div>
                 <div class="col-sm-4">
                     <div class="slider-title-link">
-                        <a href="{% url 'shop:product_list' store_name %}" class="main-color-one-color font-16"> مشاهده همه <i
+                        <a href="{% url 'shop:product_list' %}" class="main-color-one-color font-16"> مشاهده همه <i
                                 class="bi bi-caret-left-fill"></i></a>
                     </div>
                 </div>
@@ -294,12 +294,12 @@
                     {% if product.off_active == True %}
                     <div class="swiper-slide">
                         <div class="product-box item-box shadow-box ">
-                            <a href="{% url to_products store_name product.slug %}">
+                            <a href="{% url to_products product.slug %}">
                                 <div class="product-box-image">
                                     <img src="{{product.get_main_image}}" alt="">
                                 </div>
                                 <div class="product-box-title mt-4">
-                                    <a href="{% url to_products store_name product.slug %}"><h5 class="text-overflow-2">{{ product.name }}</h5></a>
+                                    <a href="{% url to_products product.slug %}"><h5 class="text-overflow-2">{{ product.name }}</h5></a>
                                 </div>
                                 {% if product.off_active == True %}
                                     {% if product.ref_class != None %}
@@ -343,7 +343,7 @@
                                 <div class="product-box-hover">
                                     <nav class="navbar navbar-expand justify-content-center">
                                         <ul class="navbar-nav align-items-center">
-                                            <li class="nav-item"><a href="{% url to_products store_name product.slug %}"
+                                            <li class="nav-item"><a href="{% url to_products product.slug %}"
                                                                     class="nav-item product-box-hover-item me-3">مشاهده
                                                 محصول</a></li>
                                             <!-- <li class="nav-item"><a href=""
@@ -351,7 +351,7 @@
                                                                     data-bs-toggle="tooltip" data-bs-placement="top"
                                                                     data-bs-title="افزودن به سبد خرید"><i
                                                     class="bi bi-basket"></i></a></li> -->
-                                            <li class="nav-item"><a href="{% url 'shop:add_to_favorites' store_name=store_name product_id=product.id ref='index' %}"
+                                            <li class="nav-item"><a href="{% url 'shop:add_to_favorites' product_id=product.id ref='index' %}"
                                                                     class="nav-item product-box-hover-item product-box-hover-item-btn"
                                                                     data-bs-toggle="tooltip" data-bs-placement="top"
                                                                     data-bs-title="افزودن به علاقه ها"><i
@@ -391,7 +391,7 @@
             {% for banner in small_banners %}
             <div class="col-lg-6">
                 <div class="advert-banner-item img-tilt" data-tilt>
-                    <a href="{% url 'shop:featured_products' store_name banner.source %}">
+                    <a href="{% url 'shop:featured_products' banner.source %}">
                         <img src="{{banner.image.url}}" alt="">
                     </a>
                 </div>
@@ -441,12 +441,12 @@
                 {% for product in products|dictsortreversed:"views" %}
                 <div class="swiper-slide">
                     <div class="product-box">
-                        <a href="{% url to_products store_name product.slug %}">
+                        <a href="{% url to_products product.slug %}">
                             <div class="product-box-image">
                                 <img src="{{product.get_main_image}}" alt="">
                             </div>
                             <div class="product-box-title">
-                                <a href="{% url to_products store_name product.slug %}"><h5 class="text-overflow-2">{{ product.name }}</h5></a>
+                                <a href="{% url to_products product.slug %}"><h5 class="text-overflow-2">{{ product.name }}</h5></a>
                             </div>
                             {% if product.off_active == True %}
                                 <div class="product-box-price">
@@ -473,7 +473,7 @@
                             <div class="product-box-hover">
                                 <nav class="navbar navbar-expand justify-content-center">
                                     <ul class="navbar-nav align-items-center">
-                                        <li class="nav-item"><a href="{% url to_products store_name product.slug %}"
+                                        <li class="nav-item"><a href="{% url to_products product.slug %}"
                                                                 class="nav-item product-box-hover-item me-3">مشاهده
                                             محصول</a></li>
                                         <!-- <li class="nav-item"><a href=""
@@ -481,7 +481,7 @@
                                                                 data-bs-toggle="tooltip" data-bs-placement="top"
                                                                 data-bs-title="افزودن به سبد خرید"><i
                                                 class="bi bi-basket"></i></a></li> -->
-                                        <li class="nav-item"><a href="{% url 'shop:add_to_favorites' store_name=store_name product_id=product.id ref='index' %}"
+                                        <li class="nav-item"><a href="{% url 'shop:add_to_favorites' product_id=product.id ref='index' %}"
                                                                 class="nav-item product-box-hover-item product-box-hover-item-btn"
                                                                 data-bs-toggle="tooltip" data-bs-placement="top"
                                                                 data-bs-title="افزودن به علاقه ها"><i
@@ -514,7 +514,7 @@
             {% for banner in big_banners %}
             <div class="col-12">
                 <div class="advert-banner-item img-tilt" data-tilt>
-                    <a href="{% url 'shop:featured_products' store_name banner.source %}">
+                    <a href="{% url 'shop:featured_products' banner.source %}">
                         <img src="{{banner.image.url}}" alt="">
                     </a>
                 </div>
@@ -549,7 +549,7 @@
                 </div>
                 <div class="col-sm-4">
                     <div class="slider-title-link">
-                        <a href="{% url 'shop:post_list' store_name %}" class="main-color-one-color font-16"> مشاهده همه <i
+                        <a href="{% url 'shop:post_list' %}" class="main-color-one-color font-16"> مشاهده همه <i
                                 class="bi bi-caret-left-fill"></i></a>
                     </div>
                 </div>
@@ -566,12 +566,12 @@
                                 <a href="">
                                     <span class="blog-slider-overlay"></span>
                                     <div class="blog-slider-item-stand-image">
-                                        <a href="{% url 'shop:post_detail' store_name post.slug %}"><img src="{{ post.get_thumbnail }}" alt=""></a>
+                                        <a href="{% url 'shop:post_detail' post.slug %}"><img src="{{ post.get_thumbnail }}" alt=""></a>
                                     </div>
                                     <div class="blog-slider-item-stand-text">
                                         <div class="blog-slider-item-stand-title">
                                             <span class="badge badge-pill main-color-two-bg mb-2">{{ post.category.name }}</span>
-                                            <a href="{% url 'shop:post_detail' store_name post.slug %}"><h6 class="font-16 title-font text-overflow-1 text-white">{{ post.title }}</h6></a>
+                                            <a href="{% url 'shop:post_detail' post.slug %}"><h6 class="font-16 title-font text-overflow-1 text-white">{{ post.title }}</h6></a>
                                             <p class="text-overflow-2 text-white mb-0 mt-2">{{ post.meta_description }}</p>
                                             <div class="blog-slider-item-info d-flex align-items-center justify-content-between">
                                                 <div class="blog-slider-item-info-item me-2 text-white">
@@ -580,7 +580,7 @@
                                                 </div>
                                                 <div class="blog-slider-item-info-item text-white">
                                                     <i class="bi bi-eye me-1"></i>
-                                                    <a href="{% url 'shop:post_detail' store_name post.slug %}"></a><span class="text-white">مطالعه بیشتر</span>
+                                                    <a href="{% url 'shop:post_detail' post.slug %}"></a><span class="text-white">مطالعه بیشتر</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -598,13 +598,13 @@
                             <div class="row gy-3 align-items-center">
                                 <div class="col-sm-4">
                                     <div class="blog-slider-item-row-image">
-                                        <a href="{% url 'shop:post_detail' store_name post.slug %}"><img src="{{ post.get_thumbnail }}" alt=""></a>
+                                        <a href="{% url 'shop:post_detail' post.slug %}"><img src="{{ post.get_thumbnail }}" alt=""></a>
                                     </div>
                                 </div>
                                 <div class="col-sm-8">
                                     <div class="blog-slider-item-stand-text">
                                         <div class="blog-slider-item-stand-title">
-                                            <a href="{% url 'shop:post_detail' store_name post.slug %}"><h6 class="font-16 title-font text-overflow-1 main-color-one-color">{{ post.title }}</h6></a>
+                                            <a href="{% url 'shop:post_detail' post.slug %}"><h6 class="font-16 title-font text-overflow-1 main-color-one-color">{{ post.title }}</h6></a>
                                             <p class="text-overflow-2 my-2">{{ post.meta_description }}</p>
                                             <div class="blog-slider-item-info d-flex align-items-center">
                                                 <div class="blog-slider-item-info-item me-3">
@@ -613,7 +613,7 @@
                                                 </div>
                                                 <div class="blog-slider-item-info-item">
                                                     <i class="bi bi-eye me-1"></i>
-                                                    <a href="{% url 'shop:post_detail' store_name post.slug %}"><span>مطالعه بیشتر</span></a>
+                                                    <a href="{% url 'shop:post_detail' post.slug %}"><span>مطالعه بیشتر</span></a>
                                                 </div>
                                             </div>
                                         </div>

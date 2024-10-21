@@ -46,8 +46,8 @@
     <div class="container-fluid">
         <nav aria-label="breadcrumb" class="my-lg-0 my-2">
             <ol class="breadcrumb mb-0">
-                <li class="breadcrumb-item"><a class="font-14 text-muted-two" href="{% url 'shop:index' store_name %}">خانه</a></li>
-                <li class="breadcrumb-item"><a class="font-14 text-muted-two" href="{% url 'shop:product_list' store_name %}">فروشگاه</a></li>
+                <li class="breadcrumb-item"><a class="font-14 text-muted-two" href="{% url 'shop:index'  %}">خانه</a></li>
+                <li class="breadcrumb-item"><a class="font-14 text-muted-two" href="{% url 'shop:product_list'  %}">فروشگاه</a></li>
                 <li class="breadcrumb-item"><a class="font-14 text-muted-two" href="#">{{ product.name }}</a></li>
                 </li>
             </ol>
@@ -73,7 +73,7 @@
                                 </div> -->
                                 <div class="icon-product-box-item" data-bs-toggle="tooltip" data-bs-placement="right"
                                      data-bs-title="افزودن به علاقه مندی">
-                                    <a href="{% url 'shop:add_to_favorites' store_name=store_name product_id=product.id ref='products' %}"><i class="bi bi-heart"></i></a>
+                                    <a href="{% url 'shop:add_to_favorites' product_id=product.id ref='products' %}"><i class="bi bi-heart"></i></a>
                                 </div>
                                 <!-- <div class="icon-product-box-item" data-bs-toggle="tooltip" data-bs-placement="right"
                                      data-bs-title="مقایسه محصول">
@@ -150,7 +150,7 @@
                                 </div>
                             </div>
                         </div>
-                        <form method="post" action="{% url 'shop:add_to_cart' store_name product.id %}">
+                        <form method="post" action="{% url 'shop:add_to_cart'  product.id %}">
                             {% csrf_token %}
                         
                         <div class="product-meta-feature bottom-border">
@@ -320,7 +320,7 @@
                                             نمایید. اگر این محصول را قبلا خریده باشید، نظر شما به عنوان خریدار
                                             ثبت خواهد
                                             شد.</p>
-                                        <form method="post" action="{% url 'shop:comment_create' store_name product.id %}" >
+                                        <form method="post" action="{% url 'shop:comment_create'  product.id %}" >
                                             {% csrf_token %}
                                             <div class="row gy-4">
                                                 <!-- <div class="col-md-4">
@@ -640,12 +640,12 @@
                 {% for product in products|dictsortreversed:"views" %}
                 <div class="swiper-slide">
                     <div class="product-box">
-                        <a href="{% url 'shop:product_detail' store_name product.slug %}">
+                        <a href="{% url 'shop:product_detail'  product.slug %}">
                             <div class="product-box-image">
                                 <img src="{{product.get_main_image}}" alt="">
                             </div>
                             <div class="product-box-title">
-                                <a href="{% url 'shop:product_detail' store_name product.slug %}"><h5 class="text-overflow-2">{{ product.name }}</h5></a>
+                                <a href="{% url 'shop:product_detail'  product.slug %}"><h5 class="text-overflow-2">{{ product.name }}</h5></a>
                             </div>
                             {% if product.off_active == True %}
                                     {% if product.ref_class != None %}
@@ -689,7 +689,7 @@
                             <div class="product-box-hover">
                                 <nav class="navbar navbar-expand justify-content-center">
                                     <ul class="navbar-nav align-items-center">
-                                        <li class="nav-item"><a href="{% url 'shop:product_detail' store_name product.slug %}"
+                                        <li class="nav-item"><a href="{% url 'shop:product_detail'  product.slug %}"
                                                                 class="nav-item product-box-hover-item me-3">مشاهده
                                             محصول</a></li>
                                         <!-- <li class="nav-item"><a href=""
@@ -697,7 +697,7 @@
                                                                 data-bs-toggle="tooltip" data-bs-placement="top"
                                                                 data-bs-title="افزودن به سبد خرید"><i
                                                 class="bi bi-basket"></i></a></li> -->
-                                        <li class="nav-item"><a href="{% url 'shop:add_to_favorites' store_name=store_name product_id=product.id ref='index' %}"
+                                        <li class="nav-item"><a href="{% url 'shop:add_to_favorites'  product_id=product.id ref='index' %}"
                                                                 class="nav-item product-box-hover-item product-box-hover-item-btn"
                                                                 data-bs-toggle="tooltip" data-bs-placement="top"
                                                                 data-bs-title="افزودن به علاقه ها"><i

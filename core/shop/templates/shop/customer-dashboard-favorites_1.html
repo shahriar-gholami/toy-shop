@@ -53,26 +53,26 @@
                         <div class="card">
                             <div class="list-group list-group-transparent mb-0 mail-inbox pb-3">
                                 <div class="mt-4 mx-4 mb-4 text-center">
-                                    <a class="btn btn-primary btn-lg d-grid" href="{% url 'shop:index' store_name %}">{{customer.full_name}} عزیز خوش‌آمدید</a>
+                                    <a class="btn btn-primary btn-lg d-grid" href="{% url 'shop:index' %}">{{customer.full_name}} عزیز خوش‌آمدید</a>
                                 </div>
                                 <a class="list-group-item d-flex align-items-center  mx-4"
-                                   href="{% url 'shop:customer_dashboard' store_name %}">
+                                   href="{% url 'shop:customer_dashboard' %}">
                                     <span class="icons"><i class="fa fa-bars"></i></span>داشبورد
                                 </a>
                                 <a class="list-group-item d-flex align-items-center  mx-4"
-                                   href="{% url 'shop:customer_dashboard_orders' store_name %}">
+                                   href="{% url 'shop:customer_dashboard_orders' %}">
                                     <span class="icons"><i class="fa fa-shopping-bag"></i></span>سفارشات                                
                                 </a>
                                 <a class="list-group-item d-flex align-items-center active mx-4"
-                                   href="{% url 'shop:customer_dashboard_favorites' store_name %}">
+                                   href="{% url 'shop:customer_dashboard_favorites' %}">
                                     <span class="icons"><i class="fa fa-heart-o"></i></span> لیست علاقمندی‌ها 
                                 </a>
                                 <a class="list-group-item d-flex align-items-center mx-4"
-                                   href="{% url 'shop:customer_dashboard_info' store_name %}">
+                                   href="{% url 'shop:customer_dashboard_info' %}">
                                     <span class="icons"><i class="fa fa-user-o"></i></span> اطلاعات کاربری
                                 </a>
                                 <a class="list-group-item d-flex align-items-center mx-4"
-                                   href="{% url 'shop:customer_dashboard_comments' store_name %}">
+                                   href="{% url 'shop:customer_dashboard_comments' %}">
                                     <span class="icons"><i class="fa fa-comment-o"></i></span> دیدگاه‌ها
                                 </a>
                                 <!-- <a class="list-group-item d-flex align-items-center mx-4"
@@ -96,14 +96,14 @@
                                     <div class="product-image6 p-2">
                                         <ul class="icons">
                                             <li>
-                                                <a class="btn btn-primary" href="{% url 'shop:product_detail' store_name product.slug %}">
+                                                <a class="btn btn-primary" href="{% url 'shop:product_detail' product.slug %}">
                                                     <i class="fe fe-eye"> </i> </a>
                                             </li>
                                             
-                                            <li><a class="btn btn-danger" href="{% url 'shop:add_to_favorites' store_name=store_name product_id=product.id ref='fav_list' %}"><i
+                                            <li><a class="btn btn-danger" href="{% url 'shop:add_to_favorites' product_id=product.id ref='fav_list' %}"><i
                                                     class="fe fe-x"></i></a></li>
                                         </ul>
-                                        <a href="{% url to_products store_name product.slug %}">
+                                        <a href="{% url to_products product.slug %}">
                                             <img alt="img"
                                                  class="img-fluid br-7 w-100" src="{{product.get_main_image}}">
                                         </a>
@@ -111,7 +111,7 @@
                                     <div class="card-body pt-0">
                                         <div class="product-content text-center">
                                             <h1 class="title fw-bold fs-16"><a
-                                                    href="{% url to_products store_name product.slug %}">{{ product.name }}</a>
+                                                    href="{% url to_products product.slug %}">{{ product.name }}</a>
                                             </h1>
                                             <div class="mb-2 text-warning">
                                                 <i class="fa fa-star text-warning"></i>
@@ -130,7 +130,7 @@
                                         </div>
                                     </div>
                                     <div class="card-footer text-center">
-                                        <a class="btn btn-primary mb-1" href="{% url 'shop:product_detail' store_name product.slug %}"><i
+                                        <a class="btn btn-primary mb-1" href="{% url 'shop:product_detail' product.slug %}"><i
                                                 class="fe fe-shopping-cart mx-2"></i>جزییات محصول</a>
                                         
                                     </div>

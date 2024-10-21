@@ -78,7 +78,7 @@
     
 </head>
 
-<body class='app rtl light-mode horizontal scrollable-layout header-light color-menu'>
+<body class='app rtl light-mode horizontal scrollable-layout color-menu'>
     
 
 <!-- Switcher -->
@@ -487,14 +487,14 @@
                 <div class="header sticky hor-header" style="margin-bottom: -74px;">
                     <div class='container-fluid main-container'>
                         <div class="d-flex">
-                            <a class="light-logo-3 " href="{% url 'shop:index' store_name %}">
+                            <a class="light-logo-3 " href="{% url 'shop:index' %}">
                                 <img alt="logo" class="header-brand-img desktop-logo" src="{{store.get_logo_image}}" height="50px">
                                 <img alt="logo" class="header-brand-img light-logo1" src="{{store.get_logo_image}}" height="45px"></a>
                             <!-- sidebar-toggle-->
                         
                             <!-- LOGO -->
                             <div class="main-header-center ms-3 d-none d-lg-block text-danger">
-                                <form method="get" action="{% url 'shop:product_search' store_name %}">
+                                <form method="get" action="{% url 'shop:product_search'  %}">
                                     <input type="text" name="q" value="{{ query }}" class="form-control text-danger"  placeholder="جستجو برای محصولات ...">
                                     <button type="submit" class="btn px-0 pt-2"><i aria-hidden="true" class="fe fe-search"></i></button>
                                 </form>
@@ -506,7 +506,7 @@
                                     </a>
                                     <div class="dropdown-menu header-search dropdown-menu-start">
                                         <div class="input-group w-100 p-2">
-                                            <form method="get" action="{% url 'shop:product_search' store_name %}">
+                                            <form method="get" action="{% url 'shop:product_search'  %}">
                                                 <input type="text" name="q" value="{{ query }}"  class="form-control ">
                                                 <div class="input-group-text btn btn-primary">
                                                     <button type="submit" class="btn px-0 pt-2"><i aria-hidden="true" class="fe fe-search"></i></button>
@@ -516,7 +516,7 @@
                                     </div>
                                 </div>
                                 <div class="dropdown  d-flex shopping-cart">
-                                    <a class="nav-link icon text-center" href="{% if request.user.is_authenticated %}{% url cart_url store_name cart.id %}{% else %}{% url cart_url store_name %}{% endif %}">
+                                    <a class="nav-link icon text-center" href="{% if request.user.is_authenticated %}{% url 'shop:customer_dashboard' %}{% else %}{% url 'shop:customer_authentication' %}{% endif %}">
                                         <i class="fe fe-shopping-cart text-primary"></i><span
                                             class="badge bg-secondary header-badge">{{cart_items_count}}</span>
                                     </a>
@@ -525,7 +525,7 @@
                                 <!-- CART -->
 
                                 <div class="dropdown  d-flex notifications">
-                                    <a class="nav-link icon" href="{% url account_url store_name %}"><i
+                                    <a class="nav-link icon" href="{% if request.user.is_authenticated %}{% url 'shop:customer_dashboard' %}{% else %}{% url 'shop:customer_authentication' %}{% endif %}"><i
                                             class="fe fe-user"></i>
                                     </a>             
                                 </div> 
@@ -549,7 +549,7 @@
                                     <div class="collapse navbar-collapse" id="navbarSupportedContent-4">
                                         <div class="d-flex order-lg-2">
                                             <div class="dropdown d-lg-none d-flex">
-                                                <form method="get" action="{% url 'shop:product_search' store_name %}">
+                                                <form method="get" action="{% url 'shop:product_search'  %}">
                                                     <div class="input-group w-100 p-2">
                                                         <input name="q"  class="form-control" placeholder="جستجو ..." type="text">
                                                         <button class="input-group-text btn btn-primary" type="submit">
@@ -582,13 +582,13 @@
                                 
                                 <!-- خانه -->
                                 <li>
-                                    <a class="side-menu__item has-link" href="{% url 'shop:index' store_name %}"><i
+                                    <a class="side-menu__item has-link" href="{% url 'shop:index'  %}"><i
                                             class="side-menu__icon fe fe-home"></i><span
                                             class="side-menu__label">خانه</span></a>
                                 </li>
                                 <!-- فروشگاه -->
                                 <li>
-                                    <a class="side-menu__item has-link" href="{% url 'shop:product_list' store_name %}"><i
+                                    <a class="side-menu__item has-link" href="{% url 'shop:product_list'  %}"><i
                                             class="side-menu__icon fe fe-shopping-bag"></i><span
                                             class="side-menu__label">فروشگاه</span></a>
                                 </li>
@@ -603,12 +603,12 @@
                                                 {% if t_category.get_sub_categories.all.first != None %}
                                                     {% if t_category.is_sub != True %}
                                                         <li class="sub-slide">
-                                                            <a class="sub-side-menu__item" data-bs-toggle="sub-slide" href="{% url 'shop:category_products' store_name t_category.slug %}"><span
+                                                            <a class="sub-side-menu__item" data-bs-toggle="sub-slide" href="{% url 'shop:category_products'  t_category.slug %}"><span
                                                                     class="sub-side-menu__label">{{t_category.name}}</span></a>
                                                             <ul class="sub-slide-menu">
-                                                                <li><a class="sub-slide-item" href="{% url 'shop:category_products' store_name t_category.slug %}">همه محصولات این دسته</a></li>
+                                                                <li><a class="sub-slide-item" href="{% url 'shop:category_products'  t_category.slug %}">همه محصولات این دسته</a></li>
                                                                 {% for sub_category in t_category.get_sub_categories.all %}
-                                                                <li><a class="sub-slide-item" href="{% url 'shop:category_products' store_name sub_category.slug %}">{{sub_category.name}}</a></li>
+                                                                <li><a class="sub-slide-item" href="{% url 'shop:category_products'  sub_category.slug %}">{{sub_category.name}}</a></li>
                                                                 {% endfor %}
                                                             </ul>
                                                         </li>
@@ -616,7 +616,7 @@
                                                 {% else %}
                                                 {% if t_category.is_sub == False %}
                                                 <li class="sub-slide">
-                                                    <a class="sub-side-menu__item" href="{% url 'shop:category_products' store_name t_category.slug %}"><span
+                                                    <a class="sub-side-menu__item" href="{% url 'shop:category_products'  t_category.slug %}"><span
                                                             class="sub-side-menu__label">{{t_category.name}}</span> <i
                                                             class="sub-angle fe fe-chevron-right"></i></a></li>
                                                 {% endif %}
@@ -627,31 +627,31 @@
                                 
                                 <!-- تماس با ما -->
                                 <li>
-                                    <a class="side-menu__item has-link" href="{% url 'shop:contact' store_name %}"><i
+                                    <a class="side-menu__item has-link" href="{% url 'shop:contact'  %}"><i
                                             class="side-menu__icon fe fe-slack"></i><span
                                             class="side-menu__label">تماس با ما</span></a>
                                 </li>
                                 <!-- درباره ما -->
                                 <li>
-                                    <a class="side-menu__item has-link" href="{% url 'shop:about' store_name %}"><i
+                                    <a class="side-menu__item has-link" href="{% url 'shop:about'  %}"><i
                                             class="side-menu__icon fe fe-check-circle"></i><span
                                             class="side-menu__label">درباره‌ی ما</span></a>
                                 </li>
                                 <!-- وبلاگ -->
                                 <li>
-                                    <a class="side-menu__item has-link" href="{% url 'shop:post_list' store_name %}"><i
+                                    <a class="side-menu__item has-link" href="{% url 'shop:post_list'  %}"><i
                                             class="side-menu__icon fe fe-check-circle"></i><span
                                             class="side-menu__label">وبلاگ</span></a>
                                 </li>
                                 <!-- قوانین و مقررات -->
                                 <li>
-                                    <a class="side-menu__item has-link" href="{% url 'shop:policies' store_name %}"><i
+                                    <a class="side-menu__item has-link" href="{% url 'shop:policies'  %}"><i
                                             class="side-menu__icon fe fe-alert-triangle"></i><span
                                             class="side-menu__label">قوانین و مقررات</span></a>
                                 </li>
                                 <!-- سوالات متداول -->
                                 <li>
-                                    <a class="side-menu__item has-link" href="{% url 'shop:faq_list' store_name %}"><i
+                                    <a class="side-menu__item has-link" href="{% url 'shop:faq_list'  %}"><i
                                             class="side-menu__icon fe fe-zap"></i><span
                                             class="side-menu__label">پرسش‌های متداول</span></a>
                                 </li>
@@ -673,7 +673,7 @@
                         <div class="col-md-12 ">
                             <div class="card mt-20 bg-primary-transparent card-transparent">   
                                 <div class="card-body mt-5">
-                                    <form class="form-horizontal" method="post" action="{% url 'shop:subscribe' store_name %}">
+                                    <form class="form-horizontal" method="post" action="{% url 'shop:subscribe'  %}">
                                         {% csrf_token %}
                                         <div class=" row mb-4">
                                             <label class="col-md-3 form-label" for="inputEmail3">عضویت در خبرنامه</label>
@@ -699,11 +699,11 @@
                                             <div class="col-lg-2 col-sm-6 col-md-4">
                                                 <h6>صفحات</h6>
                                                 <ul class="list-unstyled mb-4">
-                                                    <li><a href="{% url 'shop:index' store_name %}">خانه</a></li>
-                                                    <li><a href="{% url 'shop:product_list' store_name %}">فروشگاه</a></li>
-                                                    <li><a href="{% url 'shop:about' store_name %}">درباره ما</a></li>
-                                                    <li><a href="{% url 'shop:contact' store_name %}">تماس با ما</a></li>
-                                                    <li><a href="{% url 'shop:faq_list' store_name %}">سوالات متداول</a></li>
+                                                    <li><a href="{% url 'shop:index'  %}">خانه</a></li>
+                                                    <li><a href="{% url 'shop:product_list'  %}">فروشگاه</a></li>
+                                                    <li><a href="{% url 'shop:about'  %}">درباره ما</a></li>
+                                                    <li><a href="{% url 'shop:contact'  %}">تماس با ما</a></li>
+                                                    <li><a href="{% url 'shop:faq_list'  %}">سوالات متداول</a></li>
                                                     <li><a href="#">قوانین و مقررات</a></li>
                                                     
                                                 </ul>
@@ -796,13 +796,13 @@
                             
                             <!-- خانه -->
                             <li>
-                                <a class="side-menu__item has-link" href="{% url 'shop:index' store_name %}"><i
+                                <a class="side-menu__item has-link" href="{% url 'shop:index'  %}"><i
                                         class="side-menu__icon fe fe-home"></i><span
                                         class="side-menu__label text-white">خانه</span></a>
                             </li>
                             <!-- فروشگاه -->
                             <li>
-                                <a class="side-menu__item has-link" href="{% url 'shop:product_list' store_name %}"><i
+                                <a class="side-menu__item has-link" href="{% url 'shop:product_list'  %}"><i
                                         class="side-menu__icon fe fe-shopping-bag"></i><span
                                         class="side-menu__label text-white">فروشگاه</span></a>
                             </li>
@@ -817,13 +817,13 @@
                                             {% if t_category.get_sub_categories.all.first != None %}
                                                 {% if t_category.is_sub != True %}
                                                     <li class="sub-slide">
-                                                        <a class="sub-side-menu__item" data-bs-toggle="sub-slide" href="{% url 'shop:category_products' store_name t_category.slug %}"><span
+                                                        <a class="sub-side-menu__item" data-bs-toggle="sub-slide" href="{% url 'shop:category_products'  t_category.slug %}"><span
                                                                 class="sub-side-menu__label">{{t_category.name}}</span> <i
                                                                 class="sub-angle fe fe-chevron-right"></i></a>
                                                         <ul class="sub-slide-menu">
-                                                            <li><a class="sub-slide-item" href="{% url 'shop:category_products' store_name t_category.slug %}">همه محصولات این دسته</a></li>
+                                                            <li><a class="sub-slide-item" href="{% url 'shop:category_products'  t_category.slug %}">همه محصولات این دسته</a></li>
                                                             {% for sub_category in t_category.get_sub_categories.all %}
-                                                            <li><a class="sub-slide-item" href="{% url 'shop:category_products' store_name sub_category.slug %}">{{sub_category.name}}</a></li>
+                                                            <li><a class="sub-slide-item" href="{% url 'shop:category_products'  sub_category.slug %}">{{sub_category.name}}</a></li>
                                                             {% endfor %}
                                                         </ul>
                                                     </li>
@@ -831,7 +831,7 @@
                                             {% else %}
                                             {% if t_category.is_sub == False %}
                                             <li class="sub-slide">
-                                                <a class="sub-side-menu__item" href="{% url 'shop:category_products' store_name t_category.slug %}"><span
+                                                <a class="sub-side-menu__item" href="{% url 'shop:category_products'  t_category.slug %}"><span
                                                         class="sub-side-menu__label">{{t_category.name}}</span> <i
                                                         class="sub-angle fe fe-chevron-right"></i></a></li>
                                             {% endif %}
@@ -842,31 +842,31 @@
                             
                             <!-- تماس با ما -->
                             <li>
-                                <a class="side-menu__item has-link" href="{% url 'shop:contact' store_name %}"><i
+                                <a class="side-menu__item has-link" href="{% url 'shop:contact'  %}"><i
                                         class="side-menu__icon fe fe-slack"></i><span
                                         class="side-menu__label text-white">تماس با ما</span></a>
                             </li>
                             <!-- درباره ما -->
                             <li>
-                                <a class="side-menu__item has-link" href="{% url 'shop:about' store_name %}"><i
+                                <a class="side-menu__item has-link" href="{% url 'shop:about'  %}"><i
                                         class="side-menu__icon fe fe-check-circle"></i><span
                                         class="side-menu__label text-white">درباره‌ی ما</span></a>
                             </li>
                             <!-- وبلاگ -->
                             <li>
-                                <a class="side-menu__item has-link" href="{% url 'shop:post_list' store_name %}"><i
+                                <a class="side-menu__item has-link" href="{% url 'shop:post_list'  %}"><i
                                         class="side-menu__icon fe fe-slack"></i><span
                                         class="side-menu__label text-white">وبلاگ</span></a>
                             </li>
                             <!-- قوانین و مقررات -->
                             <li>
-                                <a class="side-menu__item has-link" href="{% url 'shop:about' store_name %}"><i
+                                <a class="side-menu__item has-link" href="{% url 'shop:about'  %}"><i
                                         class="side-menu__icon fe fe-alert-triangle"></i><span
                                         class="side-menu__label text-white">قوانین و مقررات</span></a>
                             </li>
                             <!-- سوالات متداول -->
                             <li>
-                                <a class="side-menu__item has-link" href="{% url 'shop:about' store_name %}"><i
+                                <a class="side-menu__item has-link" href="{% url 'shop:about'  %}"><i
                                         class="side-menu__icon fe fe-zap"></i><span
                                         class="side-menu__label text-white">پرسش‌های متداول</span></a>
                             </li>

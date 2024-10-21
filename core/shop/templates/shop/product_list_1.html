@@ -76,7 +76,7 @@
                                     <div aria-label="Basic example" class="btn-group file-attach m-1" role="group">
                                         <button class="btn btn-pill btn-outline-primary" type="button">{{active_filter.filter.name}} : {{active_filter.value.value}}
                                         </button>
-                                        <a href="{% url 'shop:clear_active_filter' store_name active_filter.filter.id active_filter.value.id %}" aria-label="Close" class="btn btn-pill btn-close btn-outline-primary"
+                                        <a href="{% url 'shop:clear_active_filter'  active_filter.filter.id active_filter.value.id %}" aria-label="Close" class="btn btn-pill btn-close btn-outline-primary"
                                                 type="button">
                                             <span aria-hidden="true">×</span>
                                     </a>
@@ -89,7 +89,7 @@
 
                         <div class="col-md-12 col-lg-12">
                             <div class="card">
-                                <form method="post" action="{% url 'shop:product_list' store_name %}">
+                                <form method="post" action="{% url 'shop:product_list'  %}">
                                     {% csrf_token %}
                                     <div class="card-header">
                                         <div class="card-title">دسته‌بندی</div>
@@ -171,7 +171,7 @@
                                     </div>
                                 </div>
                                 <div class="card-body "> 
-                                    <form method="post" action="{% url 'shop:feature_filter' store_name category.slug form.name %}">
+                                    <form method="post" action="{% url 'shop:feature_filter'  category.slug form.name %}">
                                     {% csrf_token %}
                                     {{ form.as_p }}
                                     <button class="btn btn-primary btn-sm mb-3 btn-block" type="submit">اعمال فیلتر</button>
@@ -198,14 +198,14 @@
                                             <div class="product-image6 p-2">
                                                 <ul class="icons">
                                                     <li>
-                                                        <a class="btn btn-primary" href="{% url 'shop:product_detail' store_name product.slug %}" target="_blank">
+                                                        <a class="btn btn-primary" href="{% url 'shop:product_detail'  product.slug %}" target="_blank">
                                                             <i class="fe fe-eye"> </i> </a>
                                                     </li>
                                                     
-                                                    <li><a class="btn btn-danger" href="{% url 'shop:add_to_favorites' store_name=store_name product_id=product.id ref='products' %}"><i
+                                                    <li><a class="btn btn-danger" href="{% url 'shop:add_to_favorites' product_id=product.id ref='products' %}"><i
                                                             class="fe fe-heart"></i></a></li>
                                                 </ul>
-                                                <a href="{% url 'shop:product_detail' store_name product.slug %}" target="_blank">
+                                                <a href="{% url 'shop:product_detail'  product.slug %}" target="_blank">
                                                     <img alt="img"
                                                          class="img-fluid br-7 w-100" src="{{product.get_main_image}}">
                                                 </a>
@@ -213,7 +213,7 @@
                                             <div class="card-body pt-0">
                                                 <div class="product-content text-center">
                                                     <h1 class="title fw-bold fs-16"><a
-                                                            href="{% url 'shop:product_detail' store_name product.slug %}" target="_blank">{{ product.name }}</a>
+                                                            href="{% url 'shop:product_detail'  product.slug %}" target="_blank">{{ product.name }}</a>
                                                     </h1>
                                                     <div class="mb-2 text-warning">
                                                         <i class="fa fa-star text-warning"></i>
@@ -236,7 +236,7 @@
                                                 </div>
                                             </div>
                                             <div class="card-footer text-center">
-                                                <a class="btn btn-primary mb-1" href="{% url 'shop:product_detail' store_name product.slug %}" target="_blank"><i
+                                                <a class="btn btn-primary mb-1" href="{% url 'shop:product_detail'  product.slug %}" target="_blank"><i
                                                     class="fe fe-shopping-cart mx-2"></i>جزییات محصول</a>
                                             </div>
                                         </div>

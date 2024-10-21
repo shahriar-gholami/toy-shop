@@ -42,7 +42,7 @@
     <div class="container-fluid">
         <nav aria-label="breadcrumb" class="my-lg-0 my-2">
             <ol class="breadcrumb mb-0">
-                <li class="breadcrumb-item"><a href="{% url 'shop:index' store_name %}" class="font-14 text-muted-two">خانه</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'shop:index'  %}" class="font-14 text-muted-two">خانه</a></li>
                 <li class="breadcrumb-item"><a href="#" class="font-14 text-muted-two">فروشگاه</a></li>
                 </li>
             </ol>
@@ -89,14 +89,14 @@
                                 <h5 class="filter-item-title">فیلتر های اعمال شده</h5>
                                 <div class="filter-item-content">
                                     {% for active_filter in active_filters %}
-                                    <a href="{% url 'shop:clear_active_filter' store_name active_filter.filter.id active_filter.value.id %}" class="btn-flat dark px-2 py-1 me-1 font-14 mb-2">
+                                    <a href="{% url 'shop:clear_active_filter'  active_filter.filter.id active_filter.value.id %}" class="btn-flat dark px-2 py-1 me-1 font-14 mb-2">
                                         <i class="bi bi-x text-danger"></i>{{active_filter.filter.name}} : {{active_filter.value.value}}</a>
                                         {% endfor %}
                                     </div>
                             </div>
                             {% endif %}
                             <div class="filter-item w-100">
-                                <form method="post" action="{% url 'shop:product_list' store_name %}">
+                                <form method="post" action="{% url 'shop:product_list'  %}">
                                 {% csrf_token %}
                                 <h5 class="filter-item-title">دسته بندی ها</h5>
                                 <div class="filter-item-content w-100">
@@ -178,7 +178,7 @@
                                     <h5 class="filter-item-title">{{filter.name}}</h5>
                                     <div class="filter-item-content">
                                         
-                                        <form method="post" action="{% url 'shop:feature_filter' store_name category.slug form.name %}">
+                                        <form method="post" action="{% url 'shop:feature_filter'  category.slug form.name %}">
                                             {% csrf_token %}
                                             {{ form.as_p }}
                                             <button type="submit" class="btn-outline-site mt-2">اعمال فیلتر</button>
@@ -217,14 +217,14 @@
                             <h5 class="filter-item-title">فیلتر های اعمال شده</h5>
                             <div class="filter-item-content">
                                 {% for active_filter in active_filters %}
-                                <a href="{% url 'shop:clear_active_filter' store_name active_filter.filter.id active_filter.value.id %}" class="btn-flat dark px-2 py-1 me-1 font-14 mb-2">
+                                <a href="{% url 'shop:clear_active_filter'  active_filter.filter.id active_filter.value.id %}" class="btn-flat dark px-2 py-1 me-1 font-14 mb-2">
                                     <i class="bi bi-x text-danger"></i>{{active_filter.filter.name}} : {{active_filter.value.value}}</a>
                                     {% endfor %}
                                 </div>
                         </div>
                         {% endif %}
                         <div class="filter-item">
-                            <form method="post" action="{% url 'shop:product_list' store_name %}">
+                            <form method="post" action="{% url 'shop:product_list'  %}">
                             {% csrf_token %}
                             <h5 class="filter-item-title">دسته بندی ها</h5>
                                 <div class="filter-item-content w-100">
@@ -306,7 +306,7 @@
                                     <h5 class="filter-item-title">{{filter.name}}</h5>
                                     <div class="filter-item-content">
                                         
-                                        <form method="post" action="{% url 'shop:feature_filter' store_name category.slug form.name %}">
+                                        <form method="post" action="{% url 'shop:feature_filter'  category.slug form.name %}">
                                             {% csrf_token %}
                                             {{ form.as_p }}
                                             <button type="submit" class="btn-outline-site mt-2">اعمال فیلتر</button>
@@ -358,7 +358,7 @@
                         <div class="col-lg-4">
                             <div class="product-box">
                                 <div>
-                                    <a href="{% url 'shop:product_detail' store_name product.slug %}"><img class="rounded-3" src="{{ product.get_main_image }}" loading="lazy" alt="{{product.name}}" ></a>
+                                    <a href="{% url 'shop:product_detail'  product.slug %}"><img class="rounded-3" src="{{ product.get_main_image }}" loading="lazy" alt="{{product.name}}" ></a>
                                     
                                     <!-- <div class="color-box">
                                         <div class="color-box-item" data-hint="نام رنگ مورد نظر" data-toggle="tooltip">
@@ -377,7 +377,7 @@
                                     <span class="product-box-image-overlay"></span>
                                 </div>
                                 <div class="product-box-title">
-                                    <a href="{% url 'shop:product_detail' store_name product.slug %}">
+                                    <a href="{% url 'shop:product_detail'  product.slug %}">
                                         <h5 class="text-overflow-2">{{product.name}}</h5>
                                     </a>
                                 </div>
@@ -417,7 +417,7 @@
                                     </div> -->
                                 </div>
                                 <div class="product-box-action">
-                                    <a class="btn rounded-0 main-color-three-bg border-0 w-100" href="{% url 'shop:product_detail' store_name product.slug %}">جزئیات محصول</a>
+                                    <a class="btn rounded-0 main-color-three-bg border-0 w-100" href="{% url 'shop:product_detail'  product.slug %}">جزئیات محصول</a>
                                 </div>
                             </div>
                         </div>

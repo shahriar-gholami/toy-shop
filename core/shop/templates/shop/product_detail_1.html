@@ -123,20 +123,20 @@
                                             <span class="fa fa-star text-warning"></span>
                                             <span class="fa fa-star-half-o text-warning"></span>
                                             <span class="fa fa-star-o text-warning"></span>
-                                            <span><a class="fa fa-heart-o " href="{% url 'shop:add_to_favorites' store_name=store_name product_id=product.id ref='product_detail' %}"></a></span>
+                                            <span><a class="fa fa-heart-o " href="{% url 'shop:add_to_favorites' product_id=product.id ref='product_detail' %}"></a></span>
                                         </p>
                                         <p class="text-muted mb-4">( 40 نظر مشتری) </p> -->
                                         <h4 class="mt-4 fw-bold fs-18"><b> ویژگی‌ها</b></h4>
                                             {% for line in product.get_brief_features %}    
                                             <p class="nav item"><strong> {{line|safe}}</strong></p>
                                             {% endfor %}
-                                        <a class="btn btn-outline-danger mt-4" href="{% url 'shop:add_to_favorites' store_name=store_name product_id=product.id ref='product_detail' %}"><i
+                                        <a class="btn btn-outline-danger mt-4" href="{% url 'shop:add_to_favorites' product_id=product.id ref='product_detail' %}"><i
                                             class="fe fe-heart me-2"></i>افزودن به علاقمندی‌ها</a>
                                     </div>
                                     <div class="tags">
                                         <h5>برچسب‌ها</h5>
                                         {% for tag in product.tags.all %}
-                                        <a class="tag" href="{% url 'shop:filter_tag_products' store_name tag.slug %}">{{ tag.name }}</a>
+                                        <a class="tag" href="{% url 'shop:filter_tag_products'  tag.slug %}">{{ tag.name }}</a>
                                         {% endfor %}
                                     </div>
                                 </div>
@@ -151,7 +151,7 @@
                                         </div>
                                         {% endif %}
                                         <hr>
-                                        <form method="post" action="{% url 'shop:add_to_cart' store_name product.id %}">
+                                        <form method="post" action="{% url 'shop:add_to_cart'  product.id %}">
                                         {% csrf_token %}
                                         <div class=" mt-4 mb-5"><span
                                             class="fw-bold me-2">وضعیت موجودی :</span><span
@@ -313,7 +313,7 @@
                             <div class="card-title">افزودن نظر</div>
                         </div>
                         <div class="card-body">
-                            <form method="post" action="{% url 'shop:comment_create' store_name product.id %}" class="form-horizontal  m-t-20">
+                            <form method="post" action="{% url 'shop:comment_create'  product.id %}" class="form-horizontal  m-t-20">
                             {% csrf_token %}
                                 
                                 <div class="form-group">
@@ -344,14 +344,14 @@
                             <div class="product-image6 p-2">
                                 <ul class="icons">
                                     <li>
-                                        <a class="btn btn-primary" href="{% url 'shop:product_detail' store_name product.slug %}">
+                                        <a class="btn btn-primary" href="{% url 'shop:product_detail'  product.slug %}">
                                             <i class="fe fe-eye"> </i> </a>
                                     </li>
                                     
-                                    <li><a class="btn btn-danger" href="{% url 'shop:add_to_favorites' store_name=store_name product_id=product.id ref='products' %}"><i
+                                    <li><a class="btn btn-danger" href="{% url 'shop:add_to_favorites' product_id=product.id ref='products' %}"><i
                                             class="fe fe-heart"></i></a></li>
                                 </ul>
-                                <a href="{% url 'shop:product_detail' store_name product.slug %}">
+                                <a href="{% url 'shop:product_detail'  product.slug %}">
                                     <img alt="img"
                                          class="img-fluid br-7 w-100" src="{{product.get_main_image}}">
                                 </a>
@@ -359,7 +359,7 @@
                             <div class="card-body pt-0">
                                 <div class="product-content text-center">
                                     <h1 class="title fw-bold fs-16"><a
-                                            href="{% url 'shop:product_detail' store_name product.slug %}">{{ product.name }}</a>
+                                            href="{% url 'shop:product_detail'  product.slug %}">{{ product.name }}</a>
                                     </h1>
                                     <div class="mb-2 text-warning">
                                         <i class="fa fa-star text-warning"></i>
@@ -386,7 +386,7 @@
                                 </div>
                             </div>
                             <div class="card-footer text-center">
-                                <a class="btn btn-primary mb-1" href="{% url 'shop:product_detail' store_name product.slug %}"><i
+                                <a class="btn btn-primary mb-1" href="{% url 'shop:product_detail'  product.slug %}"><i
                                         class="fe fe-shopping-cart mx-2"></i>جزییات محصول</a>
                                 
                             </div>

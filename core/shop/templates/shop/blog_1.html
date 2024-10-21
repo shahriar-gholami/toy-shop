@@ -57,11 +57,11 @@
                         {% for post in posts %}
                         <div class="col-xl-4 col-md-12">
                             <div class="card overflow-hidden">
-                                <a href="{% url 'shop:post_detail' store_name post.slug %}"><img alt="img" class="card-img-top" src="{{post.get_thumbnail}}"></a>
+                                <a href="{% url 'shop:post_detail' post.slug %}"><img alt="img" class="card-img-top" src="{{post.get_thumbnail}}"></a>
                                 <div class="card-body">
-                                    <a href="{% url 'shop:post_detail' store_name post.slug %}"><h5 class="card-title">{{ post.title|truncatewords:10 }}</h5></a>
+                                    <a href="{% url 'shop:post_detail' post.slug %}"><h5 class="card-title">{{ post.title|truncatewords:10 }}</h5></a>
                                     
-                                    <a class="btn btn-primary mt-4" href="{% url 'shop:post_detail' store_name post.slug %}">مشاهده جزییات</a>
+                                    <a class="btn btn-primary mt-4" href="{% url 'shop:post_detail' post.slug %}">مشاهده جزییات</a>
                                 </div>
                             </div>
                         </div>
@@ -79,10 +79,10 @@
                                     <div class="">
                                         {% for post in posts|slice:":10" %}
                                         <div class="d-flex overflow-visible mt-5">
-                                            <a href="{% url 'shop:post_detail' store_name post.slug %}"><img alt="" class="br-5" src="{{post.get_thumbnail}}" height="85px"></a>
+                                            <a href="{% url 'shop:post_detail' post.slug %}"><img alt="" class="br-5" src="{{post.get_thumbnail}}" height="85px"></a>
                                             <div class="ps-3 flex-column">
                                                 <span class="badge bg-primary me-1 mb-1 mt-1">{{post.category.name}}</span>
-                                                <h4><a href="{% url 'shop:post_detail' store_name post.slug %}">{{post.title|truncatewords:6}}</a></h4>
+                                                <h4><a href="{% url 'shop:post_detail' post.slug %}">{{post.title|truncatewords:6}}</a></h4>
                                                 
                                             </div>
                                         </div>

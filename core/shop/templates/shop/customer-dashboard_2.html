@@ -32,7 +32,7 @@
     <div class="container-fluid">
         <nav aria-label="breadcrumb" class="my-lg-0 my-2">
             <ol class="breadcrumb mb-0">
-                <li class="breadcrumb-item"><a href="{% url 'shop:index' store_name %}" class="font-14 text-muted-two">خانه</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'shop:index' %}" class="font-14 text-muted-two">خانه</a></li>
                 <li class="breadcrumb-item"><a href="#" class="font-14 text-muted-two">حساب کاربری</a></li>
 
                 </li>
@@ -203,10 +203,10 @@
                     <a href="">
                         <div class="panel-meta-item d-flex align-items-center">
                             <div class="panel-meta-item-icon">
-                                <a href="{% url 'shop:customer_dashboard_orders' store_name %}"><i class="bi bi bi-bag-check"></i></a>
+                                <a href="{% url 'shop:customer_dashboard_orders' %}"><i class="bi bi bi-bag-check"></i></a>
                             </div>
                             <div class="panel-meta-title d-flex flex-column ms-3">
-                                <a href="{% url 'shop:customer_dashboard_orders' store_name %}"><h5 class="h5">سفارشات</h5></a>
+                                <a href="{% url 'shop:customer_dashboard_orders' %}"><h5 class="h5">سفارشات</h5></a>
                             </div>
                         </div>
                     </a>
@@ -215,10 +215,10 @@
                     <a href="">
                         <div class="panel-meta-item d-flex align-items-center">
                             <div class="panel-meta-item-icon" style="background-color: #c1a37f;">
-                                <a href="{% url 'shop:customer_dashboard_favorites' store_name %}"><i class="bi bi bi-heart-fill"></i></a>
+                                <a href="{% url 'shop:customer_dashboard_favorites' %}"><i class="bi bi bi-heart-fill"></i></a>
                             </div>
                             <div class="panel-meta-title ms-3 d-flex flex-column">
-                                <a href="{% url 'shop:customer_dashboard_favorites' store_name %}"><h5 class="h5">محصولات مورد علاقه</h5></a>
+                                <a href="{% url 'shop:customer_dashboard_favorites' %}"><h5 class="h5">محصولات مورد علاقه</h5></a>
                             </div>
                         </div>
                     </a>
@@ -227,10 +227,10 @@
                     <a href="">
                         <div class="panel-meta-item d-flex align-items-center">
                             <div class="panel-meta-item-icon bg-info">
-                                <a href="{% url 'shop:customer_dashboard_comments' store_name %}"><i class="bi bi-send"></i></a>
+                                <a href="{% url 'shop:customer_dashboard_comments' %}"><i class="bi bi-send"></i></a>
                             </div>
                             <div class="panel-meta-title ms-3 d-flex flex-column">
-                                <a href="{% url 'shop:customer_dashboard_comments' store_name %}"><h5 class="h5">نظرات</h5></a>
+                                <a href="{% url 'shop:customer_dashboard_comments' %}"><h5 class="h5">نظرات</h5></a>
                             </div>
                         </div>
                     </a>
@@ -239,10 +239,10 @@
                     <a href="">
                         <div class="panel-meta-item d-flex align-items-center">
                             <div class="panel-meta-item-icon bg-secondary">
-                                <a href="{% url 'shop:customer_dashboard_info' store_name %}"><i class="bi bi-info"></i></a>
+                                <a href="{% url 'shop:customer_dashboard_info' %}"><i class="bi bi-info"></i></a>
                             </div>
                             <div class="panel-meta-title ms-3 d-flex flex-column">
-                                <a href="{% url 'shop:customer_dashboard_info' store_name %}"><h5 class="h5">اطلاعات حساب</h5></a>
+                                <a href="{% url 'shop:customer_dashboard_info' %}"><h5 class="h5">اطلاعات حساب</h5></a>
                             </div>
                         </div>
                     </a>
@@ -264,7 +264,7 @@
                 </div>
                 <div class="col-sm-4">
                     <div class="section-title-link text-sm-end text-start">
-                        <a class="font-16 btn-flat dark" href="{% url 'shop:customer_dashboard_info' store_name %}">ویرایش پروفایل</a>
+                        <a class="font-16 btn-flat dark" href="{% url 'shop:customer_dashboard_info' %}">ویرایش پروفایل</a>
                     </div>
                 </div>
             </div>

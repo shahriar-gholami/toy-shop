@@ -42,7 +42,7 @@
     <div class="container-fluid">
         <nav aria-label="breadcrumb" class="my-lg-0 my-2">
             <ol class="breadcrumb mb-0">
-                <li class="breadcrumb-item"><a href="{% url 'shop:index' store_name %}" class="font-14 text-muted-two">خانه</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'shop:index' %}" class="font-14 text-muted-two">خانه</a></li>
                 <li class="breadcrumb-item"><a href="#" class="font-14 text-muted-two">وبلاگ</a></li>
 
                 </li>
@@ -156,18 +156,18 @@
                     <div class="blog-item">
                         <div class="blog-item-parent">
                             <div class="blog-item-image">
-                                <a href="{% url 'shop:post_detail' store_name post.slug %}"><img src="{{post.get_thumbnail}}" alt=""></a>
+                                <a href="{% url 'shop:post_detail'  post.slug %}"><img src="{{post.get_thumbnail}}" alt=""></a>
                             </div>
                             <div class="blog-item-desc">
                                 <div class="blog-item-desc-parent">
                                     <div class="blog-item-title">
-                                        <a href="{% url 'shop:post_detail' store_name post.slug %}"><h5 class="title-font text-overflow-2">{{post.title}}</h5></a>
+                                        <a href="{% url 'shop:post_detail'  post.slug %}"><h5 class="title-font text-overflow-2">{{post.title}}</h5></a>
                                         <p class="mb-0 text-overflow-2">
                                             {{ post.body|truncatewords:20 }}
                                         </p>
                                     </div>
                                     <div class="blog-item-link">
-                                        <a href="{% url 'shop:post_detail' store_name post.slug %}">
+                                        <a href="{% url 'shop:post_detail'  post.slug %}">
                                             <span>خواندن ادامه</span>
                                             <i class="bi bi-arrow-left"></i>
                                         </a>

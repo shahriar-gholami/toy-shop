@@ -91,7 +91,7 @@
                                                 <td>{{order.get_discount|intcomma}}</td>
                                                 <td>{{order.get_final_payment|intcomma}}</td>
                                                 <td>{{order.shamsi_created_date}}</td>
-                                                <td>{% if order.status.latest_status == 'پرداخت شده' %} پرداخت شده {% elif order.status.latest_status == 'پرداخت نشده' %}<a class="btn btn-success mt-2 mb-2" href="{% url 'shop:order_payment' store_name order.id %}">پرداخت</a>{% elif order.status.latest_status == 'ارسال شده' %}ارسال شده{% endif %}</td>
+                                                <td>{% if order.status.latest_status == 'پرداخت شده' %} پرداخت شده {% elif order.status.latest_status == 'پرداخت نشده' %}<a class="btn btn-success mt-2 mb-2" href="{% url 'shop:order_payment' order.id %}">پرداخت</a>{% elif order.status.latest_status == 'ارسال شده' %}ارسال شده{% endif %}</td>
                                                 
                                             </tr>
                                         {% endfor %}
