@@ -516,7 +516,7 @@
                                     </div>
                                 </div>
                                 <div class="dropdown  d-flex shopping-cart">
-                                    <a class="nav-link icon text-center" href="{% if request.user.is_authenticated %}{% url 'shop:customer_dashboard' %}{% else %}{% url 'shop:customer_authentication' %}{% endif %}">
+                                    <a class="nav-link icon text-center" href="{% if request.user.is_authenticated %}{% url 'shop:cart_view' cart.id %}{% else %}{% url 'shop:customer_authentication' %}{% endif %}">
                                         <i class="fe fe-shopping-cart text-primary"></i><span
                                             class="badge bg-secondary header-badge">{{cart_items_count}}</span>
                                     </a>

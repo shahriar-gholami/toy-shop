@@ -125,7 +125,7 @@ ZP_API_STARTPAY = "https://www.zarinpal.com/pg/StartPay/{authority}"
 description = "توضیحات مربوط به تراکنش را در این قسمت وارد کنید"
 # CallbackURL = 'http://127.0.0.1:8000/shop//orders/verify/'
 
-store_name = 'فروشگاه اسباب بازی ایرانیان'
+store_name = Store.objects.all().first().name
 
 current_app_name = apps.get_containing_app_config(__name__).name
 
@@ -133,7 +133,6 @@ current_app_name = apps.get_containing_app_config(__name__).name
 class IndexView(View):
 
 	def get(self, request):
-		store_name = 'فروشگاه اسباب بازی ایرانیان'
 		current_page = request.path
 		store = Store.objects.get(name=store_name)
 		slides = Slide.objects.filter(store=store)

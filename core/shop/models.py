@@ -54,7 +54,7 @@ class Store(models.Model):
 		return JalaliDatetime(self.created).strftime('%Y/%m/%d')
 
 	def get_absolute_url(self):
-		return reverse('shop:index', kwargs={'store_name': self.name})
+		return reverse('shop:index')
 
 	def get_logo_image(self):
 		logo = StoreLogoImage.objects.filter(store=self).first()
@@ -648,8 +648,9 @@ class Order(models.Model):
 			total = self.total_price
 		if self.customer.wallet_balance != 0:
 			if total >= self.customer.wallet_balance:
+				
 				total = total - self.customer.wallet_balance
-			if self.customer.wallet_balance > total:
+			else:
 				total = 0
 		return total
 	

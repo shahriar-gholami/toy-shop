@@ -81,7 +81,7 @@
             <div class="col-xl-4 col-6">
                 <div class="header-btn">
                     <div class="header-cart d-lg-block d-none">
-                        <a href="{% if request.user.is_authenticated %}{% url 'shop:cart_view'  cart.id %}{% else %}{% url 'shop:customer_authentication'  %}{% endif %}" role="button" aria-controls="offcanvasCart"
+                        <a href="{% if request.user.is_authenticated %}{% url 'shop:cart_view' cart.id %}{% else %}{% url 'shop:customer_authentication'  %}{% endif %}" role="button" aria-controls="offcanvasCart"
                            class="btn main-color-one-bg">
                             <i class="bi bi-basket-fill"></i>
                             <span>سبد خرید</span>
@@ -89,10 +89,10 @@
                         </a>
                     </div>
                     <div class="header-btn-login d-lg-block d-none">
-                        <a href="{% url account_url  %}" class="btn"><i class="bi bi-person-fill"></i>{% if request.user.is_authenticated %}{{request.user.full_name}}{% else %} ورود / ثبت نام{% endif %}</a>
+                        <a href="{% if request.user.is_authenticated %}{% url 'shop:customer_dashboard' %}{% else %}{% url 'shop:customer_authentication' %}{% endif %}" class="btn"><i class="bi bi-person-fill"></i>{% if request.user.is_authenticated %}{{request.user.full_name}}{% else %} ورود / ثبت نام{% endif %}</a>
                     </div>
                     <div class="header-btn-login-responsive d-lg-none d-block">
-                        <a href="{% url account_url  %}" class="btn"><i class="bi bi-person-fill fs-2"></i></a>
+                        <a href="{% if request.user.is_authenticated %}{% url 'shop:customer_dashboard' %}{% else %}{% url 'shop:customer_authentication' %}{% endif %}" class="btn"><i class="bi bi-person-fill fs-2"></i></a>
                     </div>
 
                     <div class="header-btn-favorite">
@@ -287,14 +287,7 @@
                 <div class="col-lg-5">
                     <div class="header-top-menu-left">
                         <div class="row align-items-center">
-                            <div class="col-6 d-lg-none d-xl-block d-block">
-                                <div class="header-top-menu-link">
-                                    <a class="">{% if store.email != '' %}{{ store.email }}<i
-                                            class="bi bi-envelope-check-fill"></i>{% endif %} </a>
-                                    <a class="">{% if store.email != '' %}{{ store.phone_number }}<i
-                                            class="bi bi-telephone-inbound-fill"></i>{% endif %}</a>
-                                </div>
-                            </div>
+                            
                             <div class="col-lg-12 col-xl-6">
                                 <div class="header-top-menu-socail">
                                     {% if store.instagram != None %}<a href=""><i class="bi bi-instagram"></i></a>{% endif %}
@@ -467,7 +460,7 @@
             </a>
         </div>
         <div class="item">
-            <a href="{% url account_url  %}">
+            <a href="{% if request.user.is_authenticated %}{% url 'shop:customer_dashboard' %}{% else %}{% url 'shop:customer_authentication' %}{% endif %}">
                 <i class="bi bi-person"></i>
             </a>
         </div>
