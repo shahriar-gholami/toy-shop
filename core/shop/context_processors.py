@@ -1,8 +1,7 @@
 from urllib.parse import urlparse
 from .models import Category, Store, Owner
 from django.contrib.auth.models import AnonymousUser
-from shop.models import Cart
-from shop.models import Customer
+from shop.models import Cart, Tag, Customer
 
 
 store = Store.objects.get(name = 'فروشگاه اسباب بازی ایرانیان')
@@ -28,7 +27,7 @@ def base_template_context(request):
 	path_segments = parsed_url.path.split('/')
 	second_segment = path_segments[1] if len(path_segments) > 2 else None
 	third_segment = path_segments[2] if len(path_segments) > 3 else None
-	
+	special_tags = Tag.objects.filter(is_special = True)
 	
 	
 	
@@ -72,7 +71,6 @@ def base_template_context(request):
 	top_categories = Category.objects.filter(store=store)
 	app_name = path_segments[1]
 	if isinstance(request.user, AnonymousUser):
-		print('AAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
 		from shop.models import Product
 		from shop.models import Variety
 		varieties = Variety.objects.filter(store=store)
@@ -94,10 +92,10 @@ def base_template_context(request):
 				'cart_items_count':i,
 				'account_url':account_url,
 				'store':store,
-				'store_name':store_name
+				'store_name':store_name,
+				'special_tags':special_tags
 			}
 	else:
-		print('BBBBBBBBBBBBBBBBBBBBBBBB')
 		top_categories = Category.objects.filter(store=store)
 		customer, create = Customer.objects.get_or_create(phone_number=request.user.phone_number, store=store)
 		cart, create = Cart.objects.get_or_create(customer=customer, store=store)
@@ -119,5 +117,6 @@ def base_template_context(request):
 				'cart_items_count':cart_items_count,
 				'account_url':account_url,
 				'store':store,
-				'store_name':store_name
+				'store_name':store_name,
+				'special_tags':special_tags
 			}        

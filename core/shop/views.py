@@ -2870,5 +2870,174 @@ class AddProductFromDigikalaView(View):
 				)
 		return redirect('shop:product_list')				
 					
+class SpecialProductListView(View):
+
+	def get(self, request, tag_name):
+		tag = Tag.objects.filter(name=tag_name).first()
+		products = tag.get_products()
+		items_per_page = 12
+		store = Store.objects.get(name=store_name)
+		categories = Category.objects.filter(store=store)
+		paginator = Paginator(products, items_per_page)
+		page = request.GET.get('page', 1)
+		try:
+			products = paginator.page(page)
+		except PageNotAnInteger:
+			products = paginator.page(1)
+		except EmptyPage:
+			products = paginator.page(paginator.num_pages)
+		brands = Brand.objects.filter(store=store)
+		products_urls = f'{current_app_name}:product_detail'
+		sizes = Size.objects.all()
+		price_ranges = PriceRange.objects.all()
+		return render(request, f'{current_app_name}/product_list_{store.template_index}.html', 
+				{'products': products, 
+				'to_products':products_urls, 
+				'store_name':store_name, 
+				'categories':categories,
+				'brands':brands,
+				'sizes':sizes,
+				'price_ranges':price_ranges})
+	
+	def post(self, request, tag_name, *args, **kwargs):
+		main_filters = {}
+		filters = []
+		product_cat = None
+		price_range = None
+		selected_brand = None
+		tag = Tag.objects.filter(name=tag_name).first()
+		products = tag.get_products()
+		form = FilterProductsForm(request.POST)
+		if form.is_valid():
+			print(form.cleaned_data)
+			store = Store.objects.get(name=store_name)
+			category = form.cleaned_data['category']
+			if category != '':
+				product_cat = Category.objects.filter(id = int(category)).first()
+				if category != '0':
+					products = products.filter(category = product_cat, store = store)
+				else:
+					products = products.filter(store=store)
+				
+			brand = form.cleaned_data['brand']
+			if brand != '':
+				selected_brand = Brand.objects.filter(id = brand).first()
+				if brand != '0':
+					products = products.filter(brand = selected_brand.name)
+				else:
+					products = products.filter(store=store)
+							
+			filtered_products = []
+			price_ranges = form.cleaned_data['price_range']
+			if price_ranges != '0':
+				for price in price_ranges:
+					selected_price_range = PriceRange.objects.filter(id = int(form.cleaned_data['price_range'])).first()
+			else:
+				selected_price_range = None
+
+			if selected_price_range != None:
+				for product in products:
+								if product.price<selected_price_range.max_value and product.price>=selected_price_range.min_value:
+									filtered_products.append(product.id)
+			
+			if filtered_products != []:
+				products = products.filter(id__in=filtered_products, store=store)
+
+			if selected_price_range != None and filtered_products == []:
+				products = []
+			categories = Category.objects.filter(store=store)
+			store = Store.objects.get(name=store_name)
+			products_urls = f'{current_app_name}:product_detail'
+			sizes = Size.objects.all()
+			price_ranges = PriceRange.objects.all()
+			brands = Brand.objects.filter(store=store)
+			if brand != '0':
+				selected_brand = Brand.objects.get(id=brand)
+			else:
+				selected_brand = None
+
+			my_forms = []
+			if category != '0':
+				selected_category = Category.objects.filter(id = int(category)).first()
+				filters = Filter.objects.filter(store=store)
+				for filter in filters:
+					values = filter.value.all()
+					class FeatureFilterForm(forms.Form):
+						name = filter.name
+						choices = tuple([(value.value, value.value) for value in values])
+						فیلترها = forms.MultipleChoiceField(choices=choices, widget=forms.CheckboxSelectMultiple)
+					new_form = FeatureFilterForm
+					my_forms.append(new_form)
+				category = Category.objects.get(slug = selected_category.slug, store=store)
+				filters = Filter.objects.filter(category=category, store=store)
+			else:
+				selected_category = None
+
+			selected_values = []
+			active_filters = []
+			for key, value in request.session.items():
+				if key.startswith('filter-'):
+					
+					filter_name = key.replace('filter-', '')
+					selected_filter = Filter.objects.get(store = store, name = filter_name)
+					for posi_value in selected_filter.value.all():
+						if posi_value.value in value:
+							new_active_filter = {'filter':selected_filter,'value':posi_value}
+							active_filters.append(new_active_filter)
+							selected_values.append(posi_value.id)
+
+			paginator = Paginator(products, 12)
+			page = request.GET.get('page', 1)
+			try:
+				products = paginator.page(page)
+			except PageNotAnInteger:
+				# اگر شماره صفحه یک عدد نیست
+				products = paginator.page(1)
+			except EmptyPage:
+				# اگر شماره صفحه بیشتر از تعداد کل صفحات است
+				products = paginator.page(paginator.num_pages)
+
+			return render(request, f'{current_app_name}/product_list_{store.template_index}.html', 
+				 {'products': products, 
+				'brands':brands,
+				'to_products':products_urls, 
+				'store_name':store_name, 
+				'categories':categories,
+				'sizes':sizes,
+				'price_ranges':price_ranges,
+				'selected_brand':selected_brand,
+				'selected_price_range':selected_price_range,
+				'selected_category':selected_category,
+				'filters':filters,
+				'category':selected_category,
+				'my_forms':my_forms,
+				'active_filters':active_filters,
+				'main_filters': main_filters,
+				'main_selected_category' : product_cat,
+				'main_selected_brand' : selected_brand,
+				'main_selected_price_range' : selected_price_range})
+					
+		return render(request, f'{current_app_name}/product_list_{store.template_index}.html', {'store_name':store_name})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

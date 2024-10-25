@@ -152,6 +152,15 @@
                                     {% endfor %}
                                     </ul>
                                 </li>
+                                <li class="nav-item bg-ul-f7"><a class="nav-link" href="">ویژه‌ها</a>
+                                    <span class="showSubMenu"><i class="bi bi-chevron-left"></i></span>
+                                    <ul class="navbar-nav h-0">
+                                    {% for tag in special_tags %}
+                                        <li class="nav-item"><a class="nav-link" href="{% url 'shop:spetial_tag_products'  tag.name %}">{{ tag.name }}</a>
+                                        </li>
+                                    {% endfor %}
+                                    </ul>
+                                </li>
                                 <li class="nav-item bg-ul-f7"><a class="nav-link" href="{% url 'shop:about'  %}">درباره ما</a>
                                 </li>
                                 <li class="nav-item bg-ul-f7"><a class="nav-link" href="{% url 'shop:contact'  %}">تماس با ما</a>
@@ -193,7 +202,7 @@
     <div class="container-fluid">
         <div class="header-top-menu">
             <div class="row align-items-center">
-                <div class="col-lg-7">
+                <div class="col-lg-12">
                     <div class="header-top-menu-right">
                         <div class="top-menu-menu">
                             <ul class="navbar-nav align-items-center">
@@ -274,6 +283,16 @@
                                         {% endfor %}
                                     </ul>
                                 </li>
+                                <li class="nav-item">
+                                    <a class="nav-link header-top-menu-link-a fw-bold-hover" href="{% url 'shop:product_list'  %}">ویژه‌ها<i class="bi bi-award"></i></a>
+                                    <ul class="list-unstyled shadow-lg back-menu sub-menu mega-container"
+                                        style="background: #fff url('assets/img/mega-img-1.jpg') no-repeat;height: 600px;background-size: 300px;">
+                                        {% for tag in special_tags %}
+                                            <li><a class="title" href="{% url 'shop:spetial_tag_products' tag.name %}">{{tag.name}}</a></li>
+                                        {% endfor %}
+                                    </ul>
+                                </li>
+                                
                                 <li class="nav-item"><a href="{% url 'shop:contact'  %}" class="nav-link header-top-menu-link-a  ">تماس با ما<i class="bi bi-phone"></i></a></li>
                                 <li class="nav-item"><a href="{% url 'shop:about'  %}" class="nav-link header-top-menu-link-a  ">درباره ما<i class="bi bi-person-check"></i></a></li>
                                 <li class="nav-item"><a href="{% url 'shop:policies'  %}" class="nav-link header-top-menu-link-a  ">قوانین و مقررات<i class="bi bi-shield"></i></a></li>

@@ -174,6 +174,14 @@
                                     {% endfor %}
                                     </ul>
                                 </li>
+                                <li class="nav-item bg-ul-f7"><a class="nav-link" href="">ویژه‌ها</a>
+                                    <span class="showSubMenu"><i class="bi bi-chevron-left"></i></span>
+                                    <ul class="navbar-nav h-0">
+                                    {% for tag in special_tags %}
+                                        <li class="nav-item"><a class="nav-link" href="{% url 'shop:spetial_tag_products' tag.name %}">{{tag.name}}</a></li>
+                                    {% endfor %}
+                                    </ul>
+                                </li>
                                 <li class="nav-item bg-ul-f7"><a class="nav-link" href="{% url 'shop:about'  %}">درباره ما</a>
                                 </li>
                                 <li class="nav-item bg-ul-f7"><a class="nav-link" href="{% url 'shop:contact'  %}">تماس با ما</a>
@@ -430,6 +438,15 @@
                                         {% endfor %}
                                     {% endif %}
                                 {% endif %}
+                            {% endfor %}
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link header-top-menu-link-a fw-bold-hover" href="{% url 'shop:product_list'  %}">ویژه‌ها</a>
+                        <ul class="list-unstyled shadow-lg back-menu sub-menu mega-container"
+                            style="background: #fff url('assets/img/mega-img-1.jpg') no-repeat;height: 600px;background-size: 300px;">
+                            {% for tag in special_tags %}
+                                <li><a class="title" href="{% url 'shop:spetial_tag_products' tag.name %}">{{tag.name}}</a></li>
                             {% endfor %}
                         </ul>
                     </li>

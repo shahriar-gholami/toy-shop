@@ -593,6 +593,7 @@
                                             class="side-menu__label">فروشگاه</span></a>
                                 </li>
                                 <!-- دسته‌بندی‌ها -->
+                                 <!-- دسته‌بندی‌ها -->
                                 <li class="slide">
                                     <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i
                                             class="side-menu__icon fe fe-package"></i><span class="side-menu__label">دسته‌بندی‌ها</span><i
@@ -624,7 +625,19 @@
                                                 {% endfor %}
                                             </ul>
                                 </li>
-                                
+                                <li class="slide">
+                                    <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i class="side-menu__icon fe fe-package"></i><span class="side-menu__label">ویژه‌ها</span><i
+                                    class="angle fe fe-chevron-right"></i></a>
+                                    <ul class="slide-menu">
+                                        <li class="side-menu-label1"><a href="javascript:void(0)">صفحات</a></li>
+                                        {% for tag in special_tags %}
+                                            <li class="sub-slide">
+                                                <a class="sub-side-menu__item" data-bs-toggle="sub-slide" href="{% url 'shop:spetial_tag_products' tag.name %}"><span
+                                                        class="sub-side-menu__label">{{tag.name}}</span></a>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </li>
                                 <!-- تماس با ما -->
                                 <li>
                                     <a class="side-menu__item has-link" href="{% url 'shop:contact'  %}"><i
@@ -838,6 +851,19 @@
                                             {% endif %}
                                             {% endfor %}
                                         </ul>
+                            </li>
+                            <li class="slide">
+                                <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i class="side-menu__icon fe fe-package"></i><span class="side-menu__label">ویژه‌ها</span><i
+                                class="angle fe fe-chevron-right"></i></a>
+                                <ul class="slide-menu">
+                                    <li class="side-menu-label1"><a href="javascript:void(0)">صفحات</a></li>
+                                    {% for tag in special_tags %}
+                                        <li class="sub-slide">
+                                            <a class="sub-side-menu__item" data-bs-toggle="sub-slide" href="{% url 'shop:spetial_tag_products' tag.name %}"><span
+                                                    class="sub-side-menu__label">{{tag.name}}</span></a>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
                             </li>
                             
                             <!-- تماس با ما -->

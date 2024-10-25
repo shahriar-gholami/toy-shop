@@ -194,6 +194,10 @@ class Tag(models.Model):
 	store = models.ForeignKey(Store, on_delete=models.CASCADE)
 	name = models.CharField(max_length=200)
 	slug = models.SlugField(max_length=200)
+	is_special = models.BooleanField(default=False)
+
+	def get_products(self):
+		return self.product_set.all()
 
 	def __str__(self):
 		return f'{self.name} \n'
@@ -969,3 +973,5 @@ class Announcement(models.Model):
 	@property
 	def shamsi_created_date(self):
 		return JalaliDatetime(self.created).strftime('%Y/%m/%d')
+
+
