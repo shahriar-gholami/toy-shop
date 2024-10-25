@@ -67,6 +67,10 @@ class Store(models.Model):
 	def get_owner_name(self):
 		owner = Owner.objects.get(store=self)
 		return owner.full_name
+	
+	def get_owner_phone_number(self):
+		owner = Owner.objects.get(store=self)
+		return owner.phone_number
 
 	def get_canonical(self):
 		return f'https://picosite.ir/shop/{self.name}' 

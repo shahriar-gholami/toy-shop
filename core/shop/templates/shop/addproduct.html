@@ -51,6 +51,34 @@
 
                 <!-- ROW-1 OPEN -->
                 <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-title">افزودن محصول از دیجی‌کالا</div>
+                            </div>
+                            <form method="post" action="{% url 'shop:add_product_from_dg' %}">
+                                {% csrf_token %}
+                                <div class="card-body">
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <label class="col-md-12 form-label">
+                                                کد dkp یک عدد است که در صفحه محصول دیجی‌کالا، در نوار آدرس url پس از عبارت -dkp درج شده است. کافی است تنها بخش عددی این کد را در کادر زیر وارد نمایید.
+                                            </label>
+                                            
+                                            <input name="dkp_code" aria-describedby="button-addon1" aria-label="متن مثال با افزونه دکمه" class="form-control"
+                                                   placeholder="کد dkp محصول در دیجی‌کالا‌ را در اینجا وارد نمایید"
+                                                   type="text">
+                                            <button class="btn btn-light" id="button-addon2" type="submit">افزودن محصول به فروشگاه</button>
+                                            <p class="mt-2 col-md-12"> این فرایند ممکن است تا یک دقیقه به طول انجامد. لطفا از رفرش کردن صفحه جدا خودداری نمایید.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
                     
                     <div class="col-lg-12">
                         <div class="card">

@@ -65,8 +65,15 @@
                             <ul class="dropdown-menu flex-column"
                                 style="position: absolute; inset: 0px 0px auto auto; margin: 0px; transform: translate3d(0px, 42px, 0px);"
                                 data-popper-placement="bottom-end">
-                                <li><a href="{% url account_url  %}" class="dropdown-item"><i class="bi bi-house-door me-2"></i>پروفایل</a>
+                                <li><a href="{% if request.user.is_authenticated %}{% url 'shop:customer_dashboard'  %}{% else %}{% url 'shop:customer_authentication'  %}{% endif %}" class="dropdown-item"><i class="bi bi-house-door me-2"></i>پروفایل</a>
                                 </li>
+                                {% if request.user.is_authenticated %}
+                                <li><a href="
+                                    {% if request.user.phone_number == store.get_owner_phone_number %}
+                                    {% url 'shop:owner_dashboard'  %}
+                                    {% endif %}" class="dropdown-item"><i class="bi bi-arrow-up-right-square me-2"></i>داشبورد فروشندگی</a>
+                                </li>
+                                {% endif %}
                                 <li><a href="{% if request.user.is_authenticated %}{% url 'shop:customer_dashboard_orders'  %}{% else %}{% url 'shop:customer_authentication'  %}{% endif %}" class="dropdown-item"><i class="bi bi-cart-check me-2"></i>سفارش های
                                     من</a></li>
                                 <li><a href="{% if request.user.is_authenticated %}{% url 'shop:customer_dashboard_comments'  %}{% else %}{% url 'shop:customer_authentication'  %}{% endif %}" class="dropdown-item"><i class="bi bi-chat-dots me-2"></i>نظرات
@@ -82,10 +89,10 @@
             </div>
 
             <div class="col-lg-6 col-4 d-sm-block d-none order-lg-2 order-2">
-                <div class="header-top-menu">
-                    <div class="header-logo">
+                <div class="header-top-menu text-center">
+                    <div class="header-logo text-center">
                         <a href="{% url 'shop:index'  %}">
-                            <img alt="" src="{{ store.get_logo_image }}">
+                            <img class="mb-2" alt="" src="{{ store.get_logo_image }}">
                         </a>
                     </div>
                 </div>
@@ -101,7 +108,7 @@
 
             <div class="col-sm-4 col-6 order-lg-5 order-1">
 
-                <div class="responsive-menu d-lg-none d-block">
+                <div class="responsive-menu d-lg-none text-center d-block">
                     <div class="d-flex align-items-center">
 
                         <button aria-controls="responsive menu" class="btn border-0 p-3 ps-0 btn-responsive-menu"
@@ -113,11 +120,11 @@
                                       fill-rule="evenodd"/>
                             </svg>
                         </button>
-                        <div class="header-logo d-sm-none d-flex">
+                        <!-- <div class="header-logo d-sm-none text-center d-flex">
                             <a href="{% url 'shop:index'  %}">
                                 <img alt="" src="{{ store.get_logo_image }}" height="60px" width="60">
                             </a>
-                        </div>
+                        </div> -->
                     </div>
                     <div aria-labelledby="responsive menu" class="offcanvas offcanvas-start" id="responsiveMenu"
                          tabindex="-1">

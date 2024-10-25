@@ -1,5 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from random import randint
+from django.core.files.base import ContentFile
+
 from django import forms
 from django.utils import timezone
 from django.utils.timezone import make_aware
@@ -15,92 +17,9 @@ from .utils import IsOwnerUserMixin, IsCustomerUserMixin
 from django.http import HttpResponse
 import subprocess
 from django.views.generic import CreateView, ListView, DetailView, UpdateView, DeleteView
-from .forms import (NewSiteForm, 
-					OwnerForm,
-					IndexTitleUpdateForm,
-					EnamadUpdateForm,
-					VerifyOwnerForm,
-					AuthenticationCodeForm,
-					OwnerLoginForm,
-					StoreForm,
-					DeliveryForm,
-					CategoryForm,
-					ProductImageForm,
-					CommentForm,
-					MetaForm,
-					ProductForm,
-					PurchaseForm,
-					VarietyForm,
-					RequestNumberForm,
-					CouponApplyForm,
-					CouponForm,
-					OrderStatusForm,
-					VarietyUpdateForm,
-					FilterProductsForm,
-					CartEditForm,
-					DeliveryApplyForm,
-					ContactUsForm,
-					AddSlideForm,
-					AddBannerForm,
-					FaqForm,
-					CustomerForm,
-					LogoUpdateForm,
-					WithdrawForm,
-					BlogPostCreateForm,
-					BlogCategoryForm,
-					PostThumbnailUpdateForm,
-					ImageUploadForm,
-					HomeCategoryShowForm,
-					SubscriptionForm,
-					CheckoutForm,
-					ThemeForm,
-					TicketForm,
-					TicketReplyForm,
-					PoliciesForm,
-					AddFilterForm,
-					AsignFilterToProductForm,
-					FeatureFilterForm,
-					)
+from .forms import *
 from django.views import View
-from shop.models import (PriceRange, 
-						 Announcement,
-						 Size, 
-						 Store, 
-						 Owner, 
-						 OtpCode, 
-						 Customer, 
-						 Delivery, 
-						 Category, 
-						 Product, 
-						 ProductImage, 
-						 Cart, 
-						 Variety, 
-						 Order, 
-						 CartItem, 
-						 OrderStatus, 
-						 Coupon,
-						 StoreLogoImage,
-						 ContactMessage,
-						 Tag,
-						 Slide,
-						 Banner,
-						 Faq,
-						 Comment,
-						 WithdrawRecord,
-						 BlogCategory, 
-						 BlogPost,
-						 PostThumbnail,
-						 UploadedImages,
-						 CategoryImage,
-						 FeaturedCategories,
-						 Subscription,
-						 Services,
-						 Brand,
-						 TicketReply,
-						 Ticket,
-						 Filter,
-						 FilterValue,
-						 )
+from shop.models import *
 import random
 from accounts.models import User
 from utils import send_otp_code
@@ -113,7 +32,6 @@ from khayyam import JalaliDatetime
 from django.db.models import Q
 from googletrans import Translator
 import re
-
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from subprocess import Popen
@@ -1349,7 +1267,7 @@ class ProductDeleteView(IsOwnerUserMixin, View):
 		store = Store.objects.get(name=store_name)
 		product = get_object_or_404(Product, slug = product_slug, store=store)
 		product.delete()
-		return redirect(f'{current_app_name}:owner_dashboard_products', store_name)
+		return redirect(f'{current_app_name}:owner_dashboard_products')
 
 class CreateUpdateVarietyView(IsOwnerUserMixin, View):
 	
@@ -2829,5 +2747,128 @@ class OwnerDashboardAnnouncements(View):
 				announcements.append(item)
 		return render(request, self.template_name, {'store':store, 'store_name':store_name, 'announcements':announcements})
 
+
+def format_features(features_list):
+    output = ""
+    for feature in features_list:
+        title = feature['title']
+        values = feature['values']
+        values_str = ', '.join(values)  
+        output += f"{title}: {values_str}<br>"
+    return output
+
+def download_and_save_images(image_urls, product_id):
+    product = Product.objects.get(id=product_id)
+    store = product.store
+    
+    for url in image_urls:
+        response = requests.get(url)
+        if response.status_code == 200:
+            image_name = f'{product.name}-{store.name}'
+            timestamp = timezone.now().strftime("%Y%m%d_%H%M%S")
+            image_filename = f"{timestamp}_{image_name}"
+            
+            image = ProductImage(
+                store=store,
+                product=product,
+            )
+            
+            image.image.save(image_filename, ContentFile(response.content))
+            image.save()
+
+
+
+class AddProductFromDigikalaView(View):
+
+	def post(self, request):
+
+		form = AddingProductFromDigiForm(request.POST)
+		if form.is_valid():
+
+			url = f'https://api.digikala.com/v2/product/{form.cleaned_data['dkp_code']}/'
+			dkp_code = f'{form.cleaned_data['dkp_code']}'
+			shop_name = f'{Store.objects.all().first().name}'
+			try:
+				response = requests.get(url)
+				response.raise_for_status()
+				item = response.json()['data']['product']
+				brand = ''
+				title = ''
+				description = ''
+				features= []
+				price = 0
+				category_1 = ''
+				category_2 = ''
+				tags = []
+				images = []
+				main_image = ''
+
+				if item['specifications'][0] == [] or item['specifications'][0] == None:
+					features = []
+				else:
+					features= item['specifications'][0]['attributes']
+				brand = item['data_layer']['brand']
+				title = item['title_fa']
+				description = item['review']['description']
+				price = item['default_variant']['price']['selling_price']
+				category_1 = item['data_layer']['item_category3']
+				category_2 = item['data_layer']['item_category4']
+				tags = [tag['name'] for tag in item['tags']]
+				images = [image['url'][0].replace('?x-oss-process=image/resize,m_lfit,h_800,w_800/quality,q_90','').replace(' ','') for image in item['images']['list']]
+				main_image = item['images']['main']['url'][0].replace('?x-oss-process=image/resize,m_lfit,h_800,w_800/quality,q_90',''),
+				main_image = main_image[0]
+
+			except requests.exceptions.HTTPError as err:
+				print(f'HTTP error occurred: {err}')
+			except Exception as err:
+				print(f'Other error occurred: {err}')
+
+			store = Store.objects.all().first()
+			if description != '' and category_1 != '' and category_2 != '':
+				category_1, create = Category.objects.get_or_create(store = store, name = category_1)
+				if create:
+					category_1.slug = category_1.name.replace(' ','-')
+					category_1.save()
+				category_2, create = Category.objects.get_or_create(store = store, name = category_2)
+				if create:
+					category_2.slug = category_2.name.replace(' ','-')
+					category_2.save()
+				if category_1 != None and category_2 != None:
+					category_2.parent = category_1
+					category_2.is_sub = True
+					category_2.save()
+				slug = title.replace(' ','-')
+				description = description
+				features = features
+				brand = brand
+				product_brand, create = Brand.objects.get_or_create(
+					name = brand,
+					store = store
+				)
+				price = price/10
+				tags = tags
+				new_product = Product.objects.create(
+					name = title,
+					store = store,
+					slug = slug,
+					description = description,
+					features = format_features(features),
+					brand = product_brand.name,
+					price = price,
+				)
+				new_product.category.add(category_1)
+				new_product.category.add(category_2)
+				new_product.save()
+				images = images
+				download_and_save_images(images, new_product.id)
+
+				default_variety = Variety.objects.create(
+					store = store,
+					name = 'default variety',
+					product = new_product, 
+					stock = 2,
+				)
+		return redirect('shop:product_list')				
+					
 
 
