@@ -4,7 +4,7 @@ from django.contrib.auth.models import AnonymousUser
 from shop.models import Cart, Tag, Customer
 
 
-store = Store.objects.get(name = 'فروشگاه اسباب بازی ایرانیان')
+store = Store.objects.all().first()
 store_name = store.name
 
 

@@ -65,12 +65,13 @@ class Store(models.Model):
 		return logo_url
 	
 	def get_owner_name(self):
-		owner = Owner.objects.get(store=self)
+		owner = Owner.objects.filter(store=self).first()
 		return owner.full_name
 	
 	def get_owner_phone_number(self):
-		owner = Owner.objects.get(store=self)
-		return owner.phone_number
+		owners_phone_numbers = []
+		owners = Owner.objects.filter(store=self)
+		return [owner.phone_number for owner in owners]
 
 	def get_canonical(self):
 		return f'https://picosite.ir/shop/{self.name}' 

@@ -44,7 +44,6 @@ description = "توضیحات مربوط به تراکنش را در این قس
 # CallbackURL = 'http://127.0.0.1:8000/shop//orders/verify/'
 
 store_name = Store.objects.all().first().name
-
 current_app_name = apps.get_containing_app_config(__name__).name
 
 
@@ -2749,32 +2748,32 @@ class OwnerDashboardAnnouncements(View):
 
 
 def format_features(features_list):
-    output = ""
-    for feature in features_list:
-        title = feature['title']
-        values = feature['values']
-        values_str = ', '.join(values)  
-        output += f"{title}: {values_str}<br>"
-    return output
+	output = ""
+	for feature in features_list:
+		title = feature['title']
+		values = feature['values']
+		values_str = ', '.join(values)  
+		output += f"{title}: {values_str}<br>"
+	return output
 
 def download_and_save_images(image_urls, product_id):
-    product = Product.objects.get(id=product_id)
-    store = product.store
-    
-    for url in image_urls:
-        response = requests.get(url)
-        if response.status_code == 200:
-            image_name = f'{product.name}-{store.name}'
-            timestamp = timezone.now().strftime("%Y%m%d_%H%M%S")
-            image_filename = f"{timestamp}_{image_name}"
-            
-            image = ProductImage(
-                store=store,
-                product=product,
-            )
-            
-            image.image.save(image_filename, ContentFile(response.content))
-            image.save()
+	product = Product.objects.get(id=product_id)
+	store = product.store
+	
+	for url in image_urls:
+		response = requests.get(url)
+		if response.status_code == 200:
+			image_name = f'{product.name}-{store.name}'
+			timestamp = timezone.now().strftime("%Y%m%d_%H%M%S")
+			image_filename = f"{timestamp}_{image_name}"
+			
+			image = ProductImage(
+				store=store,
+				product=product,
+			)
+			
+			image.image.save(image_filename, ContentFile(response.content))
+			image.save()
 
 
 
@@ -2785,8 +2784,8 @@ class AddProductFromDigikalaView(View):
 		form = AddingProductFromDigiForm(request.POST)
 		if form.is_valid():
 
-			url = f'https://api.digikala.com/v2/product/{form.cleaned_data['dkp_code']}/'
-			dkp_code = f'{form.cleaned_data['dkp_code']}'
+			url = f'https://api.digikala.com/v2/product/{form.cleaned_data[dkp_code]}/'
+			dkp_code = f'{form.cleaned_data[dkp_code]}'
 			shop_name = f'{Store.objects.all().first().name}'
 			try:
 				response = requests.get(url)

@@ -18,11 +18,8 @@ DEBUG = config("DEBUG", cast=bool, default=True)
 SHOW_DEBUGGER_TOOLBAR = config("SHOW_DEBUGGER_TOOLBAR", cast=bool, default=False)
 
 
-ALLOWED_HOSTS = config(
-    "ALLOWED_HOSTS",
-    cast=lambda v: [s.strip() for s in v.split(",")],
-    default="*",
-)
+ALLOWED_HOSTS =  ['127.0.0.1', '195.146.32.236']
+
 
 
 # Application definition
