@@ -69,7 +69,7 @@
                                 </li>
                                 {% if request.user.is_authenticated %}
                                 <li><a href="
-                                    {% if request.user.phone_number == store.get_owner_phone_number %}
+                                    {% if request.user.phone_number in store.get_owner_phone_number %}
                                     {% url 'shop:owner_dashboard'  %}
                                     {% endif %}" class="dropdown-item"><i class="bi bi-arrow-up-right-square me-2"></i>داشبورد فروشندگی</a>
                                 </li>
@@ -178,7 +178,7 @@
                                     <span class="showSubMenu"><i class="bi bi-chevron-left"></i></span>
                                     <ul class="navbar-nav h-0">
                                     {% for tag in special_tags %}
-                                        <li class="nav-item"><a class="nav-link" href="{% url 'shop:spetial_tag_products' tag.name %}">{{tag.name}}</a></li>
+                                        <li class="nav-item"><a class="nav-link" href="{% url 'shop:special_tag_products' tag.name %}">{{tag.name}}</a></li>
                                     {% endfor %}
                                     </ul>
                                 </li>
@@ -454,7 +454,7 @@
                         <ul class="list-unstyled shadow-lg back-menu sub-menu mega-container"
                             style="background: #fff url('assets/img/mega-img-1.jpg') no-repeat;height: 600px;background-size: 300px;">
                             {% for tag in special_tags %}
-                                <li><a class="title" href="{% url 'shop:spetial_tag_products' tag.name %}">{{tag.name}}</a></li>
+                                <li><a class="title" href="{% url 'shop:special_tag_products' tag.name %}">{{tag.name}}</a></li>
                             {% endfor %}
                         </ul>
                     </li>

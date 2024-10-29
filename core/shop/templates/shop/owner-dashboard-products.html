@@ -25,7 +25,7 @@
 <meta name="twitter:image" content="{{store.get_logo_image}}">
 {% endblock %}
 
-{% block title %}پنل فروشندگی{% endblock %}
+{% block title %}مدیریت محصولات{% endblock %}
 {% block content %}
 
 <div class="main-content app-content mt-0">
@@ -39,8 +39,8 @@
                 <h1 class="page-title">داشبورد فروشندگی</h1>
                 <div>
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="javascript:void(0)">فروشگاه</a></li>
-                        <li aria-current="page" class="breadcrumb-item active">داشبورد فروشندگی</li>
+                        <li class="breadcrumb-item"><a href="{% url 'shop:owner_dashboard' %}">پنل فروشندگی</a></li>
+                        <li aria-current="page" class="breadcrumb-item active">مدیریت محصولات</li>
                     </ol>
                 </div>
             </div>

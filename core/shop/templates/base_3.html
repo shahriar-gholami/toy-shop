@@ -320,7 +320,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-5">
+                <!-- <div class="col-lg-5">
                     <div class="header-top-menu-left">
                         <div class="row align-items-center">
                             
@@ -334,7 +334,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
     </div>
@@ -360,7 +360,7 @@
                 </div>
                 <div class="footer-reutrned">
                     <h4 class="text-center">مرجوعی با احترام <br> پذیرفته میشود</h4>
-                    <i class="bi bi-arrow-down-up"></i>
+                    <a href="#"><i class="bi bi-arrow-down-up"></i></a>
                 </div>
             </div>
             <div class="col-lg-8">
@@ -381,7 +381,7 @@
                                         <span class="badge font-12 main-color-one-bg text-white rounded-pill">دفتر مرکزی</span>
                                     </div>
                                     <div>
-                                        <p class="mb-0 font-16"><span class="fw-bold h5 title-font">{{store.city}} -</span>{{store.address}}
+                                        <p class="mb-0 font-16"><span class="fw-bold h5 title-font">{{store.city}} -</span>{{store.address|safe}}
                                         </p>
                                     </div>
                                 </div>
