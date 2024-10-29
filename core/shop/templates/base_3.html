@@ -156,7 +156,16 @@
                                     <span class="showSubMenu"><i class="bi bi-chevron-left"></i></span>
                                     <ul class="navbar-nav h-0">
                                     {% for tag in special_tags %}
-                                        <li class="nav-item"><a class="nav-link" href="{% url 'shop:spetial_tag_products'  tag.name %}">{{ tag.name }}</a>
+                                        <li class="nav-item"><a class="nav-link" href="{% url 'shop:special_tag_products'  tag.name %}">{{ tag.name }}</a>
+                                        </li>
+                                    {% endfor %}
+                                    </ul>
+                                </li>
+                                <li class="nav-item bg-ul-f7"><a class="nav-link" href="">برند‌ها</a>
+                                    <span class="showSubMenu"><i class="bi bi-suit-spade"></i></span>
+                                    <ul class="navbar-nav h-0">
+                                    {% for brand in store.get_brands %}
+                                        <li class="nav-item"><a class="nav-link" href="{% url 'shop:special_brand_products'  brand.name %}">{{ brand.name }}</a>
                                         </li>
                                     {% endfor %}
                                     </ul>
@@ -288,11 +297,19 @@
                                     <ul class="list-unstyled shadow-lg back-menu sub-menu mega-container"
                                         style="background: #fff url('assets/img/mega-img-1.jpg') no-repeat;height: 600px;background-size: 300px;">
                                         {% for tag in special_tags %}
-                                            <li><a class="title" href="{% url 'shop:spetial_tag_products' tag.name %}">{{tag.name}}</a></li>
+                                            <li><a class="title" href="{% url 'shop:special_tag_products' tag.name %}">{{tag.name}}</a></li>
                                         {% endfor %}
                                     </ul>
                                 </li>
-                                
+                                <li class="nav-item">
+                                    <a class="nav-link header-top-menu-link-a fw-bold-hover" href="{% url 'shop:product_list'  %}">برندها<i class="bi bi-suit-spade"></i></a>
+                                    <ul class="list-unstyled shadow-lg back-menu sub-menu mega-container"
+                                        style="background: #fff url('assets/img/mega-img-1.jpg') no-repeat;height: 600px;background-size: 300px;">
+                                        {% for brand in store.get_brands %}
+                                            <li><a class="title" href="{% url 'shop:special_brand_products' brand.name %}">{{brand.name}}</a></li>
+                                        {% endfor %}
+                                    </ul>
+                                </li>
                                 <li class="nav-item"><a href="{% url 'shop:contact'  %}" class="nav-link header-top-menu-link-a  ">تماس با ما<i class="bi bi-phone"></i></a></li>
                                 <li class="nav-item"><a href="{% url 'shop:about'  %}" class="nav-link header-top-menu-link-a  ">درباره ما<i class="bi bi-person-check"></i></a></li>
                                 <li class="nav-item"><a href="{% url 'shop:policies'  %}" class="nav-link header-top-menu-link-a  ">قوانین و مقررات<i class="bi bi-shield"></i></a></li>

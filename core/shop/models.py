@@ -89,6 +89,9 @@ class Store(models.Model):
 			if order.status.latest_status == 'پرداخت شده' or order.status.latest_status == 'ارسال شده':
 				payed_orders_volume = payed_orders_volume + order.get_final_payment()
 		return payed_orders_volume
+
+	def get_brands(self):
+		return Brand.objects.filter(store = self)
 	
 	def __str__(self):
 		return f'{self.name}'

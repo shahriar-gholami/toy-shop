@@ -66,7 +66,8 @@ urlpatterns = [
     path('customer/dashboard/comments/', views.CustomerDashboardCommentsView.as_view(), name = 'customer_dashboard_comments'),
 
     path('products/create/', views.ProductCreateView.as_view(), name='product_create'),
-    path('products/tag/<str:tag_name>/', views.SpecialProductListView.as_view(), name='spetial_tag_products'),
+    path('products/tag/<str:tag_name>/', views.SpecialProductListView.as_view(), name='special_tag_products'),
+    path('products/brand/<str:brand_name>/', views.BrandProductListView.as_view(), name='special_brand_products'),
     path('products/auto-dg/create/', views.AddProductFromDigikalaView.as_view(), name='add_product_from_dg'),
 
 

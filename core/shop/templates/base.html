@@ -632,8 +632,21 @@
                                         <li class="side-menu-label1"><a href="javascript:void(0)">صفحات</a></li>
                                         {% for tag in special_tags %}
                                             <li class="sub-slide">
-                                                <a class="sub-side-menu__item" data-bs-toggle="sub-slide" href="{% url 'shop:spetial_tag_products' tag.name %}"><span
+                                                <a class="sub-side-menu__item" data-bs-toggle="sub-slide" href="{% url 'shop:special_tag_products' tag.name %}"><span
                                                         class="sub-side-menu__label">{{tag.name}}</span></a>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </li>
+                                <li class="slide">
+                                    <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i class="side-menu__icon fe fe-package"></i><span class="side-menu__label">ویژه‌ها</span><i
+                                    class="angle fe fe-chevron-right"></i></a>
+                                    <ul class="slide-menu">
+                                        <li class="side-menu-label1"><a href="javascript:void(0)">صفحات</a></li>
+                                        {% for brand in store.get_brands %}
+                                            <li class="sub-slide">
+                                                <a class="sub-side-menu__item" data-bs-toggle="sub-slide" href="{% url 'shop:special_brand_products' brand.name %}"><span
+                                                        class="sub-side-menu__label">{{brand.name}}</span></a>
                                             </li>
                                         {% endfor %}
                                     </ul>
@@ -859,8 +872,22 @@
                                     <li class="side-menu-label1"><a href="javascript:void(0)">صفحات</a></li>
                                     {% for tag in special_tags %}
                                         <li class="sub-slide">
-                                            <a class="sub-side-menu__item" data-bs-toggle="sub-slide" href="{% url 'shop:spetial_tag_products' tag.name %}"><span
+                                            <a class="sub-side-menu__item" data-bs-toggle="sub-slide" href="{% url 'shop:special_tag_products' tag.name %}"><span
                                                     class="sub-side-menu__label">{{tag.name}}</span></a>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </li>
+
+                            <li class="slide">
+                                <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i class="side-menu__icon fe fe-package"></i><span class="side-menu__label">برندها</span><i
+                                class="angle fe fe-chevron-right"></i></a>
+                                <ul class="slide-menu">
+                                    <li class="side-menu-label1"><a href="javascript:void(0)">صفحات</a></li>
+                                    {% for brand in store.get_brands %}
+                                        <li class="sub-slide">
+                                            <a class="sub-side-menu__item" data-bs-toggle="sub-slide" href="{% url 'shop:special_brand_products' brand.name %}"><span
+                                                    class="sub-side-menu__label">{{brand.name}}</span></a>
                                         </li>
                                     {% endfor %}
                                 </ul>
