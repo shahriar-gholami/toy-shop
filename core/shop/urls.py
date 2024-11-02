@@ -78,6 +78,10 @@ urlpatterns = [
     path('delivery/<int:pk>/edit/', views.DeliveryEditView.as_view(), name='edit_delivery'),
     path('delivery/<int:pk>/delete/', views.DeliveryDeleteView.as_view(), name='delete_delivery'),
 
+    path('owner/dashboard/tag/', views.TagListCreateView.as_view(), name='owner_dashboard_tag'),
+    path('tag/<int:pk>/edit/', views.TagEditView.as_view(), name='edit_tag'),
+    path('tag/<int:pk>/delete/', views.TagDeleteView.as_view(), name='delete_tag'),
+
     path('category/create/', views.CategoryCreateView.as_view(), name='create_category'),
     path('owner/dashboard/category/', views.CategoryListView.as_view(), name='owner_dashboard_categories'),
     path('owner/dashboard/category/image/<int:category_id>/delete/', views.DeleteCategoryImageView.as_view(), name='delete_category_image'),

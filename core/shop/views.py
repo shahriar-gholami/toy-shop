@@ -3170,7 +3170,69 @@ class BrandProductListView(View):
 					
 		return render(request, f'{current_app_name}/product_list_{store.template_index}.html', {'store_name':store_name})
 
+class TagListCreateView(IsOwnerUserMixin ,View):
 
+	template_name = f'{current_app_name}/owner-dashboard-tag.html'
+
+	def get(self, request, *args, **kwargs):
+		form = TagForm
+		store = Store.objects.get(name=store_name)
+		tags = Tag.objects.filter(store=store)
+		create_tag_url = 'shop:owner_dashboard_tag'
+		edit_tag_url = 'shop:edit_tag'
+		return render(request, self.template_name, {'edit_tag_url':edit_tag_url,
+													'create_tag_url':create_tag_url,
+													'form': form, 
+													'tags':tags,
+													'store_name':store_name})
+
+	def post(self, request, *args, **kwargs):
+		form = TagForm(request.POST)
+		if form.is_valid():
+			store = Store.objects.get(name=store_name)
+			tag = Tag.objects.create(
+				store = store,
+				name = form.cleaned_data['name'],
+				slug = form.cleaned_data['slug'],
+				is_special = form.cleaned_data['is_special']
+			)
+			tags = Tag.objects.filter(store=store)
+			create_tag_url = f'{current_app_name}:tag-list-and-create'
+			edit_tag_url = f'{current_app_name}:edit_tag'
+			return redirect(f'{current_app_name}:owner_dashboard_tag')
+		create_tag_url = f'{current_app_name}:tag-list-and-create'
+		edit_tag_url = f'{current_app_name}:edit_tag'
+		return render(request, self.template_name, {'edit_tag_url':edit_tag_url,
+													'create_tag_url':create_tag_url,
+													'form': form, 
+													'tags':tags,
+													'store_name':store_name})
+
+class TagEditView(IsOwnerUserMixin ,View):
+
+	def post(self, request, pk, *args, **kwargs):
+		tag = get_object_or_404(Tag, pk=pk)
+		form = TagForm(request.POST)
+		if form.is_valid():
+			tag.is_special = form.cleaned_data['is_special']
+			tag.save()
+			return redirect('shop:owner_dashboard_tag') 
+		store = Store.objects.filter(name = store_name).first()
+		tagss = Delivery.objects.filter(store=store)
+		create_tag_url = f'{current_app_name}:tag-list-and-create'
+		edit_tag_url = f'{current_app_name}:edit_tag'
+		return render(request, self.template_name, {'edit_tag_url':edit_tag_url,
+													'create_tag_url':create_tag_url,
+													'form': form, 
+													'tag':tag,
+													'store_name':store_name})
+
+class TagDeleteView(IsOwnerUserMixin, View):
+		
+	def get(self, request, pk, *args, **kwargs):
+		tag = Tag.objects.get(pk=pk)
+		tag.delete()
+		return redirect(f'{current_app_name}:owner_dashboard_tag')
 
 
 

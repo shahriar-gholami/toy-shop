@@ -44,6 +44,11 @@ class DeliveryForm(forms.Form):
     name =forms.CharField(max_length=250, required=False)
     price = forms.IntegerField()
 
+class TagForm(forms.Form):
+    name =forms.CharField(max_length=250, required=False)
+    slug = forms.CharField(max_length=250, required=False)
+    is_special = forms.BooleanField(required=False)
+
 class CategoryForm(forms.Form):
     name = forms.CharField(max_length=250)
     is_sub = forms.BooleanField(required=False)

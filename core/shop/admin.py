@@ -108,7 +108,7 @@ admin.site.register(ContactMessage, ContactMessageAdmin)
 
 @admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
-    list_display = ('store', 'name', 'slug')
+    list_display = ('store', 'name', 'slug', 'is_special')
     search_fields = ['name', 'slug']
     list_filter = ('store',)
 
