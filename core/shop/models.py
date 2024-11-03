@@ -53,6 +53,17 @@ class Store(models.Model):
 	def shamsi_created_date(self):
 		return JalaliDatetime(self.created).strftime('%Y/%m/%d')
 
+	def get_special_tags(self):
+		return [tag for tag in Tag.objects.filter(store = self, is_special = True)]
+
+	def get_special_tags_products(self):
+		special_products = []
+		for tag in self.get_special_tags():
+			tag_products = tag.get_products()
+			for product in tag_products:
+				special_products.append(product)
+		return special_products
+
 	def get_absolute_url(self):
 		return reverse('shop:index')
 
