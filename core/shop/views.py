@@ -3237,6 +3237,21 @@ class DeleteCategoryGroupView(View):
 			category.delete()
 		return redirect(f'{current_app_name}:owner_dashboard_categories' )
 
+class SetMerchantCodeView(View):
+
+	def post(self, request):
+
+		store = Store.objects.get(name = store_name)
+		form = MerchantCodeForm(request.POST)
+		if form.is_valid():
+			store.merchant = form.cleaned_data['merchant_code']
+			store.save()
+			return redirect('shop:owner_dashboard_store_update')
+		return render(request, 'shop/owner-dashboard-store-settings.html',
+		{
+			'wrong_merchant_message': 'ورودی نا معتبر',
+			'store': store
+		})
 
 
 

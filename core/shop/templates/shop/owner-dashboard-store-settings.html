@@ -246,6 +246,30 @@
 
                     <div class="card">
                         <div class="card-header">
+                            <h3 class="card-title">درج مرچنت کد درگاه پرداخت زرین پال</h3>
+                        </div>
+                        <div class="card-body">
+                            
+                            <form method="post" action="{% url 'shop:owner_dashboard_merchant_update' %}">
+                                {% csrf_token %}
+                            
+                            <div class="form-group">
+                                <label class="form-label">کد مرچنت</label>
+                                <label class="form-label">کد مرچنتی که در بخش مدیریت درگاه پنل زرین پال خود دریافت نموده‌اید در این قسمت وارد نمایید و پس از ثبت حتما یک بار درگاه پرداخت خود را تا مرحله‌ی ورود به صفحه درگاه و مشاهده‌ی مبلغ پرداختی آزمایش نمایید.</label>
+                                <input name="merchant_code" class="form-control" value="{{store.merchant}}">
+                            </div>
+            
+                            <div class="text-end">
+                                <button type="submit" class="btn btn-success my-1" href="javascript:void(0)">بروزرسانی</button>
+                                <p class="text-danger">{{ wrong_merchant_message }}</p>
+                            </div>
+                            
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
                             <h3 class="card-title">درج کد ای‌نماد</h3>
                         </div>
                         <div class="card-body">

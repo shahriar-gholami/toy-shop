@@ -243,6 +243,11 @@ class AddingProductFromDigiForm(forms.Form):
 class CategorySelectForm(forms.Form):
     category_select = forms.CharField()
 
+class MerchantCodeForm(forms.Form):
+    merchant_code = forms.CharField()
+
+
+
 
 
 

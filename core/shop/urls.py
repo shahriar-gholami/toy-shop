@@ -31,6 +31,7 @@ urlpatterns = [
     path('owner/dashboard/products/duplicate/<int:product_id>', views.CopyProductView.as_view(), name = 'owner_dashboard_copy_product'),
     path('owner/dashboard/customers/', views.OwnerDashboardCustomersView.as_view(), name = 'owner_dashboard_customers'),
     path('owner/dashboard/store/', views.StoreUpdateView.as_view(), name='owner_dashboard_store_update'),
+    path('owner/dashboard/merchant-update/', views.SetMerchantCodeView.as_view(), name='owner_dashboard_merchant_update'),
     path('owner/dashboard/store/index_title/', views.IndexTitleUpdateView.as_view(), name='index_title_update'),
     path('owner/dashboard/store/enamad/', views.EnamadUpdateView.as_view(), name='enamad_update'),
     path('owner/dashboard/messages/', views.OwnerDashboardMessagesView.as_view(), name='owner_dashboard_messages'),
