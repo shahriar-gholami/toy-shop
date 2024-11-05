@@ -44,39 +44,12 @@ def send_otp_code(phone_number, code):
     url = "https://api2.ippanel.com/api/v1/sms/pattern/normal/send"
 
     payload = json.dumps({
-    "code": "u5ulsafx5ymser2",
+    "code": "6zxou8xsmhi8fot",
     "sender": "+983000505",
     "recipient": phone_number,
     "variable": {
         "verification-code": code
 
-    }
-    })
-    headers = {
-    'apikey': 'q41yDW73vhtH5Xr63XYQ39DTo96yavuxGRiA9g4a79A=',
-    'Content-Type': 'application/json'
-    }
-
-    response = requests.request("POST", url, headers=headers, data=payload)
-
-    print(response.text)
-
-def diopars_register(name,family,phone,code,email,state,insta,day1,clock1,begin1,day2,clock2,begin2):
-    url = "https://api2.ippanel.com/api/v1/sms/pattern/normal/send"
-    
-
-    payload = json.dumps({
-    "code": "0ff1e8329ekmjdd",
-    "sender": "+983000505",
-    "recipient": '0'+ phone,
-    "variable": {
-        "name": f'{name.replace("+", " ")} {family.replace("+", " ")}',
-        # "first_day": f'{day1.replace("+", " ")}',
-        # "first_clock": f'{clock1.replace("+", " ")}',
-        # "first_begin": f'{begin1.replace("+", " ")}',
-        # "second_day": f'{day2.replace("+", " ")}',
-        # "second_clock": f'{clock2.replace("+", " ")}',
-        # "second_begin": f'{begin2.replace("+", " ")}',
     }
     })
     headers = {
