@@ -84,6 +84,7 @@ urlpatterns = [
 
     path('category/create/', views.CategoryCreateView.as_view(), name='create_category'),
     path('owner/dashboard/category/', views.CategoryListView.as_view(), name='owner_dashboard_categories'),
+    path('owner/dashboard/category/delete-groupe/', views.DeleteCategoryGroupView.as_view(), name='owner_dashboard_categories_delete_groupe'),
     path('owner/dashboard/category/image/<int:category_id>/delete/', views.DeleteCategoryImageView.as_view(), name='delete_category_image'),
     path('category/<int:pk>/edit/', views.CategoryUpdateView.as_view(), name='edit_category'),
     path('category/<int:pk>/delete/', views.CategoryDeleteView.as_view(), name='delete_category'),

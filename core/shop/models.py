@@ -10,7 +10,6 @@ from bs4 import BeautifulSoup
 import datetime
 from datetime import timedelta
 
-
 class Store(models.Model):
 	name = models.CharField(max_length=250, unique=True)
 	is_active = models.BooleanField(default = False)

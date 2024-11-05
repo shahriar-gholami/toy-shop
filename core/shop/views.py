@@ -1,29 +1,25 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from random import randint
 from django.core.files.base import ContentFile
-
 from django import forms
 from django.utils import timezone
-from django.utils.timezone import make_aware
 from django.contrib.auth.models import AnonymousUser
-from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
 import datetime
-from datetime import timedelta
 import re
 import requests
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import json
 from .utils import IsOwnerUserMixin, IsCustomerUserMixin
 from django.http import HttpResponse
-import subprocess
-from django.views.generic import CreateView, ListView, DetailView, UpdateView, DeleteView
+from django.views.generic import  DeleteView
 from .forms import *
 from django.views import View
 from shop.models import *
 import random
 from accounts.models import User
 from utils import send_otp_code
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import login
 from django.urls import reverse_lazy
 from django.contrib import messages
 from django.apps import apps
@@ -32,11 +28,10 @@ from khayyam import JalaliDatetime
 from django.db.models import Q
 from googletrans import Translator
 import re
-from django.utils.decorators import method_decorator
-from django.views.decorators.csrf import csrf_exempt
-from subprocess import Popen
 
-MERCHANT = 'ab11efee-695b-4070-a6ac-cb22fba2f2eb'
+
+
+MERCHANT = Store.objects.all().first().merchant
 ZP_API_REQUEST = "https://api.zarinpal.com/pg/v4/payment/request.json"
 ZP_API_VERIFY = "https://api.zarinpal.com/pg/v4/payment/verify.json"
 ZP_API_STARTPAY = "https://www.zarinpal.com/pg/StartPay/{authority}"
@@ -201,7 +196,6 @@ class OwnerDashboardCustomersView(IsOwnerUserMixin, View):
 													'customers_number':customers_number,
 													'customers':customers,})
 
-
 class OwnerDashboardOrdersView(IsOwnerUserMixin, View):
 
 	template_name = f'{current_app_name}/owner-dashboard-orders.html'
@@ -236,7 +230,6 @@ class OwnerDashboardOrdersView(IsOwnerUserMixin, View):
 													'customers':customers,
 													'orders':orders,})
 
-
 class OwnerDashboardOrderDetailView(IsOwnerUserMixin, View):
 
 	template_name = f'{current_app_name}/order-detail-owner.html'
@@ -264,7 +257,6 @@ class OwnerDashboardProductsView(IsOwnerUserMixin, View):
 		return render(request, self.template_name, {'store_name':store_name,
 											  		'products':products,
 											  		})
-
 
 class OwnerDashboardMessagesView(IsOwnerUserMixin, View):
 	
@@ -370,7 +362,6 @@ class EnamadUpdateView(View):
 		
 		return render(request, self.template_name, {'form': form, 'store': store, 'store_update':store_update_url, 'wrong_input_message':'اطلاعات ورودی نا معتبر'})
 		
-
 class MetaDataView(IsOwnerUserMixin, View):
 
 	form_class = MetaForm
@@ -609,6 +600,15 @@ class CategoryDetailView(IsOwnerUserMixin, View):
 		return render(request, self.template_name, {'category':category})
 	
 class CategoryUpdateView(IsOwnerUserMixin, View):
+
+	template_name = 'shop/editcategory.html'
+
+	def get(self, request, pk):
+		store = Store.objects.get(name = store_name)
+		categories = Category.objects.filter(store=store)
+		category = Category.objects.get(id=pk)
+
+		return render(request, self.template_name, {'category':category, 'categories':categories})
 
 	def post(self, request, pk, *args, **kwargs):
 		category = Category.objects.filter(id=pk).first()
@@ -1104,7 +1104,6 @@ class FilterTagProducts(View):
 				'brands':brands,
 				'sizes':sizes,
 				'price_ranges':price_ranges})
-
 
 class FeaturedProductListView(View):
 
@@ -1745,7 +1744,6 @@ class ContactUsPageView(View):
 			)
 			return render(request, f'{current_app_name}/contact_{store.template_index}.html', {'message':'پیام شما با موفقیت ارسال گردید.'})
 		return render(request, f'{current_app_name}/contact_{store.template_index}.html', {'message':'مقادیر به درستی وارد نشده‌اند.'})
-
 
 class ProductSearchView(View):
 
@@ -2463,6 +2461,7 @@ class DeleteCategoryImageView(IsOwnerUserMixin, View):
 		return redirect(f'{current_app_name}:owner_dashboard_categories')
 
 class GetFeaturedCategories(IsOwnerUserMixin, View):
+	
 	def post(self, request, *args, **kwargs):
 		form = HomeCategoryShowForm(request.POST)
 		if form.is_valid():
@@ -2654,7 +2653,6 @@ class DeleteFilterValueView(View):
 		filter_value.delete()
 		return redirect(f'{current_app_name}:product_update', product.id)
 
-# Create a list of form classes
 form_classes = [type(f'FeatureFilterForm{i}', (FeatureFilterForm,), {}) for i in range(1, 4)]
 
 class FeatureFilterView(View):
@@ -2746,7 +2744,6 @@ class OwnerDashboardAnnouncements(View):
 				announcements.append(item)
 		return render(request, self.template_name, {'store':store, 'store_name':store_name, 'announcements':announcements})
 
-
 def format_features(features_list):
 	output = ""
 	for feature in features_list:
@@ -2774,8 +2771,6 @@ def download_and_save_images(image_urls, product_id):
 			
 			image.image.save(image_filename, ContentFile(response.content))
 			image.save()
-
-
 
 class AddProductFromDigikalaView(View):
 
@@ -3023,8 +3018,6 @@ class BrandProductListView(View):
 	def get(self, request, brand_name):
 		brand = Brand.objects.filter(name=brand_name).first()
 		products = Product.objects.filter(brand=brand.name)
-		print('OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO')
-		print(products)
 		items_per_page = 12
 		store = Store.objects.get(name=store_name)
 		categories = Category.objects.filter(store=store)
@@ -3234,20 +3227,15 @@ class TagDeleteView(IsOwnerUserMixin, View):
 		tag.delete()
 		return redirect(f'{current_app_name}:owner_dashboard_tag')
 
+class DeleteCategoryGroupView(View):
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+	def post(self, request, *args, **kwargs):
+		form = CategorySelectForm(request.POST)
+		selected_categories = request.POST.getlist('category_select')
+		for id in selected_categories:
+			category = Category.objects.get(id=id)
+			category.delete()
+		return redirect(f'{current_app_name}:owner_dashboard_categories' )
 
 
 

@@ -203,84 +203,64 @@
                                     </div>
                                 </form>
                         
-                                    <div class="card-header">
-                                            <h3 class="card-title">دسته‌بندی‌ها</h3>
-                                        </div>
-                                        <div class="card-body">
-                                            <div class="table-responsive mt">
-                                                <table class="table table-bordered text-nowrap mb-0" id="autofill-table">
-                                                    <thead>
-                                                    <tr>
-                                                        <th>عنوان<span class="text text-white"></span></th>
-                                                        <th>تصویر<span class="text text-white"></span></th>                  
-                                                        <th>عملیات<span class="text text-white"></span></th>
-                                                    </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        
-                                                        {% for category in categories %}
-                                                            <tr>
-                                                                <form method="post" action="{% url edit_category_url  category.id %}">
-                                                                    {% csrf_token %}
-                                                                    <td class="w-100">
-                                                                        <div class="g-2 w-100">
-                                                                        <div class="col-md-12 w-100">
-                                                                            <input name="name" value="{{category.name}}" class="form-control w-100" placeholder="نام دسته‌بندی" type="text">
-                                                                        </div>
-                                                                        </div>
-                                                                        <label class="custom-control custom-checkbox mb-0 form-footer mt-4">دسته‌بندی مادر {% if category.parent != None %} - مقدار فعلی: {{category.parent.name}} {% endif %}</label>
-                                                                        <div class="col-md-12 w-100">
-                                                                            <select name="parent" class="form-control select2-show-search form-select" data-placeholder="انتخاب" type="text">
-                                                                                {% if category.is_sub == True %}
-                                                                                <option value= "{{ category.parent.id }}" class="text-white">{{ category.parent.name }}</option>
-                                                                                {% else %}
-                                                                                <option value="0" class="text-white">انتخاب</option>
-                                                                                {% endif %}
-                                                                                {% for category in categories %}
-                                                                                    <li><option value="{{ category.id }}">{{ category.name }}</option></li>
-                                                                                {% endfor %}
-                                                                        </select>
-                                                                        </div>
-                                                                    </td>
-
-                                                                    <td>
-                                                                        <div class="file-image-1">
-                                                                            <a>
-                                                                                <img alt="" class="br-5" src="{{category.get_image_url}}">
-                                                                            </a>
-                                                                            
-                                                                        </div>
-                                                                    </td>
-                                                                    
-                                                                    <td>
-                                                                        <div class=" d-flex g-2">
-                                                                            <button type="submit" class="login100-form-btn btn-primary">ذخیره</button> 
-                                                                            
-                                                                            <a href="{% url 'shop:delete_category'  category.id %}" class="btn text-danger bg-danger-transparent btn-icon py-1"
-                                                                            data-bs-original-title="حذف" data-bs-toggle="tooltip"><span
-                                                                                    class="bi bi-trash fs-16"></span></a>
-                                                                        </div>
-                                                                        <div class=" d-flex g-2 mt-4">
-                                                                            <a class="btn btn-success login100-form-btn" href="{% url 'shop:image_bank'  'category' category.id %}">بروزرسانی تصویر</a> 
-                                                                            <a href="{% url 'shop:delete_category_image'  category.id %}" class="btn text-danger bg-danger-transparent btn-icon py-1"
-                                                                            data-bs-original-title="حذف تصویر" data-bs-toggle="tooltip"><span
-                                                                                    class="bi bi-trash fs-16"></span></a>
-                                                                            
-                                                                            
-                                                                        </div>
-                                                                    </td>
-                                                                </form>
-                                                            </tr>
-                                                        {% endfor %}
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                        
-                                    
-                                    
+                            </form>
                         
-                                </form>
+                            <div class="card-header">
+                                    <h3 class="card-title">دسته‌بندی‌ها</h3>
+                            </div>
+                            <div class="card-body">                                                        
+                                <form method="post" action="{% url 'shop:owner_dashboard_categories_delete_groupe' %}">
+                                {% csrf_token %}
+                                <div class="table-responsive mt">
+                                    <table class="table table-bordered text-nowrap mb-0" id="autofill-table">
+                                        <thead>
+                                        <tr>
+                                            <th>انتخاب<span class="text text-white"></span></th>
+                                            <th>تصویر دسته<span class="text text-white"></span></th>
+                                            <th>نام دسته<span class="text text-white"></span></th>
+                                            <th>بروزرسانی<span class="text text-white"></span></th>                  
+                                            <th>حذف دسته<span class="text text-white"></span></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for category in categories %}
+                                                <tr>
+                                                    <td class="align-middle">
+                                                        <div class="form-group m-0">
+                                                            <label class="custom-control custom-checkbox">
+                                                                <input class="custom-control-input" multiple="multiple"
+                                                                       name="category_select" type="checkbox" value="{{category.id}}">
+                                                                <span class="custom-control-label"></span>
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td class="align-middle">
+                                                        <div class="text-center">
+                                                            <img alt="" class="cart-img text-center"
+                                                                src="{{category.get_image_url}}">
+                                                        </div>
+                                                    </td>
+                                                    <td class="align-middle">
+                                                        {{ category.name }}
+                                                    </td>
+                                                    
+                                                    <td class="align-middle">
+                                                        <a class="btn btn-success login100-form-btn" href="{% url 'shop:edit_category' category.id %}">بروزرسانی دسته‌بندی</a> 
+                                                    </td>
+                                                    <td class="align-middle">
+                                                        <a href="{% url 'shop:delete_category' category.id %}" class="btn text-danger bg-danger-transparent btn-icon py-1"
+                                                        data-bs-original-title="حذف دسته‌بندی" data-bs-toggle="tooltip"><span class="bi bi-trash fs-16"></span></a>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                    <button class="login100-form-btn btn-danger mt-4" type="submit"><i
+                                        class="fa fa-trash me-2"></i>پاک کردن دسته‌های انتخاب شده
+                                    </button>
+                                </div>
+                            </div>
+                        </form>   
                             </div>
                         </div>
                     </div>
