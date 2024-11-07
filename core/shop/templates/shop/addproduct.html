@@ -59,17 +59,26 @@
                             <form method="post" action="{% url 'shop:add_product_from_dg' %}">
                                 {% csrf_token %}
                                 <div class="card-body">
-                                    <div class="form-group">
-                                        <div class="input-group">
-                                            <label class="col-md-12 form-label">
-                                                کد dkp یک عدد است که در صفحه محصول دیجی‌کالا، در نوار آدرس url پس از عبارت -dkp درج شده است. کافی است تنها بخش عددی این کد را در کادر زیر وارد نمایید.
-                                            </label>
-                                            
-                                            <input name="dkp_code" aria-describedby="button-addon1" aria-label="متن مثال با افزونه دکمه" class="form-control"
-                                                   placeholder="کد dkp محصول در دیجی‌کالا‌ را در اینجا وارد نمایید"
-                                                   type="text">
-                                            <button class="btn btn-light" id="button-addon2" type="submit">افزودن محصول به فروشگاه</button>
-                                            <p class="mt-2 col-md-12"> این فرایند ممکن است تا یک دقیقه به طول انجامد. لطفا از رفرش کردن صفحه جدا خودداری نمایید.</p>
+                                    <div class="row">
+                                        <div class="col-sm-6 col-md-6">
+                                            <div class="form-group">
+                                                <label class="form-label">کد dkp محصول یا محصولات (با خط فاصله - از هم جدا نمایید) <span class="text-red">*</span></label>
+                                                <input name="dkp_code" class="form-control" placeholder="کد محصول یا لیست کد محصولات" type="text">
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6 col-md-6">
+                                            <div class="form-group">
+                                                <label class="form-label">دسته‌بندی هدف<span class="text-red">*</span></label>
+                                                <select name="category" class="form-control select2" data-placeholder="انتخاب" type="text" multiple>
+                                                    <option selected="selected" value="0">دسته‌بندی نشده</option>
+                                                    {% for category in categories %}
+                                                    <option value="{{category.id}}">{{category.name}}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="container-login100-form-btn">
+                                            <button type="submit" class="login100-form-btn btn-primary">افزودن</button>    
                                         </div>
                                     </div>
                                 </div>

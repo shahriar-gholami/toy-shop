@@ -239,6 +239,7 @@ class FeatureFilterForm(forms.Form):
     
 class AddingProductFromDigiForm(forms.Form):
     dkp_code = forms.IntegerField()
+    category = forms.CharField()
 
 class CategorySelectForm(forms.Form):
     category_select = forms.CharField()

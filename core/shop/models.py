@@ -436,9 +436,9 @@ def logo_upload_path(instance, filename):
 
 class ProductImage(models.Model):
 	store = models.ForeignKey(Store, on_delete=models.CASCADE)
-	alt_name = models.CharField(max_length=250, null=True, blank=True)
+	alt_name = models.CharField(max_length=2000, null=True, blank=True)
 	product = models.ForeignKey(Product, on_delete=models.CASCADE)
-	custom_name = models.CharField(max_length=250, blank=True, null=True)
+	custom_name = models.CharField(max_length=2000, blank=True, null=True)
 	image = models.ImageField(upload_to=image_upload_path, default='media/11.png')
 	created = models.DateTimeField(auto_now_add=True)
 
