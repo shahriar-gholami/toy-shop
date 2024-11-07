@@ -238,7 +238,7 @@ class FeatureFilterForm(forms.Form):
         self.options = forms.MultipleChoiceField(choices=choices, widget=forms.CheckboxSelectMultiple)
     
 class AddingProductFromDigiForm(forms.Form):
-    dkp_code = forms.IntegerField()
+    dkp_code = forms.CharField()
     category = forms.CharField()
 
 class CategorySelectForm(forms.Form):

@@ -2798,78 +2798,81 @@ class AddProductFromDigikalaView(View):
 		if form.is_valid():
 			category_list = request.POST.getlist('category')
 			dkp_code = form.cleaned_data['dkp_code']
-			url = f'https://api.digikala.com/v2/product/{dkp_code}/'
-			shop_name = f'{Store.objects.all().first().name}'
-			try:
-				response = requests.get(url)
-				response.raise_for_status()
-				item = response.json()['data']['product']
-				brand = ''
-				title = ''
-				features= []
-				description = ''
-				price = 0
-				tags = []
-				images = []
-				main_image = ''
+			numbers = dkp_code.split("-")
+			numbers = [int(num) for num in numbers]
+			for dkp_code in numbers:
+				url = f'https://api.digikala.com/v2/product/{dkp_code}/'
+				shop_name = f'{Store.objects.all().first().name}'
+				try:
+					response = requests.get(url)
+					response.raise_for_status()
+					item = response.json()['data']['product']
+					brand = ''
+					title = ''
+					features= []
+					description = ''
+					price = 0
+					tags = []
+					images = []
+					main_image = ''
 
-				if item['specifications'][0] == [] or item['specifications'][0] == None:
-					features = []
-				else:
-					features= item['specifications'][0]['attributes']
-				brand = item['data_layer']['brand']
-				title = item['title_fa']
-				price = item['default_variant']['price']['selling_price']
-				tags = [tag['name'] for tag in item['tags']]
-				images = [image['url'][0].replace('?x-oss-process=image/resize,m_lfit,h_800,w_800/quality,q_90','').replace(' ','') for image in item['images']['list']]
-				main_image = item['images']['main']['url'][0].replace('?x-oss-process=image/resize,m_lfit,h_800,w_800/quality,q_90',''),
-				main_image = main_image[0]
-				description = item['review']['description']
-			except requests.exceptions.HTTPError as err:
-				print(f'HTTP error occurred: {err}')
-			except Exception as err:
-				print(f'Other error occurred: {err}')
+					if item['specifications'][0] == [] or item['specifications'][0] == None:
+						features = []
+					else:
+						features= item['specifications'][0]['attributes']
+					brand = item['data_layer']['brand']
+					title = item['title_fa']
+					price = item['default_variant']['price']['selling_price']
+					tags = [tag['name'] for tag in item['tags']]
+					images = [image['url'][0].replace('?x-oss-process=image/resize,m_lfit,h_800,w_800/quality,q_90','').replace(' ','') for image in item['images']['list']]
+					main_image = item['images']['main']['url'][0].replace('?x-oss-process=image/resize,m_lfit,h_800,w_800/quality,q_90',''),
+					main_image = main_image[0]
+					description = item['review']['description']
+				except requests.exceptions.HTTPError as err:
+					print(f'HTTP error occurred: {err}')
+				except Exception as err:
+					print(f'Other error occurred: {err}')
 
-			store = Store.objects.all().first()
-			if not description:
-				description = '-'
-			slug = title.replace(' ','-')
-			description = description
-			features = features
-			brand = brand
-			product_brand, create = Brand.objects.get_or_create(
-				name = brand,
-				store = store
-			)
-			price = price/10
-			tags = tags
-			new_product = Product.objects.create(
-				name = title,
-				store = store,
-				slug = slug,
-				description = description,
-				features = format_features(features),
-				brand = product_brand.name,
-				price = price,
-			)
-			for category_id in category_list:
-				if category_id == '0':
-					category, create = Category.objects.get_or_create(store = store,
-																		name = 'دسته‌بندی نشده',
-																		slug = 'ungategorized')
-				else:
-					category = Category.objects.get(id = category_id)
-				new_product.category.add(category)
-				new_product.save()
-				images = images
-				download_and_save_main_image(main_image, new_product.id)
-				download_and_save_images(images, new_product.id)
-				default_variety = Variety.objects.create(
-					store = store,
-					name = 'default variety',
-					product = new_product, 
-					stock = 2,
+				store = Store.objects.all().first()
+				if not description:
+					description = '-'
+				slug = title.replace(' ','-')
+				description = description
+				features = features
+				brand = brand
+				product_brand, create = Brand.objects.get_or_create(
+					name = brand,
+					store = store
 				)
+				price = price/10
+				tags = tags
+				new_product = Product.objects.create(
+					name = title,
+					store = store,
+					slug = slug,
+					description = description,
+					features = format_features(features),
+					brand = product_brand.name,
+					price = price,
+				)
+				for category_id in category_list:
+					if category_id == '0':
+						category, create = Category.objects.get_or_create(store = store,
+																			name = 'دسته‌بندی نشده',
+																			slug = 'ungategorized')
+					else:
+						category = Category.objects.get(id = category_id)
+					new_product.category.add(category)
+					new_product.save()
+					images = images
+					download_and_save_main_image(main_image, new_product.id)
+					download_and_save_images(images, new_product.id)
+					default_variety = Variety.objects.create(
+						store = store,
+						name = 'default variety',
+						product = new_product, 
+						stock = 2,
+					)
 		return redirect('shop:product_list')				
 					
 class SpecialProductListView(View):
