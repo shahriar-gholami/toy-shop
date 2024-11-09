@@ -54,10 +54,15 @@ class ProductAdmin(admin.ModelAdmin):
     @admin.display(description='Active Price')
     def active_price(self, obj):
         return obj.get_active_price()
-    list_display = ('name', 'price','sales_price','ref_price','off_active', 'active_price','ref_class','stock_alarm_volume','stock_alarm', 'show_varieties')
-    list_editable = ('ref_class','price','ref_price','stock_alarm_volume','off_active','sales_price')
+    list_display = ('id','name', 'price','sales_price','ref_price','off_active', 'active_price','ref_class','stock_alarm', 'display_varieties_stock')
+    list_editable = ('name', 'ref_class','price','ref_price','off_active','sales_price')
     search_fields = ['name', 'slug']
     prepopulated_fields = {'slug': ('name',)}  # تولید اتوماتیک اسلاگ از نام
+
+    def display_varieties_stock(self, obj):
+        stock_info = obj.get_stock_info()
+        return ', '.join([f'{variety}: {stock}' for variety, stock in stock_info.items()])
+    display_varieties_stock.short_description = 'Varieties Stock'
 
 @admin.register(Cart)
 class CartAdmin(admin.ModelAdmin):

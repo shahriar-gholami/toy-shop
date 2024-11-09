@@ -405,8 +405,15 @@ class Product(models.Model):
 		varieties = Variety.objects.filter(product = self)
 		return varieties
 	
+	def get_stock_info(self):
+		varieties = Variety.objects.filter(product = self)
+		stock_info = {}
+		for variety in varieties:
+			stock_info[f'{variety.name}'] = variety.stock
+		return stock_info
+	
 	def get_absolute_url(self):
-		return reverse('shop:product_detail', kwargs={'store_name': self.store.name, 'product_slug':self.slug})
+		return reverse('shop:product_detail', kwargs={'product_slug':self.slug})
 
 	def get_sell_stats(self):
 		selled = 0
