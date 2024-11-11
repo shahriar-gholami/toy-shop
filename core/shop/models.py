@@ -236,6 +236,12 @@ class Category(models.Model):
 			categories = Category.objects.filter(store=self.store, parent=self)
 			return categories
 		return None
+	
+	def get_category_brands(self):
+		brands = []
+		products = self.product_set.all()
+		pass
+
 
 	def get_image_url(self):
 		image = CategoryImage.objects.get(store=self.store, category=self)
@@ -282,6 +288,7 @@ class Product(models.Model):
 	ref_class = models.ForeignKey(ProductRefClass, null=True, blank=True, on_delete=models.SET_NULL)
 	ref_price = models.IntegerField(default=0, null=True, blank=True)
 	stock_alarm_volume = models.IntegerField(default=0, null=True, blank=True)
+	is_original = models.BooleanField(default=False)
 
 	def get_filtered_products(self, filter_value_ids):
 		products = Product.objects.all()
@@ -293,9 +300,8 @@ class Product(models.Model):
 	
 	def show_varieties(self):
 		varieties = Variety.objects.filter(product=self)
-		return ", ".join([f"{variety.name} (Stock: {variety.stock})" for variety in varieties])
+		return ", ".join([f"{variety.name} (Stock: {variety.stock})" for variety in varieties])	
 
-	
 	def get_stock_alarm_status(self):
 		varieties = Variety.objects.filter(product = self)
 		stock_volume = 0

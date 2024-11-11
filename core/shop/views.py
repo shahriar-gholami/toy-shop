@@ -976,6 +976,11 @@ class ProductListView(View):
 					products = Product.objects.filter(category = product_cat, store = store)
 				else:
 					products = Product.objects.filter(store=store)
+				categories = []
+				if product_cat.is_sub == True:
+					categories = []
+				else:
+					categories = [cat for cat in Category.objects.all() if cat.parent == product_cat]
 				
 			brand = form.cleaned_data['brand']
 			if brand != '':
@@ -1003,7 +1008,7 @@ class ProductListView(View):
 
 			if selected_price_range != None and filtered_products == []:
 				products = []
-			categories = Category.objects.filter(store=store)
+			
 			store = Store.objects.get(name=store_name)
 			products_urls = f'{current_app_name}:product_detail'
 			sizes = Size.objects.all()
@@ -1188,10 +1193,13 @@ class CategoryProductsListView(View):
 			new_form = FeatureFilterForm
 			my_forms.append(new_form)
 		category = Category.objects.get(slug = category_slug, store=store)
+		categories = []
+		if category.is_sub == True:
+			categories = []
+		else:
+			categories = [cat for cat in Category.objects.all() if cat.parent == category]
 		filters = Filter.objects.filter(category=category, store=store)
 		products = Product.objects.filter(store=store,category=category)
-		categories = Category.objects.filter(store=store)
-
 		selected_values = []
 		active_filters = []
 		for key, value in request.session.items():
@@ -1229,6 +1237,7 @@ class CategoryProductsListView(View):
 				'filters':filters,
 				'my_forms':my_forms,
 				'active_filters':active_filters,
+				'main_selected_category': category
 				})
 		
 class ProductDetailView(View):

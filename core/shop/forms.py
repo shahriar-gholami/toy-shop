@@ -75,6 +75,7 @@ class ProductForm(forms.Form):
         price = forms.IntegerField(required=False)
         sales_price = forms.IntegerField(required=False)
         off_active = forms.CharField(max_length=250, required=False)
+        is_original = forms.CharField(max_length=250, required=False)
         category = forms.CharField(max_length=250, required=False)
         
 class FilterProductsForm(forms.Form):
