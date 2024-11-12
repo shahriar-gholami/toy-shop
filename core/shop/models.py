@@ -185,14 +185,6 @@ class OtpCode(models.Model):
 	def __str__(self):
 		return f'{self.phone_number} - {self.code} - {self.created}'	
 
-	# def get_total_purchases(self):
-	# 	orders = Order.objects.filter(customer=self)
-	# 	total = 0
-	# 	for order in orders:
-	# 		if order.status.latest_status=='paid' or order.status.latest_status=='delivered':
-	# 			total += order.total_price
-	# 	return total
-
 class Delivery(models.Model):
 	store = models.ForeignKey(Store, on_delete=models.CASCADE)
 	name = models.CharField(max_length = 250)
@@ -240,8 +232,12 @@ class Category(models.Model):
 	def get_category_brands(self):
 		brands = []
 		products = self.product_set.all()
-		pass
-
+		brands = set()
+		for product in products:
+			if product.brand:
+				brand = Brand.objects.get(name = product.brand)
+				brands.add(brand)
+		return brands		
 
 	def get_image_url(self):
 		image = CategoryImage.objects.get(store=self.store, category=self)
@@ -927,6 +923,9 @@ class Services(models.Model):
 class Brand(models.Model):
 	store = models.ForeignKey(Store, on_delete=models.CASCADE)
 	name = models.CharField(max_length=250)
+
+	def __str__(self):
+		return self.name
 
 class Recommender(models.Model):
 	full_name = models.CharField(max_length = 250)

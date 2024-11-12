@@ -44,7 +44,7 @@
         <nav aria-label="breadcrumb" class="my-lg-0 my-2">
             <ol class="breadcrumb mb-0">
                 <li class="breadcrumb-item"><a href="{% url 'shop:index'  %}" class="font-14 text-muted-two">خانه</a></li>
-                <li class="breadcrumb-item"><a href="#" class="font-14 text-muted-two">فروشگاه</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'shop:product_list'  %}" class="font-14 text-muted-two">فروشگاه</a></li>
                 </li>
             </ol>
         </nav>
@@ -275,7 +275,6 @@
                                 <h5 class="filter-item-title">برندها</h5>
                                 <div class="filter-item-content mt-4">
                                     <div class="align-items-center justify-content-between flex-wrap mb-3">
-                                        
                                         <div class="col-md-12">
                                             <div class="comment-item" for="floatingInputOstan">
                                                 <label class="label-float fw-bold">برندها <span class="text-danger">*</span></label>
@@ -287,10 +286,10 @@
                                                         <option value="0" class="text-white">انتخاب</option>
                                                     {% endif %}    
                                                     {% for brand in brands %}
-                                                        <option value="{{brand.id}}">{{brand.name}}</option>
+                                                        <option value="{{brand.id}}">{{brand}}</option>
                                                     {% endfor %}
+                                                    
                                                 </select>
-            
                                             </div>
                                         </div>
                                     </div>
@@ -323,7 +322,6 @@
                                 <input type="submit" class="btn main-color-green text-white rounded-pill px-5 py-2" value="اعمال فیلتر">
                                 </form>
                             </div>
-                                
                         </div>
 
                         {% if category %}

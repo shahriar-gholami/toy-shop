@@ -977,18 +977,24 @@ class ProductListView(View):
 				else:
 					products = Product.objects.filter(store=store)
 				categories = []
-				if product_cat.is_sub == True:
-					categories = []
-				else:
-					categories = [cat for cat in Category.objects.all() if cat.parent == product_cat]
-				
+				if product_cat:
+					if product_cat.is_sub == True:
+						categories = []
+					else:
+						categories = [cat for cat in Category.objects.all() if cat.parent == product_cat]
+			
+			brands = Brand.objects.filter(store=store)	
 			brand = form.cleaned_data['brand']
 			if brand != '':
 				selected_brand = Brand.objects.filter(id = brand).first()
 				if brand != '0':
 					products = products.filter(brand = selected_brand.name)
+					main_selected_brand = Brand.objects.filter(id = brand).first()
+					brands = list(Brand.objects.filter(id = brand))
 				else:
 					products = products.filter(store=store)
+					if category != '0':
+						brands = product_cat.get_category_brands()
 							
 			filtered_products = []
 			price_ranges = form.cleaned_data['price_range']
@@ -1013,11 +1019,10 @@ class ProductListView(View):
 			products_urls = f'{current_app_name}:product_detail'
 			sizes = Size.objects.all()
 			price_ranges = PriceRange.objects.all()
-			brands = Brand.objects.filter(store=store)
-			if brand != '0':
-				selected_brand = Brand.objects.get(id=brand)
-			else:
-				selected_brand = None
+			# if brand != '0':
+			# 	selected_brand = Brand.objects.get(id=brand)
+			# else:
+			# 	selected_brand = None
 
 			my_forms = []
 			if category != '0':
@@ -1220,6 +1225,7 @@ class CategoryProductsListView(View):
 		price_ranges = PriceRange.objects.all()
 		paginator = Paginator(products, 12)
 		page = request.GET.get('page', 1)
+		brands = category.get_category_brands()
 		try:
 			products = paginator.page(page)
 		except PageNotAnInteger:
@@ -1235,6 +1241,7 @@ class CategoryProductsListView(View):
 				'price_ranges':price_ranges,
 				'category':category,
 				'filters':filters,
+				'brands': brands,
 				'my_forms':my_forms,
 				'active_filters':active_filters,
 				'main_selected_category': category
@@ -1244,8 +1251,6 @@ class ProductDetailView(View):
 
 	def get(self, request, product_slug ):
 		store = Store.objects.get(name=store_name)
-		print('YYYYYYYYYYYYYYYYYYYYYYYy')
-		print(product_slug)
 		product = Product.objects.filter(slug = product_slug, store=store).first()
 		product.views = product.views + 1
 		product.save()
