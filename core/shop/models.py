@@ -237,6 +237,14 @@ class Category(models.Model):
 			if product.brand:
 				brand = Brand.objects.get(name = product.brand)
 				brands.add(brand)
+		if self.get_sub_categories() != None:
+			sub_categories = self.get_sub_categories()
+			for sub_cat in sub_categories:
+				products = sub_cat.product_set.all()
+				for product in products:
+					if product.brand:
+						brand = Brand.objects.get(name = product.brand)
+						brands.add(brand)
 		return brands		
 
 	def get_image_url(self):

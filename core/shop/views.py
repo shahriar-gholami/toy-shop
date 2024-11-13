@@ -970,10 +970,21 @@ class ProductListView(View):
 			print(form.cleaned_data)
 			store = Store.objects.get(name=store_name)
 			category = form.cleaned_data['category']
+			products = set()
 			if category != '':
 				product_cat = Category.objects.filter(id = int(category)).first()
 				if category != '0':
-					products = Product.objects.filter(category = product_cat, store = store)
+					cat_products = Product.objects.filter(store=store,category=product_cat)
+					for product in cat_products:
+						products.add(product)
+					if product_cat.get_sub_categories() != None:
+						sub_categories = product_cat.get_sub_categories()
+						for sub_cat in sub_categories:
+							sub_products = sub_cat.product_set.all()
+							for product in sub_products:
+								products.add(product)
+
+
 				else:
 					products = Product.objects.filter(store=store)
 				categories = []
@@ -982,7 +993,10 @@ class ProductListView(View):
 						categories = []
 					else:
 						categories = [cat for cat in Category.objects.all() if cat.parent == product_cat]
-			
+			product_ids = [product.id for product in products]
+			products = Product.objects.filter(id__in=product_ids)
+
+
 			brands = Brand.objects.filter(store=store)	
 			brand = form.cleaned_data['brand']
 			if brand != '':
@@ -1204,22 +1218,32 @@ class CategoryProductsListView(View):
 		else:
 			categories = [cat for cat in Category.objects.all() if cat.parent == category]
 		filters = Filter.objects.filter(category=category, store=store)
-		products = Product.objects.filter(store=store,category=category)
-		selected_values = []
-		active_filters = []
-		for key, value in request.session.items():
-			# بررسی آیا کلید با الگوی مورد نظر شروع می‌شود
-			if key.startswith('filter-'):
+		products = set()
+		cat_products = Product.objects.filter(store=store,category=category)
+		for product in cat_products:
+			products.add(product)
+		if category.get_sub_categories() != None:
+			sub_categories = category.get_sub_categories()
+			for sub_cat in sub_categories:
+				sub_products = sub_cat.product_set.all()
+				for product in sub_products:
+					products.add(product)
+
+		# selected_values = []
+		# active_filters = []
+		# for key, value in request.session.items():
+		# 	# بررسی آیا کلید با الگوی مورد نظر شروع می‌شود
+		# 	if key.startswith('filter-'):
 				
-				filter_name = key.replace('filter-', '')
-				selected_filter = Filter.objects.get(store = store, name = filter_name)
-				for posi_value in selected_filter.value.all():
-					if posi_value.value in value:
-						new_active_filter = {'filter':selected_filter,'value':posi_value}
-						active_filters.append(new_active_filter)
-						selected_values.append(posi_value.id)
-		products = Product.get_filtered_products(Product ,selected_values)
-		products = products.filter(store = store, category = category)
+		# 		filter_name = key.replace('filter-', '')
+		# 		selected_filter = Filter.objects.get(store = store, name = filter_name)
+		# 		for posi_value in selected_filter.value.all():
+		# 			if posi_value.value in value:
+		# 				new_active_filter = {'filter':selected_filter,'value':posi_value}
+		# 				active_filters.append(new_active_filter)
+		# 				selected_values.append(posi_value.id)
+		# products = Product.get_filtered_products(Product ,selected_values)
+		products = list(products)
 		products_urls = f'{current_app_name}:product_detail'
 		sizes = Size.objects.all()
 		price_ranges = PriceRange.objects.all()
@@ -1243,7 +1267,7 @@ class CategoryProductsListView(View):
 				'filters':filters,
 				'brands': brands,
 				'my_forms':my_forms,
-				'active_filters':active_filters,
+				# 'active_filters':active_filters,
 				'main_selected_category': category
 				})
 		

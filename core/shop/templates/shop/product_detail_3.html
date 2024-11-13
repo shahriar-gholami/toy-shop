@@ -129,13 +129,13 @@
                         </div>
                         <div class="product-meta-overal my-3 bottom-border">
                             <div class="row gy-3 align-items-center">
-                                <div class="col-md-4">
+                                <div class="col-md-2">
                                     <div class="label-site rounded-pill label-success">
                                         <i class="bi bi-check-circle me-1"></i>
                                         موجود در انبار
                                     </div>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-5">
                                     <div class="d-flex align-items-center">
                                         <span class="text-muted-two me-2">دسته بندی</span>{% for category in product.category.all %}
                                         <div class="label-site rounded-pill">
@@ -143,10 +143,18 @@
                                         </div>{% endfor %}
                                     </div>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-2">
                                     <span class="text-muted-two me-2">کد محصول</span>
                                     <span>sku-{{product.id}}</span>
                                 </div>
+                                {% if product.is_original %}
+                                <div class="col-md-3">
+                                    <div class="label-site rounded-pill label-success">
+                                        <i class="bi bi-check-circle me-1"></i>
+                                        کالای اورجینال
+                                    </div>
+                                </div>
+                                {% endif %}
                             </div>
                         </div>
                         <form method="post" action="{% url 'shop:add_to_cart'  product.id %}">
