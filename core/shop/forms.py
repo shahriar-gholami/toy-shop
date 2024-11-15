@@ -71,6 +71,7 @@ class ProductForm(forms.Form):
         description = forms.CharField(widget=CKEditorWidget(), required=False)
         tags = forms.CharField(max_length=1000, required=False)
         features = forms.CharField(max_length=1000, required=False)
+        color = forms.CharField(max_length=250, required=False)
         brand = forms.CharField(max_length=250, required=False)
         price = forms.IntegerField(required=False)
         sales_price = forms.IntegerField(required=False)
@@ -87,6 +88,7 @@ class FilterProductsForm(forms.Form):
     # )
     price_range = forms.CharField(required=False)
     brand = forms.CharField(required=False)
+    color = forms.CharField(required=False)
 
 class CartEditForm(forms.Form):
     count = forms.IntegerField()

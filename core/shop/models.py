@@ -267,11 +267,19 @@ class ProductRefClass(models.Model):
 	def __str__(self):
 		return self.name
 
+class ProductColor(models.Model):
+	store = models.ForeignKey(Store, on_delete=models.CASCADE)
+	name = models.CharField(max_length=250)
+	color_code = models.CharField(max_length=250)
+
+	def __str__(self):
+		return self.name
+
 class Product(models.Model):
 	store = models.ForeignKey(Store, on_delete=models.CASCADE)
 	category = models.ManyToManyField(Category)
 	name = models.CharField(max_length=200)
-	slug = models.SlugField(max_length=200)
+	slug = models.CharField(max_length=200)
 	description = RichTextField()
 	features = RichTextField()
 	brand = models.CharField(max_length=250, null=True, blank=True)
@@ -283,16 +291,17 @@ class Product(models.Model):
 	created = models.DateTimeField(auto_now_add=True)
 	updated = models.DateTimeField(auto_now=True)
 	views = models.IntegerField(default = 0)
-	meta_description = models.CharField(max_length=500, default='')
-	meta_keywords = models.CharField(max_length=500, default='')
-	meta_og_title = models.CharField(max_length=250, default= '')
-	meta_og_description = models.CharField(max_length=1000, default= '')
-	meta_tc_title = models.CharField(max_length=250, default= '')
-	meta_tc_description = models.CharField(max_length=250, default= '')
+	meta_description = models.CharField(max_length=500, null=True, blank = True)
+	meta_keywords = models.CharField(max_length=500, null=True, blank = True)
+	meta_og_title = models.CharField(max_length=250,  null=True, blank = True)
+	meta_og_description = models.CharField(max_length=1000,  null=True, blank = True)
+	meta_tc_title = models.CharField(max_length=250,  null=True, blank = True)
+	meta_tc_description = models.CharField(max_length=250,  null=True, blank = True)
 	ref_class = models.ForeignKey(ProductRefClass, null=True, blank=True, on_delete=models.SET_NULL)
 	ref_price = models.IntegerField(default=0, null=True, blank=True)
 	stock_alarm_volume = models.IntegerField(default=0, null=True, blank=True)
 	is_original = models.BooleanField(default=False)
+	color = models.ManyToManyField(ProductColor, blank=True)
 
 	def get_filtered_products(self, filter_value_ids):
 		products = Product.objects.all()
@@ -434,6 +443,26 @@ class Product(models.Model):
 					selled = selled + item['quantity']
 		return selled
 
+	def get_related_products(self):
+		related_products = set()
+		product_categoreis = self.category.all()
+		for cat in product_categoreis:
+			if cat.is_sub == True:
+				products = cat.product_set.all()
+				for product in products:
+					if product != self:
+						related_products.add(product)
+						if len(related_products)>=6:
+							return list(related_products)
+		for cat in product_categoreis:
+			if cat.is_sub == False:
+				products = cat.product_set.all()
+				for product in products:
+					if product != self:
+						related_products.add(product)
+						if len(related_products)>=6:
+							return list(related_products)
+		return list(related_products)
 
 
 	def __str__(self):

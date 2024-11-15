@@ -832,7 +832,9 @@ class ProductUpdateView(IsOwnerUserMixin, View):
 		update_variety_url = f'{current_app_name}:update_variety'
 		image_delete_url = f'{current_app_name}:product_image_delete'
 		delete_variety_url = f'{current_app_name}:delete_variety'
-		return render(request, self.template_name, {'form': form, 
+		colors = ProductColor.objects.all()
+		return render(request, self.template_name, {'form': form,
+											  		'colors': colors, 
 													'categories': categories, 
 													'store_name':store_name, 
 													'product': product, 
@@ -857,6 +859,14 @@ class ProductUpdateView(IsOwnerUserMixin, View):
 		form = ProductForm(request.POST)
 		categories = Category.objects.filter(store=store)
 		if form.is_valid():
+			print('QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ')
+			print(form.cleaned_data)
+			color_codes = request.POST.getlist('color')
+			print(color_codes)
+			if color_codes != []:
+				for code in color_codes:
+					new_color = ProductColor.objects.get(id = int(code))
+					product.color.add(new_color)
 			name = form.cleaned_data['name']
 			product.name = name
 			price = form.cleaned_data['price']
@@ -864,11 +874,15 @@ class ProductUpdateView(IsOwnerUserMixin, View):
 			sales_price = form.cleaned_data['sales_price']
 			product.sales_price = sales_price
 			off_active = form.cleaned_data['off_active']
-			print(off_active)
 			if off_active == '1':
 				product.off_active = True
 			if off_active == '0':
 				product.off_active = False
+			original = form.cleaned_data['is_original']
+			if original == '0':
+				product.is_original = False
+			if original == '1':
+				product.is_original = True
 			brand = form.cleaned_data['brand']
 			new_brand, create = Brand.objects.get_or_create(name=brand, store=store)
 			product.brand = brand
@@ -950,8 +964,10 @@ class ProductListView(View):
 		products_urls = f'{current_app_name}:product_detail'
 		sizes = Size.objects.all()
 		price_ranges = PriceRange.objects.all()
+		colors = ProductColor.objects.all()
 		return render(request, f'{current_app_name}/product_list_{store.template_index}.html', 
 				{'products': products, 
+	 			'colors': colors,
 				'to_products':products_urls, 
 				'store_name':store_name, 
 				'categories':categories,
@@ -996,7 +1012,6 @@ class ProductListView(View):
 			product_ids = [product.id for product in products]
 			products = Product.objects.filter(id__in=product_ids)
 
-
 			brands = Brand.objects.filter(store=store)	
 			brand = form.cleaned_data['brand']
 			if brand != '':
@@ -1017,26 +1032,34 @@ class ProductListView(View):
 					selected_price_range = PriceRange.objects.filter(id = int(form.cleaned_data['price_range'])).first()
 			else:
 				selected_price_range = None
-
 			if selected_price_range != None:
 				for product in products:
 								if product.price<selected_price_range.max_value and product.price>=selected_price_range.min_value:
 									filtered_products.append(product.id)
-			
 			if filtered_products != []:
 				products = products.filter(id__in=filtered_products, store=store)
-
 			if selected_price_range != None and filtered_products == []:
+				products = []
+
+			filtered_products = []
+			color = form.cleaned_data['color']
+			if color != '0' and color != '':
+				selected_color = ProductColor.objects.filter(id = int(form.cleaned_data['color'])).first()
+			else:
+				selected_color = None
+			if selected_color != None:
+				for product in products:
+					if selected_color in product.color.all():
+						filtered_products.append(product.id)
+			if filtered_products != []:
+				products = products.filter(id__in=filtered_products, store=store)
+			if selected_color != None and filtered_products == []:
 				products = []
 			
 			store = Store.objects.get(name=store_name)
 			products_urls = f'{current_app_name}:product_detail'
 			sizes = Size.objects.all()
 			price_ranges = PriceRange.objects.all()
-			# if brand != '0':
-			# 	selected_brand = Brand.objects.get(id=brand)
-			# else:
-			# 	selected_brand = None
 
 			my_forms = []
 			if category != '0':
@@ -1079,8 +1102,11 @@ class ProductListView(View):
 				# اگر شماره صفحه بیشتر از تعداد کل صفحات است
 				products = paginator.page(paginator.num_pages)
 
+			colors = ProductColor.objects.all()
+
 			return render(request, f'{current_app_name}/product_list_{store.template_index}.html', 
 				 {'products': products, 
+	  			'colors': colors,
 				'brands':brands,
 				'to_products':products_urls, 
 				'store_name':store_name, 
@@ -1155,6 +1181,7 @@ class FeaturedProductListView(View):
 			if type_label == 'tag':
 				products = Product.objects.filter(tags__id=obj_id)
 			elif type_label == 'category':
+				main_selected_category = Category.objects.get(id = obj_id)
 				products = Product.objects.filter(category__id=obj_id)
 		items_per_page = 12
 		paginator = Paginator(products, items_per_page)
@@ -1164,9 +1191,14 @@ class FeaturedProductListView(View):
 		except PageNotAnInteger:
 			products = paginator.page(1)
 		except EmptyPage:
-			products = paginator.page(paginator.num_pages)		
+			products = paginator.page(paginator.num_pages)
+		brands = Brand.objects.all()
+		colors = ProductColor.objects.all() 		
 		return render(request, f'{current_app_name}/product_list_{store.template_index}.html',
 				 {'products': products, 
+	  			'brands': brands,
+				'colors': colors,
+	  			'main_selected_category': main_selected_category,
 				'to_products':products_urls, 
 				'store_name':store_name, 
 				'categories':categories,
@@ -1256,8 +1288,11 @@ class CategoryProductsListView(View):
 			products = paginator.page(1)
 		except EmptyPage:
 			products = paginator.page(paginator.num_pages)
+
+		colors = ProductColor.objects.all()
 		return render(request, f'{current_app_name}/product_list_{store.template_index}.html', 
 				{'products': products, 
+	 			'colors': colors,
 				'to_products':products_urls, 
 				'store_name':store_name, 
 				'categories':categories,
@@ -2796,31 +2831,26 @@ def format_features(features_list):
 def download_and_save_images(image_urls, product_id):
 	product = Product.objects.get(id=product_id)
 	store = product.store
-	
 	for url in image_urls:
 		response = requests.get(url)
 		if response.status_code == 200:
-			image_name = f'{product.name}-{store.name}'[0:249]
-			timestamp = timezone.now().strftime("%Y%m%d_%H%M%S")
-			image_filename = f"{timestamp}_{os.path.splitext(image_name)[0][:100]}{os.path.splitext(image_name)[1]}"
-			
+			image_name = product.name
+			image_filename = image_name
 			image = ProductImage(
 				store=store,
 				product=product,
 			)
-			
 			image.image.save(image_filename, ContentFile(response.content))
 			image.save()
 
 def download_and_save_main_image(image_url, product_id):
 	product = Product.objects.get(id=product_id)
 	store = product.store
-	
 	url = image_url
 	response = requests.get(url)
 	if response.status_code == 200:
-		image_name = f'{product.name}'
-		image_filename = f"{image_name}"
+		image_name = product.name
+		image_filename = image_name
 		image = ProductImage(
 			store=store,
 			product=product,
@@ -2860,6 +2890,11 @@ class AddProductFromDigikalaView(View):
 						features= item['specifications'][0]['attributes']
 					brand = item['data_layer']['brand']
 					title = item['title_fa']
+					title = title.replace("/", "")
+					words = title.split()
+					if len(words) > 15:
+						words = words[:15]
+					title = " ".join(words)
 					price = item['default_variant']['price']['selling_price']
 					tags = [tag['name'] for tag in item['tags']]
 					images = [image['url'][0].replace('?x-oss-process=image/resize,m_lfit,h_800,w_800/quality,q_90','').replace(' ','') for image in item['images']['list']]

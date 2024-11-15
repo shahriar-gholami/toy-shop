@@ -337,7 +337,7 @@
                 </div>
 
                 
-                {% for product in products|slice:":6" %}
+                {% for product in product.get_related_products %}
                 <div class="col-md-6 col-xl-2 col-sm-6">
                     <div class="card">
                         <div class="product-grid6">

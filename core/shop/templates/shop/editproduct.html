@@ -63,7 +63,7 @@
 
                                         <div class="col-md-9">
                                             <p>در حال حاضر حراج {% if product.off_active == True %} فعال {% else %} غیر فعال {% endif %} است.</p>
-                                            <select name="off_active" class="form-control select2-show-search form-select" data-placeholder="انتخاب" type="text">
+                                            <select name="off_active" class="form-control select2 form-select" data-placeholder="انتخاب" type="text">
                                                 {% if product.off_active == None %}
                                                     <option value="0">حراج غیر فعال</option>
                                                     <option value="1">حراج فعال</option>
@@ -103,6 +103,37 @@
                                             {% endif %}
                                             {% for category in categories %}
                                             <option value="{{category.id}}">{{category.name}}</option>
+                                            {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-4">
+                                        <label class="col-md-3 form-label">کالای اورجینال :</label>
+                                        <div class="col-md-9">
+                                            <select name="is_original" class="form-control select2 form-select" data-placeholder="انتخاب" type="text">
+                                            {% if product.is_original == True %}
+                                            <option selected="selected" value="1">کالای اورجینال</option>
+                                            <option  value="0">کالای غیر اورجینال</option>
+                                            {% else %}
+                                            <option selected="selected" value="0">کالای غیر اورجینال</option>
+                                            <option  value="1">کالای اورجینال</option>
+                                            {% endif %}
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-4">
+                                        <label class="col-md-3 form-label">رنگ محصول:</label>
+                                        <div class="col-md-9">
+                                            <select name="color" class="form-control select2-show-search form-select" data-placeholder="انتخاب" type="text" multiple>
+                                            {% if product.color != None %}
+                                            {% for color in product.color.all %}
+                                            <option selected="selected" value="{{ color.id }}">{{color.name}}</option>
+                                            {% endfor %}
+                                            {% endif %}
+                                            {% for color in colors %}
+                                            <option value="{{color.id}}">{{color.name}}</option>
                                             {% endfor %}
                                             </select>
                                         </div>

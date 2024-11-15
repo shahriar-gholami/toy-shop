@@ -844,7 +844,7 @@
             <div class="swiper product-slider-swiper">
 
                 <div class="swiper-wrapper ">
-                    {% for product in products %}
+                    {% for product in product.get_related_products %}
                     <div class="swiper-slide">
                         <div class="product-box">
                             <div>

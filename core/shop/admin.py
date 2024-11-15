@@ -1,6 +1,5 @@
 from django.contrib import admin
-from.models import ProductRefClass, Announcement,Domain, Ticket, TicketReply, Brand, Customer, Services, Subscription, FeaturedCategories, CategoryImage, UploadedImages, BlogPost, BlogCategory, WithdrawRecord, Comment, Faq, Banner, Slide, StoreLogoImage, ContactMessage, OtpCode, Store, Owner, Delivery, Category, Variety, Product, Cart, OrderStatus, Order, Size, PriceRange, Coupon, Tag
-# Register your models here.
+from.models import *
 
 
 @admin.register(ProductRefClass)
@@ -12,6 +11,11 @@ class OtpCodeAdmin(admin.ModelAdmin):
     search_fields = ('phone_number',)
 
 admin.site.register(OtpCode, OtpCodeAdmin)
+
+@admin.register(ProductColor)
+class ProductColorAdmin(admin.ModelAdmin):
+    list_display = ('name', 'color_code', 'store')  # نمایش فیلدهای اصلی در پنل ادمین
+    search_fields = ('name', 'color_code')
 
 @admin.register(Store)
 class StoreAdmin(admin.ModelAdmin):
@@ -46,6 +50,12 @@ class VarietyAdmin(admin.ModelAdmin):
     list_display = ('store', 'name', 'product', 'stock',)
     search_fields = ['name', 'product__name', 'store__name']
 
+class VarietyInline(admin.TabularInline):  # یا admin.StackedInline برای نمایش به صورت بلوکی
+    model = Variety
+    extra = 0  # تعداد فرم‌های اضافی
+    fields = ('name', 'stock')  # فیلدهایی که می‌خواهید قابل ویرایش باشند
+    can_delete = True  # در صورت نیاز به حذف کردن، این را به True تغییر دهید
+
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     @admin.display(boolean=True, description='Stock Alarm')
@@ -58,6 +68,7 @@ class ProductAdmin(admin.ModelAdmin):
     list_editable = ('name', 'ref_class','price','ref_price','off_active','sales_price')
     search_fields = ['name', 'slug']
     prepopulated_fields = {'slug': ('name',)}  # تولید اتوماتیک اسلاگ از نام
+    inlines = [VarietyInline]
 
     def display_varieties_stock(self, obj):
         stock_info = obj.get_stock_info()
