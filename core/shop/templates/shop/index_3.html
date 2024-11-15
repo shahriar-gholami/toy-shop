@@ -438,7 +438,7 @@
         <div class="swiper mt-4 product-slider-swiper">
 
             <div class="swiper-wrapper ">
-                {% for product in products|dictsortreversed:"views" %}
+                {% for product in most_viewed_products %}
                 <div class="swiper-slide">
                     <div class="product-box">
                         <a href="{% url to_products product.slug %}">

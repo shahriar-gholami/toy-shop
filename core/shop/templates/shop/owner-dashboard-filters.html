@@ -201,20 +201,27 @@
                                                     <tbody>
                                                         {% for filter in filters %}
                                                             <tr>
-                                                                
-                                                                    <td class="align-middle">{{filter.name}}</td>
+                                                                <form action="{% url 'shop:edit_filter' filter.id %}" method="post">
+                                                                    {% csrf_token %}
+                                                                    <td class="align-middle">
+                                                                        
+                                                                                <input name="name" class="form-control" id="postal" placeholder="عنوان فیلتر" value="{{filter.name}}"
+                                                                                       type="text">
+                                                                        
+                                                                    </td>
                                                                     <td class="align-middle">{{filter.category.name}}</td>
                                                                     <td class="align-middle">
                                                                     {% for value in filter.value.all %}{{value.value}}{% endfor %}
                                                                     </td>
                                                                     <td>
-                                                                        <div class=" d-flex g-2">
-                                                                            
-                                                                            <a href="{% url 'shop:delete_filter'  filter.id %}" class="btn text-danger bg-danger-transparent btn-icon py-1"
-                                                                            data-bs-original-title="حذف" data-bs-toggle="tooltip"><span
-                                                                                    class="bi bi-trash fs-16"></span></a>
-                                                                        </div>
+                                                                
+
+                                                                        <button class="btn btn-success" type="submit">بروزرسانی</button>
+                                                                        <a href="{% url 'shop:delete_filter'  filter.id %}" class="btn text-danger bg-danger-transparent btn-icon py-1"
+                                                                                                data-bs-original-title="حذف" data-bs-toggle="tooltip">حذف <span
+                                                                                                        class="bi bi-trash fs-16"></span></a>
                                                                     </td>
+                                                                </form>
                                                                 
                                                             </tr>
                                                         {% endfor %}

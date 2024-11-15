@@ -55,7 +55,17 @@ class IndexView(View):
 		products = Product.objects.filter(store=store)
 		to_products = f'{current_app_name}:product_detail'
 		featured_categories = FeaturedCategories.objects.filter(store = store).first()
-		return render(request, f'{current_app_name}/index_{store.template_index}.html', {'services':services,'posts':posts,'featured_categories':featured_categories,'to_products':to_products ,'products':products ,'store_name':store_name, 'slides':slides, 'small_banners':small_banners, 'big_banners':big_banners})
+		most_viewed_products = Product.objects.order_by('-views')[:8]
+		return render(request, f'{current_app_name}/index_{store.template_index}.html', {'services':services,
+																				   'posts':posts,
+																				   'featured_categories':featured_categories,
+																				   'to_products':to_products ,
+																				   'products':products ,
+																				   'store_name':store_name, 
+																				   'slides':slides, 
+																				   'small_banners':small_banners, 
+																				   'big_banners':big_banners,
+																				   'most_viewed_products':most_viewed_products})
 
 class OwnerView(View):
 
@@ -2693,6 +2703,18 @@ class FilterView(View):
 				store = store
 			)
 			return redirect(f'{current_app_name}:owner_dashboard_filters')
+		
+class EditFilterTitleView(IsOwnerUserMixin, View):
+
+	def post(self, request, filter_id):
+
+		form = EditFilterTitleForm(request.POST)
+		if form.is_valid():
+			filter_name = form.cleaned_data['name']
+			filter = Filter.objects.get(id=filter_id)
+			filter.name = filter_name
+			filter.save()
+		return redirect(f'{current_app_name}:owner_dashboard_filters')
 		
 class DeleteFilter(View):
 

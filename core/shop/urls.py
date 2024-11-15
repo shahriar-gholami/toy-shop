@@ -27,6 +27,7 @@ urlpatterns = [
     path('owner/dashboard/orders/<int:order_id>/', views.OwnerDashboardOrderDetailView.as_view(), name = 'owner_dashboard_order_detail'),
     path('owner/dashboard/products', views.OwnerDashboardProductsView.as_view(), name = 'owner_dashboard_products'),
     path('owner/dashboard/filters/', views.FilterView.as_view(), name = 'owner_dashboard_filters'),
+    path('owner/dashboard/filters/edit-filter/<str:filter_id>/', views.EditFilterTitleView.as_view(), name = 'edit_filter'),
     path('owner/dashboard/filters/<int:filter_id>/delete/', views.DeleteFilter.as_view(), name = 'delete_filter'),
     path('owner/dashboard/products/duplicate/<int:product_id>', views.CopyProductView.as_view(), name = 'owner_dashboard_copy_product'),
     path('owner/dashboard/customers/', views.OwnerDashboardCustomersView.as_view(), name = 'owner_dashboard_customers'),

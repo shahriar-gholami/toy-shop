@@ -78,6 +78,9 @@ class ProductForm(forms.Form):
         off_active = forms.CharField(max_length=250, required=False)
         is_original = forms.CharField(max_length=250, required=False)
         category = forms.CharField(max_length=250, required=False)
+
+class EditFilterTitleForm(forms.Form):
+    name = forms.CharField()
         
 class FilterProductsForm(forms.Form):
     category = forms.CharField(required=False)
