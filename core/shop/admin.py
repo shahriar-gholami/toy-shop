@@ -1,5 +1,7 @@
 from django.contrib import admin
 from.models import *
+from django.utils.html import format_html
+
 
 
 @admin.register(ProductRefClass)
@@ -64,11 +66,18 @@ class ProductAdmin(admin.ModelAdmin):
     @admin.display(description='Active Price')
     def active_price(self, obj):
         return obj.get_active_price()
-    list_display = ('id','name', 'price','sales_price','ref_price','off_active', 'active_price','ref_class','stock_alarm', 'display_varieties_stock')
-    list_editable = ('name', 'ref_class','price','ref_price','off_active','sales_price')
+    list_display = ('id','name', 'code','price','sales_price','ref_price','off_active', 'active_price','ref_class','stock_alarm', 'view_on_site_icon', 'display_varieties_stock')
+    list_editable = ('name', 'code','ref_class','price','ref_price','off_active','sales_price')
     search_fields = ['name', 'slug']
     prepopulated_fields = {'slug': ('name',)}  # تولید اتوماتیک اسلاگ از نام
     inlines = [VarietyInline]
+
+    def view_on_site_icon(self, obj):
+        url = obj.get_absolute_url()  # اطمینان حاصل کنید متد get_absolute_url در مدل تعریف شده
+        return format_html('<a href="{}" target="_blank">View</a>', url)
+
+    view_on_site_icon.short_description = 'View on Site'  # عنوان ستون در ادمین
+    view_on_site_icon.allow_tags = True
 
     def display_varieties_stock(self, obj):
         stock_info = obj.get_stock_info()

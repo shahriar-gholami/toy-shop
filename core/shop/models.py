@@ -199,7 +199,7 @@ class Delivery(models.Model):
 class Tag(models.Model):
 	store = models.ForeignKey(Store, on_delete=models.CASCADE)
 	name = models.CharField(max_length=200)
-	slug = models.SlugField(max_length=200)
+	slug = models.CharField(max_length=200)
 	is_special = models.BooleanField(default=False)
 
 	def get_products(self):
@@ -302,6 +302,7 @@ class Product(models.Model):
 	stock_alarm_volume = models.IntegerField(default=0, null=True, blank=True)
 	is_original = models.BooleanField(default=False)
 	color = models.ManyToManyField(ProductColor, blank=True)
+	code = models.CharField(max_length=20, null=True, blank=True)
 
 	def get_filtered_products(self, filter_value_ids):
 		products = Product.objects.all()

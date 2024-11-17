@@ -161,17 +161,59 @@
                             {% csrf_token %}
                         
                         <div class="product-meta-feature bottom-border">
-                            <div class="row gy-3">
-                                <div class="col-lg-8">
-                                    <div class="product-meta-feature-items">
-                                        <h5 class="title font-16 mb-2">ویژگی های کالا</h5>
-                                        <ul class="navbar-nav">
-                                            {% for line in product.get_brief_features %}    
-                                            <li class="nav item"><strong> {{line|safe}}</strong></li>
-                                            {% endfor %}
-                                        </ul>
+                            
+                                <div class="row gy-3">
+                                    <div class="col-lg-6">
+                                        <div class="product-meta-feature-items">
+                                            <h5 class="title font-16 mb-2">ویژگی های کالا</h5>
+                                            <ul class="navbar-nav">
+                                                {% for line in product.get_brief_features %}    
+                                                <li class="nav item"><strong> {{line|safe}}</strong></li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
                                     </div>
-                                </div>
+                                    <div class="col-lg-6">
+                                        <div class="row gy-3 text-start">
+                                            
+                                            
+                                            <div class="col-lg-6">
+                                                <div class="product-meta-rating mt-2 text-lg-start text-start">
+                                                    <div class="label-success rounded-pill py-2 text-center">
+                                                        ارسال امن و سریع
+                                                        <i class="bi bi-truck ms-2"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="product-meta-rating mt-2 text-lg-start text-start">
+                                                    <div class="label-success rounded-pill py-2 text-center">
+                                                        تضمین اصالت کالا
+                                                        <i class="bi bi-bookmark-star ms-2"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="product-meta-rating mt-2 text-lg-start text-start">
+                                                    <div class="label-success rounded-pill py-2 text-center">
+                                                        پشتیبانی ۲۴ ساعته
+                                                        <i class="bi bi-clock ms-2"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="product-meta-rating mt-2 text-lg-start text-start">
+                                                    <div class="label-success rounded-pill py-2 text-center">
+                                                        امکان عودت کالا
+                                                        <i class="bi bi-arrow-repeat ms-2"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                           
+                                        </div>
+                                    </div>
+                                
                                 {% if product.get_product_varieties.count > 1 %}
                                     <div class="product-meta-color">
                                         <h5 class="font-16">
