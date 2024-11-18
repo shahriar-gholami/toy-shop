@@ -1,6 +1,35 @@
 from django.contrib import admin
 from.models import *
 from django.utils.html import format_html
+from django import forms
+
+from django import forms
+from .models import Product, Category
+
+class ProductCategoryForm(forms.ModelForm):
+    category = forms.ModelMultipleChoiceField(
+        queryset=Category.objects.all(),
+        widget=forms.SelectMultiple,  # یا CheckboxSelectMultiple
+        required=False,
+        label="Categories"
+    )
+
+    class Meta:
+        model = Product
+        fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance.pk:  # فقط اگر محصول وجود داشته باشد
+            self.fields['category'].initial = self.instance.category.all()
+
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        if commit:
+            instance.save()
+        if instance.pk:
+            instance.category.set(self.cleaned_data['category'])
+        return instance
 
 
 
@@ -60,13 +89,14 @@ class VarietyInline(admin.TabularInline):  # یا admin.StackedInline برای �
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
+    # form = ProductCategoryForm
     @admin.display(boolean=True, description='Stock Alarm')
     def stock_alarm(self, obj):
         return obj.get_stock_alarm_status()
     @admin.display(description='Active Price')
     def active_price(self, obj):
         return obj.get_active_price()
-    list_display = ('id','name', 'code','price','sales_price','ref_price','off_active', 'active_price','ref_class','stock_alarm', 'view_on_site_icon', 'display_varieties_stock')
+    list_display = ('id','name', 'code', 'category','price','sales_price','ref_price','off_active', 'active_price','ref_class','stock_alarm', 'view_on_site_icon')
     list_editable = ('name', 'code','ref_class','price','ref_price','off_active','sales_price')
     search_fields = ['name', 'slug']
     prepopulated_fields = {'slug': ('name',)}  # تولید اتوماتیک اسلاگ از نام
@@ -78,6 +108,10 @@ class ProductAdmin(admin.ModelAdmin):
 
     view_on_site_icon.short_description = 'View on Site'  # عنوان ستون در ادمین
     view_on_site_icon.allow_tags = True
+
+    # def display_categories(self, obj):
+    #     return ', '.join([category.name for category in obj.category.all()])
+    # display_categories.short_description = "Categories"
 
     def display_varieties_stock(self, obj):
         stock_info = obj.get_stock_info()
