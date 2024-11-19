@@ -1,5 +1,6 @@
 import requests
 import json
+from shop.models import Product
 
 
 def send_domain_warn_msg(phone_number, owner_name):
@@ -95,7 +96,11 @@ def site_req_inform(phone_number, name):
     response = requests.request("POST", url, headers=headers, data=payload)
     print(response.text)
 
-
+def erase_stock_volume(product):
+    product_varieties = product.get_varieties()
+    for variety in product_varieties:
+        variety.stock = 0
+        variety.save()    
 
 
 

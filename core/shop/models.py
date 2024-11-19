@@ -303,6 +303,10 @@ class Product(models.Model):
 	is_original = models.BooleanField(default=False)
 	color = models.ManyToManyField(ProductColor, blank=True)
 	code = models.CharField(max_length=20, null=True, blank=True)
+	verified = models.BooleanField(default=False)
+
+	def get_varieties(self):
+		return Variety.objects.filter(product = self)
 
 	def get_filtered_products(self, filter_value_ids):
 		products = Product.objects.all()

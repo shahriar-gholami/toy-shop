@@ -1,0 +1,10 @@
+/* admin_custom.css */
+.field-code {
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding-right: 5px; /* اضافه کردن فضای داخلی در سمت راست */
+    margin-right: 5px;
+    border: 1cap;
+}
