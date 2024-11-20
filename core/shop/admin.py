@@ -77,8 +77,8 @@ class ProductAdmin(admin.ModelAdmin):
     @admin.display(description='Active Price')
     def active_price(self, obj):
         return obj.get_active_price()
-    list_display = ('id','name','display_categories', 'verified','code','price','sales_price','ref_price','off_active', 'active_price','ref_class','stock_alarm', 'view_on_site_icon', 'display_varieties_stock')
-    list_editable = ('name', 'verified','code','ref_class','price','ref_price','off_active','sales_price')
+    list_display = ('id','name','display_categories','age_class','brand' ,'code','price','sales_price','ref_price','off_active', 'active_price','ref_class','stock_alarm', 'view_on_site_icon','verified')
+    list_editable = ('name', 'verified','code','age_class','brand' ,'ref_class','price','ref_price','off_active','sales_price')
     search_fields = ['name', 'slug']
     prepopulated_fields = {'slug': ('name',)}  # تولید اتوماتیک اسلاگ از نام
     inlines = [VarietyInline]
@@ -89,6 +89,15 @@ class ProductAdmin(admin.ModelAdmin):
         }
 
     actions = [erase_stock,]
+
+    def save_model(self, request, obj, form, change):
+        if obj.brand:
+            brand_name = obj.brand  # حذف فاصله‌های اضافی
+            brand_obj, created = Brand.objects.get_or_create(
+                name=brand_name, defaults={'store': obj.store}
+            )
+            obj.brand = brand_obj.name
+            super().save_model(request, obj, form, change)
 
     def view_on_site_icon(self, obj):
         url = obj.get_absolute_url()  # اطمینان حاصل کنید متد get_absolute_url در مدل تعریف شده

@@ -304,6 +304,7 @@ class Product(models.Model):
 	color = models.ManyToManyField(ProductColor, blank=True)
 	code = models.CharField(max_length=20, null=True, blank=True)
 	verified = models.BooleanField(default=False)
+	age_class = models.IntegerField(default=1)
 
 	def get_varieties(self):
 		return Variety.objects.filter(product = self)

@@ -1,10 +1,11 @@
 /* admin_custom.css */
-.field-code {
-    max-width: 150px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    padding-right: 5px; /* اضافه کردن فضای داخلی در سمت راست */
-    margin-right: 5px;
-    border: 1cap;
+.field-code, .field-brand {
+    max-width: 75px; /* محدود کردن عرض */
+    overflow: hidden; /* جلوگیری از overflow */
+}
+
+/* admin_custom.css */
+/* مخفی کردن فقط آیکون‌های عملیات اضافه، ویرایش، و حذف */
+.related-widget-wrapper a {
+    display: none !important; /* مخفی کردن لینک‌های آیکون */
 }
