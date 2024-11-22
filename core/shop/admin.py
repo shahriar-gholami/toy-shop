@@ -4,7 +4,7 @@ from django.utils.html import format_html
 from django import forms
 from django.contrib import admin
 from .models import Product, Category
-from utils import erase_stock_volume
+from utils import erase_stock_volume, update_slugs
 
 
 
@@ -88,7 +88,7 @@ class ProductAdmin(admin.ModelAdmin):
             'all': ('assets/css/admin_custom.css',)  # لینک به فایل CSS
         }
 
-    actions = [erase_stock,]
+    actions = [erase_stock,update_slugs]
 
     def save_model(self, request, obj, form, change):
         if obj.brand:

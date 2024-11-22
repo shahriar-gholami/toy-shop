@@ -100,7 +100,14 @@ def erase_stock_volume(product):
     product_varieties = product.get_varieties()
     for variety in product_varieties:
         variety.stock = 0
-        variety.save()    
+        variety.save()  
+
+def update_slugs(modeladmin, request, queryset):
+    for product in queryset:
+        product.slug = product.name.replace(' ', '-')
+        product.save()
+    # نمایش پیام تایید برای کاربر
+    modeladmin.message_user(request, "Slugs updated successfully!")
 
 
 
