@@ -77,8 +77,8 @@ class ProductAdmin(admin.ModelAdmin):
     @admin.display(description='Active Price')
     def active_price(self, obj):
         return obj.get_active_price()
-    list_display = ('id','name','display_categories','age_class','brand' ,'code','price','sales_price','ref_price','off_active', 'active_price','ref_class','stock_alarm', 'view_on_site_icon','verified')
-    list_editable = ('name', 'verified','code','age_class','brand' ,'ref_class','price','ref_price','off_active','sales_price')
+    list_display = ('id','name','display_categories','age_class','brand' ,'code','price','sales_price','ref_price','off_active', 'active_price','ref_class','stock_alarm', 'view_on_site_icon', 'express','verified')
+    list_editable = ('name', 'verified','code','age_class','brand' ,'ref_class','price','ref_price','off_active','express','sales_price')
     search_fields = ['name', 'slug']
     prepopulated_fields = {'slug': ('name',)}  # تولید اتوماتیک اسلاگ از نام
     inlines = [VarietyInline]

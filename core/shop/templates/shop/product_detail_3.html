@@ -137,10 +137,12 @@
                                 </div>
                                 <div class="col-md-5">
                                     <div class="d-flex align-items-center">
-                                        <span class="text-muted-two me-2">دسته بندی</span>{% for category in product.category.all %}
+                                        <span class="text-muted-two me-2">دسته بندی</span>
+                                        {% for category in product.category.all %}
                                         <div class="label-site rounded-pill">
-                                            {{category.name}}
-                                        </div>{% endfor %}
+                                            <a href="{% url 'shop:category_products' category.slug %}">{{category.name}}</a>
+                                        </div>
+                                        {% endfor %}
                                     </div>
                                 </div>
                                 <div class="col-md-2">

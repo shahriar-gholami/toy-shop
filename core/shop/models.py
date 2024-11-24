@@ -305,6 +305,7 @@ class Product(models.Model):
 	code = models.CharField(max_length=20, null=True, blank=True)
 	verified = models.BooleanField(default=False)
 	age_class = models.IntegerField(default=1)
+	express = models.BooleanField(default=False)
 
 	def get_varieties(self):
 		return Variety.objects.filter(product = self)
@@ -969,6 +970,15 @@ class Brand(models.Model):
 
 	def __str__(self):
 		return self.name
+
+	def save(self, *args, **kwargs):
+		# بررسی اگر نام برند تغییر کرده باشد
+		if self.pk:
+			original_name = Brand.objects.get(pk=self.pk).name
+			if original_name != self.name:
+				# بروزرسانی نام برند در محصولات مرتبط
+				Product.objects.filter(brand=original_name).update(brand=self.name)
+		super().save(*args, **kwargs)
 
 class Recommender(models.Model):
 	full_name = models.CharField(max_length = 250)

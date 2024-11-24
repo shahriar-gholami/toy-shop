@@ -976,7 +976,7 @@ class ProductListView(View):
 		price_ranges = PriceRange.objects.all()
 		colors = ProductColor.objects.all()
 		return render(request, f'{current_app_name}/product_list_{store.template_index}.html', 
-				{'products': products, 
+				{'products': [product for product in products if product.verified==True], 
 	 			'colors': colors,
 				'to_products':products_urls, 
 				'store_name':store_name, 
@@ -1170,7 +1170,7 @@ class FeaturedProductListView(View):
 	def get(self, request, source):
 		store = Store.objects.get(name=store_name)
 		categories = Category.objects.filter(store=store)
-		products = Product.objects.filter(store=store)
+		products = [product for product in Product.objects.filter(store=store) if product.verified == True]
 		paginator = Paginator(products, 12)
 		page = request.GET.get('page', 1)
 		try:
@@ -1261,7 +1261,7 @@ class CategoryProductsListView(View):
 			categories = [cat for cat in Category.objects.all() if cat.parent == category]
 		filters = Filter.objects.filter(category=category, store=store)
 		products = set()
-		cat_products = Product.objects.filter(store=store,category=category)
+		cat_products = [product for product in Product.objects.filter(store=store,category=category) if product.verified == True]
 		for product in cat_products:
 			products.add(product)
 		if category.get_sub_categories() != None:
@@ -3123,7 +3123,7 @@ class BrandProductListView(View):
 
 	def get(self, request, brand_name):
 		brand = Brand.objects.filter(name=brand_name).first()
-		products = Product.objects.filter(brand=brand.name)
+		products = [product for product in Product.objects.filter(brand=brand.name) if product.verified == True]
 		items_per_page = 12
 		store = Store.objects.get(name=store_name)
 		categories = Category.objects.filter(store=store)
