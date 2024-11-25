@@ -742,6 +742,23 @@ class Order(models.Model):
 				})
 		return selled_products
 
+	def get_order_express_products(self):
+		order_express_products = []
+		products = self.get_selled_products()
+		for product in products:
+			if product.express == True:
+				order_express_products.append(product)
+		return order_express_products
+
+	def get_order_normal_products(self):
+		order_normal_products = []
+		products = self.get_selled_products()
+		for product in products:
+			if product.express != True:
+				order_normal_products.append(product)
+		return order_normal_products
+		
+	
 
 
 	def get_discount(self):

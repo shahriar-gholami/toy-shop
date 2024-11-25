@@ -90,6 +90,7 @@
                 <div class="col-12">
                     <div class="cart-product-item">
                         <div class="content-box">
+                            {% if order.get_order_express_products != None %}
                             <div class="container-fluid">
                                 <div class="responsive-table">
                                     <table class="table table-bordered site-tbl">
@@ -104,7 +105,7 @@
                                         </thead>
                                         <tbody>
                                             {% for item in order.items.all %}
-                                            
+                                            {% if item.variety.product.express == True %}
                                             <tr>
                                                 <td colspan="2" class="text-center align-middle">
                                                     <a href="{% url 'shop:product_detail' item.variety.product.slug %}"><img src="{{item.variety.product.get_main_image}}" width="80" class="rounded-3" alt=""></a>
@@ -138,11 +139,69 @@
                                                 </td>
                                                 
                                             </tr>
+                                            {% endif %}
                                             {% endfor %}
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
+                            {% endif %}
+                            {% if order.get_order_normal_products != None %}
+                            <div class="container-fluid">
+                                <div class="responsive-table">
+                                    <table class="table table-bordered site-tbl">
+                                        <thead>
+                                        <tr>
+                                            <th class="h5 text-center" colspan="2">محصول</th>
+                                            <th class="h5 text-center">عنوان</th>
+                                            <th class="h5 text-center">تعداد</th>
+                                            <th class="h5 text-center">قیمت</th>
+                                            <th class="h5 text-center">مجموع</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for item in order.items.all %}
+                                            {% if item.variety.product.express == False %}
+                                            <tr>
+                                                <td colspan="2" class="text-center align-middle">
+                                                    <a href="{% url 'shop:product_detail' item.variety.product.slug %}"><img src="{{item.variety.product.get_main_image}}" width="80" class="rounded-3" alt=""></a>
+                                                </td>
+                                                <td class="align-middle">
+                                                    
+                                                    <h5 class="fw-light">{{item.variety.product.name}}</h5>
+                                                    
+                                                    <div class="d-flex flex-lg-row flex-column mt-4 justify-content-start  align-items-lg-center align-items-start">
+                                                        
+                                                        
+                                                        <div class="item d-flex align-items-center">
+                                                            <div class="icon"><i class="bi bi-palette2"></i></div>
+                                                            <div class="saller-name mx-2">تنوع:</div>
+                                                            <div class="saller-name text-muted">
+                                                                <div class="product-meta-color-items mt-0" style="line-height: 1">
+                                                                {{item.variety.name}}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        
+                                                    </div>
+                                                    
+                                                </td>
+                                                <td class="text-center align-middle"><h6 class="title-font main-color-one-color h2 mb-0">{{item.quantity}}</h6></td>
+                                                <td class="text-center align-middle">
+                                                    <h5 class="title-font main-color-one-color h2 mb-0">{{item.variety.product.get_active_price|intcomma}}<span class="mb-0 text-muted-two font-14 fw-lighter"> تومان</span></h5>
+                                                </td>
+                                                <td class="text-center align-middle">
+                                                    <h5 class="title-font main-color-one-color h2 mb-0">{{item.get_item_price|intcomma}}<span class="mb-0 text-muted-two font-14 fw-lighter"> تومان</span></h5>
+                                                </td>
+                                                
+                                            </tr>
+                                            {% endif %}
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            {% endif %}
                         </div>
                     </div>
                 </div>

@@ -139,7 +139,7 @@
                                     <div class="d-flex align-items-center">
                                         <span class="text-muted-two me-2">دسته بندی</span>
                                         {% for category in product.category.all %}
-                                        <div class="label-site rounded-pill">
+                                        <div class="label-site">
                                             <a href="{% url 'shop:category_products' category.slug %}">{{category.name}}</a>
                                         </div>
                                         {% endfor %}
@@ -285,6 +285,14 @@
                             </div>
                         </div>
                         <div class="product-meta-add-to-cart mt-4">
+                            {% if product.express == True %}
+                            <div class="col-lg-6">
+                                <p>
+                                    ارسال فوری در تهران
+                                    <i class="bi bi-truck ms-2"></i>
+                                </p>
+                            </div>
+                            {% endif %}
                             <button class="btn product-meta-add-to-cart-btn main-color-one-bg rounded-pill" type="submit">افزودن محصول</button> 
                         </div>
                         <div>
