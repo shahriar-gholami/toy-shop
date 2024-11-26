@@ -57,11 +57,12 @@ class VarietyAdmin(admin.ModelAdmin):
     list_display = ('store', 'name', 'product', 'stock',)
     search_fields = ['name', 'product__name', 'store__name']
 
-class VarietyInline(admin.TabularInline):  # یا admin.StackedInline برای نمایش به صورت بلوکی
-    model = Variety
-    extra = 0  # تعداد فرم‌های اضافی
-    fields = ('name', 'stock')  # فیلدهایی که می‌خواهید قابل ویرایش باشند
-    can_delete = True  # در صورت نیاز به حذف کردن، این را به True تغییر دهید
+# class VarietyInline(admin.TabularInline):  # یا admin.StackedInline برای نمایش به صورت بلوکی
+#     model = Variety
+#     extra = 0  # تعداد فرم‌های اضافی
+#     fields = ('name', 'stock')  # فیلدهایی که می‌خواهید قابل ویرایش باشند
+#     can_delete = True  # در صورت نیاز به حذف کردن، این را به True تغییر دهید
+
 
 def erase_stock(modeladmin, request, queryset):
     for product in queryset:
@@ -81,7 +82,7 @@ class ProductAdmin(admin.ModelAdmin):
     list_editable = ('name', 'verified','code','age_class','brand' ,'ref_class','price','ref_price','off_active','express','sales_price')
     search_fields = ['name', 'slug']
     prepopulated_fields = {'slug': ('name',)}  # تولید اتوماتیک اسلاگ از نام
-    inlines = [VarietyInline]
+    # inlines = [VarietyInline]
 
     class Media:
         css = {
