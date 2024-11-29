@@ -92,6 +92,7 @@
                         <div class="content-box">
                             {% if order.get_order_express_products != None %}
                             <div class="container-fluid">
+                                <h6 class="font-16">کالاهای با قابلیت ارسال اکسپرس</h6>
                                 <div class="responsive-table">
                                     <table class="table table-bordered site-tbl">
                                         <thead>
@@ -143,6 +144,17 @@
                                             {% endfor %}
                                         </tbody>
                                     </table>
+                                </div>
+                                <div class="factor-item pb-3">
+                                    <div class="comment-item w-100 mt-4" for="floatingInputOstan">
+                                        <label class="label-float fw-bold">زمان ارسال <span class="text-danger">*</span></label>
+                                        <select name="category" id="floatingInputOstan" class="form-select width-200">
+                                            <option value= "1">ارسال امروز ساعت ۱۲ تا ۱۵</option>
+                                            <option value= "1">ارسال امروز ساعت ۱۲ تا ۱۵</option>
+                                            <option value= "1">ارسال امروز ساعت ۱۲ تا ۱۵</option>
+                                            <option value= "1">ارسال امروز ساعت ۱۲ تا ۱۵</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                             {% endif %}
