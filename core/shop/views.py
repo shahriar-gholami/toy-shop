@@ -11,7 +11,9 @@ import requests
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import json
 from .utils import IsOwnerUserMixin, IsCustomerUserMixin
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
+import pytz
+import locale
 from django.views.generic import  DeleteView
 from .forms import *
 from django.views import View
@@ -1652,7 +1654,32 @@ class OrderDetailView(IsCustomerUserMixin ,View):
 		order_detail_url = f"{current_app_name}:apply_coupon"
 		delivery_methods = Delivery.objects.filter(store=store)
 		form2 = DeliveryApplyForm
-		return render(request, f'{current_app_name}/order_detail_{store.template_index}.html', {'form2':form2,'delivery_methods':delivery_methods ,'order':order, 'form':self.form_class, 'order_detail':order_detail_url, 'store_name':store_name})
+		tehran_timezone = pytz.timezone('Asia/Tehran')
+		today = datetime.now(tehran_timezone)
+		days_map = {
+			'Saturday': 'شنبه',
+			'Sunday': 'یکشنبه',
+			'Monday': 'دوشنبه',
+			'Tuesday': 'سه‌شنبه',
+			'Wednesday': 'چهارشنبه',
+			'Thursday': 'پنج‌شنبه',
+			'Friday': 'جمعه',
+		}
+		next_days = []
+		for i in range(1, 6):  # از فردا تا پنج روز بعد
+			future_date = today + timedelta(days=i)
+			day_name = days_map[future_date.strftime('%A')]
+			date_str = future_date.strftime('%Y-%m-%d')  # تاریخ به فرمت دلخواه
+			next_days.append({'day': day_name, 'date': date_str})
+		intervals = ExpressDeliveryInterval.objects.all()
+		return render(request, f'{current_app_name}/order_detail_{store.template_index}.html', {'form2':form2,
+																								'next_days':next_days,
+																								'intervals':intervals,
+																								'delivery_methods':delivery_methods ,
+																								'order':order, 
+																								'form':self.form_class, 
+																								'order_detail':order_detail_url, 
+																								'store_name':store_name})
 
 class OrderWrongCouponView(IsCustomerUserMixin, View):
 
@@ -3358,6 +3385,33 @@ class SetMerchantCodeView(View):
 			'wrong_merchant_message': 'ورودی نا معتبر',
 			'store': store
 		})
+
+class RecieverDetailsView(View):
+
+	template_name = f'{current_app_name}/reciever_details.html'
+
+	def get(self, request, order_id):
+		form = RecieverDetailsForm
+		store = Store.objects.get(name = store_name)
+		order = Order.objects.get(id = order_id)
+		return render(request, self.template_name, {'order':order, 'store':store, 'form':form})
+
+	def post(self, request, order_id):
+
+		form = RecieverDetailsForm(request.POST)
+		store = Store.objects.get(name = store_name)
+		order = Order.objects.get(id = order_id)
+		if form.is_valid():
+			order.reciever_name = form.cleaned_data['name']
+			order.reciever_familly_name =form.cleaned_data['familly_name']
+			order.reciever_phone_number = form.cleaned_data['phone_number']
+			order.reciever_email = form.cleaned_data['email']
+			order.reciever_state = form.cleaned_data['state']
+			order.reciever_city = form.cleaned_data['city']
+			order.reciever_zip_code = form.cleaned_data['zip_code']
+			order.reciever_address = form.cleaned_data['address']
+			order.save()
+			return redirect('shop:order_detail', order.id)
 
 
 

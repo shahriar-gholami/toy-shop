@@ -253,6 +253,16 @@ class CategorySelectForm(forms.Form):
 class MerchantCodeForm(forms.Form):
     merchant_code = forms.CharField()
 
+class RecieverDetailsForm(forms.Form):
+    name = forms.CharField(required = False)
+    familly_name = forms.CharField(required = False)
+    phone_number = forms.CharField(required = False)
+    email = forms.EmailField(required = False)
+    state = forms.CharField(required = False)
+    city = forms.CharField(required = False)
+    zip_code = forms.CharField(required = False)
+    address = forms.CharField(required = False)
+
 
 
 

@@ -1070,4 +1070,8 @@ class Announcement(models.Model):
 	def shamsi_created_date(self):
 		return JalaliDatetime(self.created).strftime('%Y/%m/%d')
 
-
+class ExpressDeliveryInterval(models.Model):
+	start_time = models.IntegerField()
+	end_time = models.IntegerField()
+	total_cap = models.IntegerField(default=100)
+	teken_cap = models.IntegerField(default=0)

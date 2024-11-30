@@ -24,6 +24,12 @@ class ProductColorAdmin(admin.ModelAdmin):
     list_display = ('name', 'color_code', 'store')  # نمایش فیلدهای اصلی در پنل ادمین
     search_fields = ('name', 'color_code')
 
+@admin.register(ExpressDeliveryInterval)
+class ExpressDeliveryIntervalAdmin(admin.ModelAdmin):
+    list_display = ('start_time', 'end_time', 'total_cap', 'teken_cap')
+    list_filter = ('start_time', 'end_time')
+    search_fields = ('start_time', 'end_time')
+
 @admin.register(Store)
 class StoreAdmin(admin.ModelAdmin):
     list_display = ('name', 'get_owner_name', 'phone_number', 'shamsi_created_date', 'has_domain','domain_msg', 'has_payment_gw', 'gw_msg', 'has_notif')

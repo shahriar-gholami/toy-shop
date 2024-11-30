@@ -83,7 +83,7 @@
         </div>
 
     </div>
-
+    {% if order.reciever_city == 'تهران' %}
     <div class="container-fluid">
         <div class="cart-product">
             <div class="row gy-4">
@@ -149,10 +149,12 @@
                                     <div class="comment-item w-100 mt-4" for="floatingInputOstan">
                                         <label class="label-float fw-bold">زمان ارسال <span class="text-danger">*</span></label>
                                         <select name="category" id="floatingInputOstan" class="form-select width-200">
-                                            <option value= "1">ارسال امروز ساعت ۱۲ تا ۱۵</option>
-                                            <option value= "1">ارسال امروز ساعت ۱۲ تا ۱۵</option>
-                                            <option value= "1">ارسال امروز ساعت ۱۲ تا ۱۵</option>
-                                            <option value= "1">ارسال امروز ساعت ۱۲ تا ۱۵</option>
+                                            {% for interval in intervals %}
+                                            {% if interval.start_time > tehran_time %}
+                                            <option value= "{{interval.id}}">ارسال امروز از ساعت {{interval.start_time}} الی {{interval.end_time}}</option>
+                                            {% endif %}
+                                            {% endfor %}
+                                            <option value= "0">ارسال عادی روز کاری بعدی</option>
                                         </select>
                                     </div>
                                 </div>
@@ -162,6 +164,7 @@
                         <div class="content-box">
                             {% if order.get_order_normal_products != None %}
                             <div class="container-fluid">
+                                <h6 class="font-16">کالاها با ارسال عادی - {{next_days}}</h6>
                                 <div class="responsive-table">
                                     <table class="table table-bordered site-tbl">
                                         <thead>
@@ -213,6 +216,19 @@
                                             {% endfor %}
                                         </tbody>
                                     </table>
+                                    <div class="factor-item pb-3">
+                                        <div class="comment-item w-100 mt-4" for="floatingInputOstan">
+                                            <label class="label-float fw-bold">زمان ارسال <span class="text-danger">*</span></label>
+                                            <select name="category" id="floatingInputOstan" class="form-select width-200">
+                                                {% for interval in intervals %}
+                                                {% if interval.start_time > tehran_time %}
+                                                <option value= "{{interval.id}}">ارسال امروز از ساعت {{interval.start_time}} الی {{interval.end_time}}</option>
+                                                {% endif %}
+                                                {% endfor %}
+                                                <option value= "0">ارسال عادی روز کاری بعدی</option>
+                                            </select>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             {% endif %}
@@ -288,6 +304,141 @@
             </div>
         </div>
     </div>
+    {% else %}
+    <div class="container-fluid">
+        <div class="cart-product">
+            <div class="row gy-4">
+                <div class="col-12">
+                    <div class="cart-product-item">
+                        <div class="content-box">
+                            <div class="container-fluid">
+                                <h6 class="font-16">کالاهای با قابلیت ارسال اکسپرس</h6>
+                                <div class="responsive-table">
+                                    <table class="table table-bordered site-tbl">
+                                        <thead>
+                                        <tr>
+                                            <th class="h5 text-center" colspan="2">محصول</th>
+                                            <th class="h5 text-center">عنوان</th>
+                                            <th class="h5 text-center">تعداد</th>
+                                            <th class="h5 text-center">قیمت</th>
+                                            <th class="h5 text-center">مجموع</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for item in order.items.all %}
+                                            <tr>
+                                                <td colspan="2" class="text-center align-middle">
+                                                    <a href="{% url 'shop:product_detail' item.variety.product.slug %}"><img src="{{item.variety.product.get_main_image}}" width="80" class="rounded-3" alt=""></a>
+                                                </td>
+                                                <td class="align-middle">
+                                                    
+                                                    <h5 class="fw-light">{{item.variety.product.name}}</h5>
+                                                    
+                                                    <div class="d-flex flex-lg-row flex-column mt-4 justify-content-start  align-items-lg-center align-items-start">
+                                                        
+                                                        
+                                                        <div class="item d-flex align-items-center">
+                                                            <div class="icon"><i class="bi bi-palette2"></i></div>
+                                                            <div class="saller-name mx-2">تنوع:</div>
+                                                            <div class="saller-name text-muted">
+                                                                <div class="product-meta-color-items mt-0" style="line-height: 1">
+                                                                {{item.variety.name}}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        
+                                                    </div>
+                                                    
+                                                </td>
+                                                <td class="text-center align-middle"><h6 class="title-font main-color-one-color h2 mb-0">{{item.quantity}}</h6></td>
+                                                <td class="text-center align-middle">
+                                                    <h5 class="title-font main-color-one-color h2 mb-0">{{item.variety.product.get_active_price|intcomma}}<span class="mb-0 text-muted-two font-14 fw-lighter"> تومان</span></h5>
+                                                </td>
+                                                <td class="text-center align-middle">
+                                                    <h5 class="title-font main-color-one-color h2 mb-0">{{item.get_item_price|intcomma}}<span class="mb-0 text-muted-two font-14 fw-lighter"> تومان</span></h5>
+                                                </td>
+                                                
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+                <div class="col-12 mt-5">
+                    <div class="row gy-4">
+                        <div class="col-xl-9">
+                            <div class="content-box">
+                                <div class="container-fluid">
+
+                                    <div class="alert alert-danger rounded-0">
+                                        با توجه به محدود بودن موجودی کالاها، افزودن کالا به سبد خرید به معنی رزرو آن
+                                        نیست. جهت نهایی کردن خرید پیش از اتمام موجودی، همین حالا سبد خود را ثبت و خرید
+                                        را تکمیل کنید.
+                                    </div>
+
+                                    
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-xl-3">
+                            <div class="content-box">
+                                <div class="container-fluid">
+                                    <div class="item">
+                                        <div class="factor">
+                                            <form action="{% url 'shop:apply_coupon' order.id %}" method="post">
+                                            {% csrf_token %}
+                                            <div class="form-group">
+                                                <label class="label-float fw-bold">کد تخفیف <span class="text-danger">*</span></label>
+                                                <input name="code" class="form-control form-label label-float" id="exampleInputname" placeholder="کد تخفیف خود را وارد نمایید"
+                                                       type="text">
+                                            </div>
+                                            <button type="submit" class="btn-outline-site main-color-one-bg rounded-pill px-3 py-1">اعمال کد تخفیف</button>
+                                            <label class="col-md-9 form-label">{{message}}</label>
+                                            </form>
+                                            <div class="form-group mt-4">
+                                                <form method="post" action="{% url 'shop:apply_delivery' order.id %}">
+                                                {% csrf_token %}
+                                                <label class="label-float fw-bold">شیوه ارسال <span class="text-danger">*</span></label>
+            
+                                                <select name="delivery" id="floatingInputOstan" class="form-control form-label label-float">
+                                                    <option label="انتخاب"></option>
+                                                    {% for delivery in delivery_methods %}
+                                                    <option value="{{delivery.id}}">{{delivery.name}}</option>
+                                                    {% endfor %}
+                                                </select>
+                                                <button type="submit" class="btn-outline-site main-color-one-bg rounded-pill px-3 py-1">اعمال شیوه ارسال</button>
+                                                <p>{% if order.delivery_method != None %}انتخاب شیوه ارسال فعلی: {{order.delivery_method.name}} + {{order.delivery_method.price}} تومان {%endif%}</p>
+                                                <p class="text-danger">{{message2}}</p>
+                                                </form>
+                                            </div>
+                                            <div class="d-flex factor-item mb-3 align-items-center justify-content-between">
+                                                <h5 class="mb-0 h6">جمع کل:</h5>
+                                                
+                                                <p class="mb-0 font-17">{{order.get_without_cashback_cost|intcomma }} تومان</p>
+                                            </div>
+
+                                            <div class="action mt-3 d-flex align-items-center justify-content-center w-100">
+                                                <a href="{% url 'shop:order_payment' order.id %}"
+                                                   class="btn-outline-site main-color-one-bg rounded-pill px-5 py-2">تایید سفارش</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
 
 </div>
 
