@@ -89,10 +89,10 @@
             <div class="row gy-4">
                 <div class="col-12">
                     <div class="cart-product-item">
-                        <div class="content-box">
+                        <div class="content-box p-4">
                             {% if order.get_order_express_products != None %}
                             <div class="container-fluid">
-                                <h6 class="font-16">کالاهای با قابلیت ارسال اکسپرس</h6>
+                                <h6 class="title-font mb-3 h6">کالاهای با قابلیت ارسال اکسپرس</h6>
                                 <div class="responsive-table">
                                     <table class="table table-bordered site-tbl">
                                         <thead>
@@ -146,17 +146,60 @@
                                     </table>
                                 </div>
                                 <div class="factor-item pb-3">
-                                    <div class="comment-item w-100 mt-4" for="floatingInputOstan">
-                                        <label class="label-float fw-bold">زمان ارسال <span class="text-danger">*</span></label>
-                                        <select name="category" id="floatingInputOstan" class="form-select width-200">
-                                            {% for interval in intervals %}
-                                            {% if interval.start_time > tehran_time %}
-                                            <option value= "{{interval.id}}">ارسال امروز از ساعت {{interval.start_time}} الی {{interval.end_time}}</option>
-                                            {% endif %}
-                                            {% endfor %}
-                                            <option value= "0">ارسال عادی روز کاری بعدی</option>
-                                        </select>
+                                    <h5 class="title-font mb-3 h6">شیوه و زمان ارسال</h5>
+                                    <div class="row gy-3">
+                                        <div class="col-sm-6">
+                                            <div class="bank-item p-4">
+                                                <h5 class="title-font mb-3 h6">ارسال فوری اکسپرس</h5>
+                                                <div class="comment-item w-100 mt-4" for="floatingInputOstan">
+                                                    <label class="label-float fw-bold">زمان ارسال <span class="text-danger">*</span></label>
+                                                    <select name="category" id="floatingInputOstan" class="form-select width-200 mb-3">
+                                                        {% for interval in intervals %}
+                                                            {% if interval.start_time > now_hour %}
+                                                                <option value= "{{interval.id}}">ارسال امروز از ساعت {{interval.start_time}} الی {{interval.end_time}}</option>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                        <option value= "0">ارسال عادی روز کاری بعدی</option>
+                                                    </select>
+                                                    <label class="label-float fw-bold">زمان ارسال <span class="text-danger">*</span></label>
+                                                    <select name="category" id="floatingInputOstan" class="form-select width-200 mb-3">
+                                                        {% for interval in intervals %}
+                                                            {% if interval.start_time > now_hour %}
+                                                                <option value= "{{interval.id}}">ارسال امروز از ساعت {{interval.start_time}} الی {{interval.end_time}}</option>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                        <option value= "0">ارسال عادی روز کاری بعدی</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="bank-item p-4">
+                                                <h5 class="title-font mb-3 h6">ارسال معمولی سفارش</h5>
+                                                <div class="comment-item w-100 mt-4" for="floatingInputOstan">
+                                                    <label class="label-float fw-bold">زمان ارسال <span class="text-danger">*</span></label>
+                                                    <select name="category" id="floatingInputOstan" class="form-select width-200 mb-3">
+                                                        {% for interval in intervals %}
+                                                            {% if interval.start_time > now_hour %}
+                                                                <option value= "{{interval.id}}">ارسال امروز از ساعت {{interval.start_time}} الی {{interval.end_time}}</option>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                        <option value= "0">ارسال عادی روز کاری بعدی</option>
+                                                    </select>
+                                                    <label class="label-float fw-bold">زمان ارسال <span class="text-danger">*</span></label>
+                                                    <select name="category" id="floatingInputOstan" class="form-select width-200 mb-3">
+                                                        {% for interval in intervals %}
+                                                            {% if interval.start_time > now_hour %}
+                                                                <option value= "{{interval.id}}">ارسال امروز از ساعت {{interval.start_time}} الی {{interval.end_time}}</option>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                        <option value= "0">ارسال عادی روز کاری بعدی</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
+                                    
                                 </div>
                             </div>
                             {% endif %}
@@ -164,7 +207,7 @@
                         <div class="content-box">
                             {% if order.get_order_normal_products != None %}
                             <div class="container-fluid">
-                                <h6 class="font-16">کالاها با ارسال عادی - {{next_days}}</h6>
+                                <h6 class="font-16">کالاها با ارسال عادی</h6>
                                 <div class="responsive-table">
                                     <table class="table table-bordered site-tbl">
                                         <thead>
@@ -184,12 +227,8 @@
                                                     <a href="{% url 'shop:product_detail' item.variety.product.slug %}"><img src="{{item.variety.product.get_main_image}}" width="80" class="rounded-3" alt=""></a>
                                                 </td>
                                                 <td class="align-middle">
-                                                    
                                                     <h5 class="fw-light">{{item.variety.product.name}}</h5>
-                                                    
                                                     <div class="d-flex flex-lg-row flex-column mt-4 justify-content-start  align-items-lg-center align-items-start">
-                                                        
-                                                        
                                                         <div class="item d-flex align-items-center">
                                                             <div class="icon"><i class="bi bi-palette2"></i></div>
                                                             <div class="saller-name mx-2">تنوع:</div>
@@ -199,9 +238,7 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        
                                                     </div>
-                                                    
                                                 </td>
                                                 <td class="text-center align-middle"><h6 class="title-font main-color-one-color h2 mb-0">{{item.quantity}}</h6></td>
                                                 <td class="text-center align-middle">
@@ -218,14 +255,19 @@
                                     </table>
                                     <div class="factor-item pb-3">
                                         <div class="comment-item w-100 mt-4" for="floatingInputOstan">
-                                            <label class="label-float fw-bold">زمان ارسال <span class="text-danger">*</span></label>
+                                            <label class="label-float fw-bold">روز ارسال <span class="text-danger">*</span></label>
+                                            <select name="category" id="floatingInputOstan" class="form-select width-200">
+                                                {% for day in next_days %}
+                                                <option value= "{{day.id}}">ارسال روز {{day.day}} - {{day.date}}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                        <div class="comment-item w-100 mt-4" for="floatingInputOstan">
+                                            <label class="label-float fw-bold">بازه زمانی ارسال <span class="text-danger">*</span></label>
                                             <select name="category" id="floatingInputOstan" class="form-select width-200">
                                                 {% for interval in intervals %}
-                                                {% if interval.start_time > tehran_time %}
-                                                <option value= "{{interval.id}}">ارسال امروز از ساعت {{interval.start_time}} الی {{interval.end_time}}</option>
-                                                {% endif %}
+                                                <option value= "{{interval.id}}">ارسال از ساعت {{interval.start_time}} الی {{interval.end_time}}</option>
                                                 {% endfor %}
-                                                <option value= "0">ارسال عادی روز کاری بعدی</option>
                                             </select>
                                         </div>
                                     </div>

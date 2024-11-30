@@ -13,7 +13,6 @@ import json
 from .utils import IsOwnerUserMixin, IsCustomerUserMixin
 from django.http import HttpResponse, JsonResponse
 import pytz
-import locale
 from django.views.generic import  DeleteView
 from .forms import *
 from django.views import View
@@ -1656,6 +1655,7 @@ class OrderDetailView(IsCustomerUserMixin ,View):
 		form2 = DeliveryApplyForm
 		tehran_timezone = pytz.timezone('Asia/Tehran')
 		today = datetime.now(tehran_timezone)
+		now_hour = today.hour
 		days_map = {
 			'Saturday': 'شنبه',
 			'Sunday': 'یکشنبه',
@@ -1668,12 +1668,13 @@ class OrderDetailView(IsCustomerUserMixin ,View):
 		next_days = []
 		for i in range(1, 6):  # از فردا تا پنج روز بعد
 			future_date = today + timedelta(days=i)
+			date_str = JalaliDatetime(future_date).strftime('%Y/%m/%d')
 			day_name = days_map[future_date.strftime('%A')]
-			date_str = future_date.strftime('%Y-%m-%d')  # تاریخ به فرمت دلخواه
 			next_days.append({'day': day_name, 'date': date_str})
 		intervals = ExpressDeliveryInterval.objects.all()
 		return render(request, f'{current_app_name}/order_detail_{store.template_index}.html', {'form2':form2,
 																								'next_days':next_days,
+																								'now_hour':now_hour,
 																								'intervals':intervals,
 																								'delivery_methods':delivery_methods ,
 																								'order':order, 
