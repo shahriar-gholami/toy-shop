@@ -3414,7 +3414,12 @@ class RecieverDetailsView(View):
 			order.save()
 			return redirect('shop:order_detail', order.id)
 
+class OrderDeliveryOptionsView(View):
 
+	def post(self, request, order_id):
+		form = OrderDeliveryOptionsForm(request.POST)
+		order = Order.objects.get(id = order_id)
+		
 
 
 
