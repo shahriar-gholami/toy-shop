@@ -23,3 +23,4 @@ psycopg2-binary
 googletrans==4.0.0-rc1
 bs4
 pytz
+django-admin-interface

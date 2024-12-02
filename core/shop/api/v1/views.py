@@ -90,7 +90,28 @@ class ProductListCreate(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-
+class CorrectProductSlugs(APIView):
+    def post(self, request):
+        # تعداد محصولات اصلاح شده
+        corrected_count = 0
+        
+        products = Product.objects.all()
+        for product in products:
+            if '/' in product.slug:  # بررسی اینکه آیا نیاز به اصلاح دارد
+                product.slug = product.slug.replace('/', '')
+                product.save()
+                corrected_count += 1
+        
+        # بازگشت پاسخ مناسب
+        return Response(
+            {
+                "message": f"Successfully corrected slugs for {corrected_count} products.",
+                "total_products": products.count(),
+                "corrected_products": corrected_count,
+            },
+            status=status.HTTP_200_OK
+        )
+        
 
 
 

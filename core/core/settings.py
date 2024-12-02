@@ -25,8 +25,8 @@ ALLOWED_HOSTS =  ['127.0.0.1', '195.146.32.236']
 # Application definition
 
 INSTALLED_APPS = [
-    'admin_interface',
-    'colorfield',
+    # 'admin_interface',
+    # 'colorfield',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -167,5 +167,7 @@ CKEDITOR_CONFIGS = {
         'width': 600,
     },
 }
+
+DATA_UPLOAD_MAX_NUMBER_FIELDS = 10000
 
 # USE_L10N = False

@@ -279,7 +279,7 @@ class Product(models.Model):
 	store = models.ForeignKey(Store, on_delete=models.CASCADE)
 	category = models.ManyToManyField(Category)
 	name = models.CharField(max_length=200)
-	slug = models.CharField(max_length=200)
+	slug = models.SlugField(max_length=200, )
 	description = RichTextField()
 	features = RichTextField()
 	brand = models.CharField(max_length=250, null=True, blank=True)
@@ -386,7 +386,7 @@ class Product(models.Model):
 		# پایان کد HTML
 		feature_table += '</table>'
 		
-		return feature_table
+		return feature_table		
 
 	class Meta:
 		ordering = ('name',)

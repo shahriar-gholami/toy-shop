@@ -10,7 +10,7 @@ app_name = f"{current_app_name}"
 
 urlpatterns = [
     
-    # path("api/v1/", include("shop.api.v1.urls")),
+    path("api/v1/", include("shop.api.v1.urls")),
     path('', views.IndexView.as_view(), name='index'),
     path('owner/dashboard/edit-home/', views.HomePageUpdateView.as_view(), name='owner_dashboard_edit_home'),
     path('owner/dashboard/edit-layout/', views.ChangeThemeLayoutView.as_view(), name='owner_dashboard_edit_layout'),

@@ -7,6 +7,7 @@ from .models import Product, Category
 from utils import erase_stock_volume, update_slugs
 
 
+
 @admin.register(ProductRefClass)
 class ProductRefClassAdmin(admin.ModelAdmin):
     list_display = ('name', 'price_coef')
