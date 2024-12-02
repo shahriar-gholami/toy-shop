@@ -73,7 +73,7 @@ def base_template_context(request):
 	if isinstance(request.user, AnonymousUser):
 		from shop.models import Product
 		from shop.models import Variety
-		varieties = Variety.objects.filter(store=store)
+		varieties = Variety.objects.all()
 		products_id_list = []
 		i = 0
 		for variety in varieties:

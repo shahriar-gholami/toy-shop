@@ -25,6 +25,8 @@ ALLOWED_HOSTS =  ['127.0.0.1', '195.146.32.236']
 # Application definition
 
 INSTALLED_APPS = [
+    'admin_interface',
+    'colorfield',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -123,12 +125,12 @@ AUTH_PASSWORD_VALIDATORS = [
 
 DEFAULT_CHARSET = 'utf-8'
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'fa'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Tehran'
 
 USE_I18N = True
-
+USE_L10N = True
 USE_TZ = True
 
 
@@ -166,4 +168,4 @@ CKEDITOR_CONFIGS = {
     },
 }
 
-USE_L10N = False
+# USE_L10N = False

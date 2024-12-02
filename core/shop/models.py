@@ -307,6 +307,8 @@ class Product(models.Model):
 	age_class = models.IntegerField(default=1)
 	express = models.BooleanField(default=False)
 
+	
+
 	def get_varieties(self):
 		return Variety.objects.filter(product = self)
 
@@ -388,6 +390,8 @@ class Product(models.Model):
 
 	class Meta:
 		ordering = ('name',)
+		verbose_name = "محصول"
+		verbose_name_plural = "محصولات"
 
 	def get_main_image(self):
 		images = ProductImage.objects.filter(product=self)
@@ -488,7 +492,6 @@ def logo_upload_path(instance, filename):
 	return f"{instance.store.name}/{filename}"
 
 class ProductImage(models.Model):
-	store = models.ForeignKey(Store, on_delete=models.CASCADE)
 	alt_name = models.CharField(max_length=2000, null=True, blank=True)
 	product = models.ForeignKey(Product, on_delete=models.CASCADE)
 	custom_name = models.CharField(max_length=2000, blank=True, null=True)
@@ -525,13 +528,12 @@ class StoreLogoImage(models.Model):
 		super().save(*args, **kwargs)
 
 class Variety(models.Model):
-	store = models.ForeignKey(Store, on_delete=models.CASCADE)
 	name = models.CharField(max_length=250, default = 'size')
 	product = models.ForeignKey(Product, on_delete=models.CASCADE)
 	stock = models.PositiveIntegerField()
 
 	def __str__(self):
-		return f'{self.store.name} - {self.product.name} - {self.name}'
+		return f'{self.product.name} - {self.name}'
 
 class Comment(models.Model):
 	store = models.ForeignKey(Store, on_delete=models.CASCADE)

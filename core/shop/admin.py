@@ -7,8 +7,6 @@ from .models import Product, Category
 from utils import erase_stock_volume, update_slugs
 
 
-
-
 @admin.register(ProductRefClass)
 class ProductRefClassAdmin(admin.ModelAdmin):
     list_display = ('name', 'price_coef')
@@ -60,14 +58,14 @@ class CategoryAdmin(admin.ModelAdmin):
 
 @admin.register(Variety)
 class VarietyAdmin(admin.ModelAdmin):
-    list_display = ('store', 'name', 'product', 'stock',)
-    search_fields = ['name', 'product__name', 'store__name']
+    list_display = ('name', 'product', 'stock',)
+    search_fields = ['name', 'product__name']
 
-# class VarietyInline(admin.TabularInline):  # یا admin.StackedInline برای نمایش به صورت بلوکی
-#     model = Variety
-#     extra = 0  # تعداد فرم‌های اضافی
-#     fields = ('name', 'stock')  # فیلدهایی که می‌خواهید قابل ویرایش باشند
-#     can_delete = True  # در صورت نیاز به حذف کردن، این را به True تغییر دهید
+class VarietyInline(admin.TabularInline):  # یا admin.StackedInline برای نمایش به صورت بلوکی
+    model = Variety
+    extra = 0  # تعداد فرم‌های اضافی
+    fields = ('name', 'stock')  # فیلدهایی که می‌خواهید قابل ویرایش باشند
+    can_delete = True  # در صورت نیاز به حذف کردن، این را به True تغییر دهید
 
 
 def erase_stock(modeladmin, request, queryset):
@@ -75,6 +73,19 @@ def erase_stock(modeladmin, request, queryset):
         erase_stock_volume(product)
     modeladmin.message_user(request, "The stock volume has been erased.")
 
+# تعریف Inline برای تصاویر محصول
+class ProductImageInline(admin.TabularInline):
+    model = ProductImage
+    extra = 0
+    fields = ('image', 'preview', 'alt_name', 'custom_name')  # افزودن فیلد preview
+    readonly_fields = ('preview',)  # فقط خواندنی بودن پیش‌نمایش
+
+    def preview(self, obj):
+        if obj.image:
+            return format_html('<img src="{}" style="width: 100px; height: auto;" />', obj.image.url)
+        return "No Image"
+
+    preview.short_description = "Image Preview"  # عنوان ستون در پنل ادمین
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
@@ -88,8 +99,8 @@ class ProductAdmin(admin.ModelAdmin):
     list_editable = ('name', 'verified','code','age_class','brand' ,'ref_class','price','ref_price','off_active','express','sales_price')
     search_fields = ['name', 'slug']
     autocomplete_fields = ['category',]
-    prepopulated_fields = {'slug': ('name',)}  # تولید اتوماتیک اسلاگ از نام
-    # inlines = [VarietyInline]
+    prepopulated_fields = {'slug': ('name',)}  
+    inlines = [ProductImageInline, VarietyInline]
 
     class Media:
         css = {
