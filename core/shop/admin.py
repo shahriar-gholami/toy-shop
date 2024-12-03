@@ -45,7 +45,7 @@ class OwnerAdmin(admin.ModelAdmin):
 
 @admin.register(Delivery)
 class DeliveryAdmin(admin.ModelAdmin):
-    list_display = ('store', 'name', 'price')
+    list_display = ('name', 'price', 'min_cart_free')
 
 @admin.register(Announcement)
 class AnnouncementAdmin(admin.ModelAdmin):

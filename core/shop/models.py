@@ -186,15 +186,13 @@ class OtpCode(models.Model):
 		return f'{self.phone_number} - {self.code} - {self.created}'	
 
 class Delivery(models.Model):
-	store = models.ForeignKey(Store, on_delete=models.CASCADE)
 	name = models.CharField(max_length = 250)
 	price = models.IntegerField()
+	min_cart_free = models.IntegerField(default=2000000) 
 
 	def __str__(self):
 		return f'{self.name} + {self.price} تومان '
 
-	class Meta:
-		ordering = ('store',)
 
 class Tag(models.Model):
 	store = models.ForeignKey(Store, on_delete=models.CASCADE)
@@ -691,6 +689,11 @@ class Order(models.Model):
 	reciever_address = models.CharField(max_length=250, null=True, blank=True)
 	reciever_zip_code = models.CharField(max_length=250, null=True, blank=True)
 	paid_by_wallet = models.IntegerField(default=0)
+	has_express_items = models.BooleanField(default=False)
+	has_normal_items = models.BooleanField(default=False)
+	delivery_description = models.TextField(null=True, blank=True)
+	delivery_cost = models.IntegerField(default=0)
+	delivery_off = models.BooleanField(default=False)
 
 	def get_raw_cost(self):
 		orig_cost = 0

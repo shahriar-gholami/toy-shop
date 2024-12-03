@@ -1651,7 +1651,7 @@ class OrderDetailView(IsCustomerUserMixin ,View):
 		order = Order.objects.get(id=order_id)
 		store = Store.objects.get(name = store_name)
 		order_detail_url = f"{current_app_name}:apply_coupon"
-		delivery_methods = Delivery.objects.filter(store=store)
+		delivery_methods = Delivery.objects.all()
 		form2 = DeliveryApplyForm
 		tehran_timezone = pytz.timezone('Asia/Tehran')
 		today = datetime.now(tehran_timezone)
@@ -3419,7 +3419,72 @@ class OrderDeliveryOptionsView(View):
 	def post(self, request, order_id):
 		form = OrderDeliveryOptionsForm(request.POST)
 		order = Order.objects.get(id = order_id)
-		
+		if form.is_valid():
+			express_time_express = form.cleaned_data['express_time_express']
+			express_day_normal = form.cleaned_data['express_day_normal']
+			express_time_normal = form.cleaned_data['express_time_normal']
+			normal_day = form.cleaned_data['normal_day']
+			normal_time = form.cleaned_data['normal_time']
+			if express_time_express != '0' and express_day_normal != '0':
+				store = Store.objects.all().first()
+				form = OrderDeliveryOptionsForm
+				tehran_timezone = pytz.timezone('Asia/Tehran')
+				today = datetime.now(tehran_timezone)
+				now_hour = today.hour
+				days_map = {
+					'Saturday': 'شنبه',
+					'Sunday': 'یکشنبه',
+					'Monday': 'دوشنبه',
+					'Tuesday': 'سه‌شنبه',
+					'Wednesday': 'چهارشنبه',
+					'Thursday': 'پنج‌شنبه',
+					'Friday': 'جمعه',
+				}
+				next_days = []
+				for i in range(1, 6):  # از فردا تا پنج روز بعد
+					future_date = today + timedelta(days=i)
+					date_str = JalaliDatetime(future_date).strftime('%Y/%m/%d')
+					day_name = days_map[future_date.strftime('%A')]
+					next_days.append({'day': day_name, 'date': date_str})
+				intervals = ExpressDeliveryInterval.objects.all()
+				return render(request, f'{current_app_name}/order_detail_{store.template_index}.html', {'form':form,
+																										'next_days':next_days,
+																										'multi_choice_error':'شما نمی‌توانید همزمان دو روش مختلف ارسال برای کالاهای با تحویل فوری انتخاب نمایید.',
+																										'now_hour':now_hour,
+																										'intervals':intervals,
+																										'order':order, 
+																										})
+
+			if express_time_express == '0':
+				express_delivery = f'{express_day_normal} - {express_time_normal}'
+			else:
+				express_delivery = f'امروز ساعت: {ExpressDeliveryInterval.objects.get(id = int(express_time_express)).start_time }'
+			delivery_description = ' '
+			delivery_cost = 0
+			if order.has_express_items == True:
+				delivery_description = delivery_description+'کالاهای اکسپرس: \n'
+				for item in order.items.all():
+					if item.variety.product.express == True:
+						delivery_description = delivery_description+f'{item.variety.product.name} - {item.variety.name} - {item.quantity}\n'
+				delivery_description = delivery_description+'زمان تحویل: \n'
+				delivery_description = delivery_description+f'{express_delivery} \n'
+				delivery_cost = delivery_cost + Delivery.objects.get(name = 'ارسال اکسپرس').price
+
+			if order.has_normal_items == True:
+				delivery_description = delivery_description+'کالاهای ارسال عادی: \n'
+				for item in order.items.all():
+					if item.variety.product.express == False:
+						delivery_description = delivery_description+f'{item.variety.product.name} - {item.variety.name} - {item.quantity}\n'
+				delivery_description = delivery_description+'زمان تحویل: \n'
+				delivery_description = delivery_description+f'{normal_day} - ساعت {ExpressDeliveryInterval.objects.get(id = int(normal_time)).start_time} \n'
+				order.delivery_description = delivery_description
+				delivery_cost = delivery_cost + Delivery.objects.get(name = 'ارسال عادی').price
+			order.delivery_cost = delivery_cost
+			order.save()
+			print('8888888888888888888888888888888888888888888888888888')
+			print(order.delivery_description)
+
+
 
 
 
