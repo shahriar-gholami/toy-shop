@@ -3456,7 +3456,7 @@ class OrderDeliveryOptionsView(View):
 																										})
 
 			if express_time_express == '0':
-				express_delivery = f'{express_day_normal} - {express_time_normal}'
+				express_delivery = f'{express_day_normal} - {ExpressDeliveryInterval.objects.get(id = int(express_time_normal)).start_time}'
 			else:
 				express_delivery = f'امروز ساعت: {ExpressDeliveryInterval.objects.get(id = int(express_time_express)).start_time }'
 			delivery_description = ' '
@@ -3465,21 +3465,28 @@ class OrderDeliveryOptionsView(View):
 				delivery_description = delivery_description+'کالاهای اکسپرس: \n'
 				for item in order.items.all():
 					if item.variety.product.express == True:
-						delivery_description = delivery_description+f'{item.variety.product.name} - {item.variety.name} - {item.quantity}\n'
+						delivery_description = delivery_description+f'{item.variety.product.name} - تنوع: {item.variety.name} - تعداد: {item.quantity} عدد\n'
 				delivery_description = delivery_description+'زمان تحویل: \n'
 				delivery_description = delivery_description+f'{express_delivery} \n'
-				delivery_cost = delivery_cost + Delivery.objects.get(name = 'ارسال اکسپرس').price
+				if order.total_price > Delivery.objects.get(name = 'ارسال اکسپرس').price:
+					delivery_cost = delivery_cost + Delivery.objects.get(name = 'ارسال اکسپرس').price
 
 			if order.has_normal_items == True:
 				delivery_description = delivery_description+'کالاهای ارسال عادی: \n'
 				for item in order.items.all():
 					if item.variety.product.express == False:
-						delivery_description = delivery_description+f'{item.variety.product.name} - {item.variety.name} - {item.quantity}\n'
+						delivery_description = delivery_description+f'{item.variety.product.name} - تنوع: {item.variety.name} - تعداد: {item.quantity} عدد\n'
 				delivery_description = delivery_description+'زمان تحویل: \n'
 				delivery_description = delivery_description+f'{normal_day} - ساعت {ExpressDeliveryInterval.objects.get(id = int(normal_time)).start_time} \n'
-				order.delivery_description = delivery_description
+			
+			if order.total_price >= Delivery.objects.get(name = 'ارسال عادی').price:
 				delivery_cost = delivery_cost + Delivery.objects.get(name = 'ارسال عادی').price
 			order.delivery_cost = delivery_cost
+			delivery_description = delivery_description + '-------------------------------------------------------\n'
+			delivery_description = delivery_description + f'هزینه ارسال کالاها: {delivery_cost} تومان\n'
+			delivery_description = delivery_description + '-------------------------------------------------------\n'
+			delivery_description = delivery_description + f'هزینه ارسال کالاها: {order.total_price+delivery_cost} تومان\n'
+			order.delivery_description = delivery_description
 			order.save()
 			print('8888888888888888888888888888888888888888888888888888')
 			print(order.delivery_description)
