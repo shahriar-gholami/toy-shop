@@ -3485,7 +3485,7 @@ class OrderDeliveryOptionsView(View):
 			delivery_description = delivery_description + '-------------------------------------------------------\n'
 			delivery_description = delivery_description + f'هزینه ارسال کالاها: {delivery_cost} تومان\n'
 			delivery_description = delivery_description + '-------------------------------------------------------\n'
-			delivery_description = delivery_description + f'هزینه ارسال کالاها: {order.total_price+delivery_cost} تومان\n'
+			delivery_description = delivery_description + f'مجموع هزینه: {order.total_price+delivery_cost} تومان\n'
 			order.delivery_description = delivery_description
 			order.save()
 			print('8888888888888888888888888888888888888888888888888888')
