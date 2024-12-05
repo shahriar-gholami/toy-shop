@@ -1700,14 +1700,18 @@ class CouponApplyView(IsCustomerUserMixin, View):
 	form_class = CouponApplyForm
 	current_datetime = datetime.now()
 	def post(self, request, order_id, *args, **kwargs):
+
+		order = Order.objects.get(id=order_id)
 		form = self.form_class(request.POST)
 		if form.is_valid():
 			code = form.cleaned_data['code']
 			store = Store.objects.get(name = store_name)
 			coupon = Coupon.objects.filter(code__exact=code, store=store).first()
 			if coupon == None:
-				return redirect(f'{current_app_name}:order_detail', order_id, 'wrong_code')
-			order = Order.objects.get(id=order_id)
+				order.delivery_description = order.delivery_description + f'<p class="text-danger">کد تخفیف نامعتبر</p>' 
+				order.save()
+				return redirect(f'{current_app_name}:order_final_check', order_id)
+			
 			current_datetime = datetime.now()
 			jalali_datetime  = JalaliDatetime(current_datetime)
 			formatted_date = jalali_datetime.strftime('%Y/%m/%d')
@@ -1715,14 +1719,19 @@ class CouponApplyView(IsCustomerUserMixin, View):
 				if jalali_datetime.month>=coupon.get_from_month() and jalali_datetime.month<=coupon.get_to_month():
 					if jalali_datetime.day>=coupon.get_from_day() and jalali_datetime.day<=coupon.get_to_day():
 						if order.used_coupon == True:
-							return redirect(f'{current_app_name}:order_detail', order_id)
+							order.delivery_description = order.delivery_description + f'<p class="text-danger">برای این سفارش قبلا کد تخفیف وارد شده است</p>' 
+							order.save()
+							return redirect(f'{current_app_name}:order_final_check', order_id)
 						else:
 							order.total_price -= coupon.discount
 							order.used_coupon = True
+							order.delivery_description = order.delivery_description + f'<p class="text-danger">مبلغ نهایی پس از اعمال کد تخفیف: {order.total_price+order.delivery_cost:,} تومان</p>' 
 							order.save()
-						return redirect(f'{current_app_name}:order_detail', order_id)
-			wrong_code='wrong_code'
-			return redirect(f'{current_app_name}:order_detail', order_id, wrong_code)
+						return redirect(f'{current_app_name}:order_final_check', order_id)
+			order.delivery_description = order.delivery_description + f'<p class="text-danger">کد وارد شده نامعتبر بوده و یا قبلا وارد شده است</p>' 
+			order.save()
+			return redirect(f'{current_app_name}:order_final_check', order_id)
+		return redirect(f'{current_app_name}:order_final_check', order_id)
 	
 class DeliveryApplyView(IsCustomerUserMixin, View):
 
@@ -2064,94 +2073,10 @@ class LogoUpdateView(IsOwnerUserMixin, View):
 
 class OrderPayView(IsCustomerUserMixin, View):
 	
-	def get(self, request, order_id):
+	
+	def get(self, request, order_id, *args, **kwargs):
+
 		store = Store.objects.get(name = store_name)
-		MERCHANT = 'ab11efee-695b-4070-a6ac-cb22fba2f2eb'
-		if store.merchant != None:
-			MERCHANT = store.merchant
-
-		form = CheckoutForm
-		order = Order.objects.get(id=order_id)
-		if order.delivery_method == None:
-			store = Store.objects.get(name = store_name)
-			delivery_methods = Delivery.objects.filter(store=store)
-			copun_form = CouponApplyForm
-			form2 = DeliveryApplyForm
-			return render(request, f'{current_app_name}/order_detail_{store.template_index}.html', {'form': copun_form ,'store':store, 'order':order, 'message2':'لطفا یک شیوه ارسال را انتخاب و اعمال نمایید', 'delivery_methods':delivery_methods, 'form2': form2})
-		return render(request, f'{current_app_name}/checkout_{store.template_index}.html', {'store':store, 'order':order, 'form':form})
-
-	def post(self, request, order_id, *args, **kwargs):
-
-		form = CheckoutForm(request.POST)
-		order = Order.objects.get(id=order_id)
-		store = Store.objects.get(name = store_name)
-		if form.is_valid():
-			name_message = ''
-			familly_name_message = ''
-			phone_number_message = ''
-			email_message = ''
-			state_message = ''
-			city_message = ''
-			zip_code_message = ''
-			address_message = ''
-			print(form.cleaned_data)
-			empty_field = False
-			name = form.cleaned_data['name']
-			if not name:
-				name_message = 'فیلد نام نباید خالی باشد'
-				empty_field = True
-			familly_name = form.cleaned_data['familly_name']
-			if not familly_name:
-				familly_name_message = 'فیلد نام خانوادگی نباید خالی باشد'
-				empty_field = True
-			phone_number = form.cleaned_data['phone_number']
-			if not phone_number:
-				phone_number_message = 'فیلم شماره تماس نباید خالی باشد'
-				empty_field = True
-			email = form.cleaned_data['email']
-			if not email:
-				email_message = 'فیلد ایمیل نباید خالی باشد'
-				empty_field = True
-			state = form.cleaned_data['state']
-			if not state:
-				state_message = 'فیلد استان نباید خالی باشد'
-				empty_field = True
-			city = form.cleaned_data['city']
-			if not city:
-				city_message = 'فیلد شهر نباید خالی باشد'
-				empty_field = True
-			zip_code = form.cleaned_data['zip_code']
-			if not zip_code:
-				zip_code_message = 'فیلد کد پستی نباید خالی باشد'
-				empty_field = True
-			address = form.cleaned_data['address']
-			if not address:
-				address_message = 'فیلد آدرس نباید خالی باشد'
-				empty_field = True
-			if empty_field == True:
-				return render(request, f'{current_app_name}/checkout_{store.template_index}.html', {
-				'store':store, 
-				'order':order, 
-				'form':form,
-				'name_message': name_message,
-				'familly_name_message': familly_name_message,
-				'phone_number_message': phone_number_message,
-				'email_message': email_message,
-				'state_message': state_message,
-				'city_message': city_message,
-				'zip_code_message': zip_code_message,
-				'address_message': address_message}) 
-
-			order.reciever_name = name
-			order.reciever_familly_name = familly_name
-			order.reciever_phone_number = phone_number
-			order.reciever_email = email
-			order.reciever_state = state
-			order.reciever_city = city
-			order.reciever_zip_code = zip_code
-			order.reciever_address = address
-			order.save()
-
 		order = Order.objects.get(id=order_id)
 		request.session['order_pay'] = {
 			'order_id': order.id,
@@ -2165,12 +2090,7 @@ class OrderPayView(IsCustomerUserMixin, View):
 			order.paid_by_wallet = order.get_without_cashback_cost()
 			order.save()
 			return redirect(f'{current_app_name}:customer_dashboard_order_detail', order.id)
-
-		store = Store.objects.get(name = store_name)
-		MERCHANT = 'ab11efee-695b-4070-a6ac-cb22fba2f2eb'
-		if store.merchant != None:
-			MERCHANT = store.merchant
-
+		MERCHANT = store.merchant
 		req_data = {
 			"merchant_id": MERCHANT,
 			"amount": order.get_final_payment()*10,
@@ -3462,37 +3382,40 @@ class OrderDeliveryOptionsView(View):
 			delivery_description = ' '
 			delivery_cost = 0
 			if order.has_express_items == True:
-				delivery_description = delivery_description+'کالاهای اکسپرس: \n'
+				delivery_description = delivery_description+'کالاهای اکسپرس: <br>'
 				for item in order.items.all():
 					if item.variety.product.express == True:
-						delivery_description = delivery_description+f'{item.variety.product.name} - تنوع: {item.variety.name} - تعداد: {item.quantity} عدد\n'
-				delivery_description = delivery_description+'زمان تحویل: \n'
-				delivery_description = delivery_description+f'{express_delivery} \n'
-				if order.total_price > Delivery.objects.get(name = 'ارسال اکسپرس').price:
+						delivery_description = delivery_description+f'{item.variety.product.name} - تنوع: {item.variety.name.replace('default variety','ندارد')} - قیمت: {item.get_item_price():,} تومان - تعداد: {item.quantity} عدد - مجموع هزینه: {item.get_item_price()*item.quantity:,} تومان<br>'
+				delivery_description = delivery_description+'زمان تحویل: <br>'
+				delivery_description = delivery_description+f'{express_delivery} <br>'
+				if order.total_price <= Delivery.objects.get(name = 'ارسال اکسپرس').price:
 					delivery_cost = delivery_cost + Delivery.objects.get(name = 'ارسال اکسپرس').price
 
 			if order.has_normal_items == True:
-				delivery_description = delivery_description+'کالاهای ارسال عادی: \n'
+				delivery_description = delivery_description+'کالاهای ارسال عادی: <br>'
 				for item in order.items.all():
 					if item.variety.product.express == False:
-						delivery_description = delivery_description+f'{item.variety.product.name} - تنوع: {item.variety.name} - تعداد: {item.quantity} عدد\n'
-				delivery_description = delivery_description+'زمان تحویل: \n'
-				delivery_description = delivery_description+f'{normal_day} - ساعت {ExpressDeliveryInterval.objects.get(id = int(normal_time)).start_time} \n'
+						delivery_description = delivery_description+f'{item.variety.product.name} - تنوع: {item.variety.name.replace('default variety','ندارد')} - قیمت: {item.get_item_price():,} تومان - تعداد: {item.quantity} عدد - مجموع هزینه: {item.get_item_price()*item.quantity:,} تومان<br>'
+				delivery_description = delivery_description+'زمان تحویل: <br>'
+				delivery_description = delivery_description+f'{normal_day} - ساعت {ExpressDeliveryInterval.objects.get(id = int(normal_time)).start_time} <br>'
 			
-			if order.total_price >= Delivery.objects.get(name = 'ارسال عادی').price:
+			if order.total_price <= Delivery.objects.get(name = 'ارسال عادی').price:
 				delivery_cost = delivery_cost + Delivery.objects.get(name = 'ارسال عادی').price
 			order.delivery_cost = delivery_cost
-			delivery_description = delivery_description + '-------------------------------------------------------\n'
-			delivery_description = delivery_description + f'هزینه ارسال کالاها: {delivery_cost} تومان\n'
-			delivery_description = delivery_description + '-------------------------------------------------------\n'
-			delivery_description = delivery_description + f'مجموع هزینه: {order.total_price+delivery_cost} تومان\n'
+			delivery_description = delivery_description + '---------------------------------------------<br>'
+			delivery_description = delivery_description + f'هزینه کالاهای سفارش: {order.total_price:,} تومان<br>'
+			delivery_description = delivery_description + '---------------------------------------------<br>'
+			delivery_description = delivery_description + f'هزینه ارسال کالاها: {delivery_cost:,} تومان<br>'
+			delivery_description = delivery_description + '---------------------------------------------<br>'
+			delivery_description = delivery_description + f'مجموع هزینه: {order.total_price+delivery_cost:,} تومان<br>'
 			order.delivery_description = delivery_description
 			order.save()
 			print('8888888888888888888888888888888888888888888888888888')
 			print(order.delivery_description)
 
+class OrderFinalCheckView(View):
 
-
-
-
-
+	def get(self, request, order_id):
+		store = Store.objects.all().first()
+		order = Order.objects.get(id = order_id)
+		return render(request, f'{current_app_name}/order_final_check_{store.template_index}.html', {'store':store, 'order':order})

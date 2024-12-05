@@ -130,6 +130,7 @@ urlpatterns = [
     path('orders/<int:order_id>/update_status/<int:status_id>/', views.OrderProcessView.as_view(), name='update_order_status'),
     path('order-detail/<int:order_id>/', views.OrderDetailView.as_view(), name='order_detail'),
     path('order-reciever-detail/<int:order_id>/', views.RecieverDetailsView.as_view(), name='order_reciever_detail'),
+    path('order-final-check/<int:order_id>/', views.OrderFinalCheckView.as_view(), name='order_final_check'),
     path('order-delivery-options/<int:order_id>/', views.OrderDeliveryOptionsView.as_view(), name='order_delivery_options'),
     path('order-detail/<int:order_id>/<str:wrong_code>', views.OrderWrongCouponView.as_view(), name='order_detail'),
 
