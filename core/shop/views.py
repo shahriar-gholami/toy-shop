@@ -1639,8 +1639,18 @@ class CreateOrderView(IsCustomerUserMixin, View):
 				total_price += price
 			order = Order.objects.create(customer=customer, total_price=total_price, status = order_status, store=store)
 			order.items.set(items)
+			for item in order.items.all():
+				if item.variety.product.express == True:
+					order.has_express_items = True
+					order.save()
+					break
+			for item in order.items.all():
+				if item.variety.product.express == False:
+					order.has_normal_items = True
+					order.save()
+					break
 			cart.items.clear()
-			return redirect(f'{current_app_name}:order_detail' , order.id)
+			return redirect(f'{current_app_name}:order_reciever_detail' , order.id)
 		return render(request, f'{current_app_name}/empty-cart_{store.template_index}.html', {'store_name':store_name})
 
 class OrderDetailView(IsCustomerUserMixin ,View):
@@ -1651,7 +1661,6 @@ class OrderDetailView(IsCustomerUserMixin ,View):
 		order = Order.objects.get(id=order_id)
 		store = Store.objects.get(name = store_name)
 		order_detail_url = f"{current_app_name}:apply_coupon"
-		delivery_methods = Delivery.objects.all()
 		form2 = DeliveryApplyForm
 		tehran_timezone = pytz.timezone('Asia/Tehran')
 		today = datetime.now(tehran_timezone)
@@ -1665,6 +1674,8 @@ class OrderDetailView(IsCustomerUserMixin ,View):
 			'Thursday': 'پنج‌شنبه',
 			'Friday': 'جمعه',
 		}
+		normal_delivery = Delivery.objects.get(name= 'ارسال عادی')
+		express_delivery = Delivery.objects.get(name= 'ارسال اکسپرس')
 		next_days = []
 		for i in range(1, 6):  # از فردا تا پنج روز بعد
 			future_date = today + timedelta(days=i)
@@ -1672,12 +1683,27 @@ class OrderDetailView(IsCustomerUserMixin ,View):
 			day_name = days_map[future_date.strftime('%A')]
 			next_days.append({'day': day_name, 'date': date_str})
 		intervals = ExpressDeliveryInterval.objects.all()
+		merging_delivery_id = ExpressDeliveryInterval.objects.get(start_time = 100).id
+		default_delivery_id = ExpressDeliveryInterval.objects.get(start_time = 0).id
+		if order.total_price >=  normal_delivery.min_cart_free and normal_delivery.min_cart_free_active == True:
+			normal_delivery_price = 'رایگان'
+		else:
+			normal_delivery_price = str(normal_delivery.price) + 'تومان'
+		if order.total_price >=  express_delivery.min_cart_free and express_delivery.min_cart_free_active == True:
+			express_delivery_price = 'رایگان'
+		else:
+			express_delivery_price = str(express_delivery.price) + 'تومان'
 		return render(request, f'{current_app_name}/order_detail_{store.template_index}.html', {'form2':form2,
 																								'next_days':next_days,
+																								'default_delivery_id':default_delivery_id,
 																								'now_hour':now_hour,
+																								'express_delivery_price':express_delivery_price,
+																								'normal_delivery_price':normal_delivery_price,
 																								'intervals':intervals,
-																								'delivery_methods':delivery_methods ,
 																								'order':order, 
+																								'merging_delivery_id':merging_delivery_id,
+																								'normal_delivery':normal_delivery,
+																								'express_delivery':express_delivery,
 																								'form':self.form_class, 
 																								'order_detail':order_detail_url, 
 																								'store_name':store_name})
@@ -3337,6 +3363,7 @@ class RecieverDetailsView(View):
 class OrderDeliveryOptionsView(View):
 
 	def post(self, request, order_id):
+		store = Store.objects.all().first()
 		form = OrderDeliveryOptionsForm(request.POST)
 		order = Order.objects.get(id = order_id)
 		if form.is_valid():
@@ -3345,8 +3372,10 @@ class OrderDeliveryOptionsView(View):
 			express_time_normal = form.cleaned_data['express_time_normal']
 			normal_day = form.cleaned_data['normal_day']
 			normal_time = form.cleaned_data['normal_time']
-			if express_time_express != '0' and express_day_normal != '0':
-				store = Store.objects.all().first()
+			print('OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO')
+			print(form.cleaned_data)
+
+			if express_time_express != '0' and express_day_normal != '0' and express_day_normal != '':
 				form = OrderDeliveryOptionsForm
 				tehran_timezone = pytz.timezone('Asia/Tehran')
 				today = datetime.now(tehran_timezone)
@@ -3360,6 +3389,8 @@ class OrderDeliveryOptionsView(View):
 					'Thursday': 'پنج‌شنبه',
 					'Friday': 'جمعه',
 				}
+				normal_delivery = Delivery.objects.get(name= 'ارسال عادی')
+				express_delivery = Delivery.objects.get(name= 'ارسال اکسپرس')
 				next_days = []
 				for i in range(1, 6):  # از فردا تا پنج روز بعد
 					future_date = today + timedelta(days=i)
@@ -3367,17 +3398,38 @@ class OrderDeliveryOptionsView(View):
 					day_name = days_map[future_date.strftime('%A')]
 					next_days.append({'day': day_name, 'date': date_str})
 				intervals = ExpressDeliveryInterval.objects.all()
-				return render(request, f'{current_app_name}/order_detail_{store.template_index}.html', {'form':form,
-																										'next_days':next_days,
-																										'multi_choice_error':'شما نمی‌توانید همزمان دو روش مختلف ارسال برای کالاهای با تحویل فوری انتخاب نمایید.',
-																										'now_hour':now_hour,
-																										'intervals':intervals,
-																										'order':order, 
-																										})
+				merging_delivery_id = ExpressDeliveryInterval.objects.get(start_time = 100).id
+				default_delivery_id = ExpressDeliveryInterval.objects.get(start_time = 0).id
+				if order.total_price >=  normal_delivery.min_cart_free and normal_delivery.min_cart_free_active == True:
+					normal_delivery_price = 'رایگان'
+				else:
+					normal_delivery_price = str(normal_delivery.price) + 'تومان'
+				if order.total_price >=  express_delivery.min_cart_free and express_delivery.min_cart_free_active == True:
+					express_delivery_price = 'رایگان'
+				else:
+					express_delivery_price = str(express_delivery.price) + 'تومان'
+				return render(request, f'{current_app_name}/order_detail_{store.template_index}.html', {
+																									'next_days':next_days,
+																									'default_delivery_id':default_delivery_id,
+																									'now_hour':now_hour,
+																									'normal_delivery_price':normal_delivery_price,
+																									'express_delivery_price':express_delivery_price,
+																									'intervals':intervals,
+																									'multi_choice_error':'شما نمی‌توانید همزمان دو روش مختلف ارسال برای کالاهای با تحویل فوری انتخاب نمایید.',
+																									'order':order, 
+																									'merging_delivery_id':merging_delivery_id,
+																									'normal_delivery':normal_delivery,
+																									'express_delivery':express_delivery,
+																									'form':form, 
+																									'store_name':store_name})
+
 
 			if express_time_express == '0':
-				express_delivery = f'{express_day_normal} - {ExpressDeliveryInterval.objects.get(id = int(express_time_normal)).start_time}'
-			else:
+				if ExpressDeliveryInterval.objects.get(id=int(express_time_normal)).start_time != 100:
+					express_delivery = f'{express_day_normal} - {ExpressDeliveryInterval.objects.get(id = int(express_time_normal)).start_time}'
+				else:
+					express_delivery = f'ارسال کالاهای اکسپرس همراه با کالاهای عادی'
+			elif express_time_express != '':
 				express_delivery = f'امروز ساعت: {ExpressDeliveryInterval.objects.get(id = int(express_time_express)).start_time }'
 			delivery_description = ' '
 			delivery_cost = 0
@@ -3410,8 +3462,8 @@ class OrderDeliveryOptionsView(View):
 			delivery_description = delivery_description + f'مجموع هزینه: {order.total_price+delivery_cost:,} تومان<br>'
 			order.delivery_description = delivery_description
 			order.save()
-			print('8888888888888888888888888888888888888888888888888888')
-			print(order.delivery_description)
+			return redirect('shop:order_final_check', order.id)
+			
 
 class OrderFinalCheckView(View):
 

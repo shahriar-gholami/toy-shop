@@ -54,7 +54,7 @@
 {% if order.reciever_city == 'تهران' %}
 <form method="post" action="{% url 'shop:order_delivery_options' order.id %}">
 {% csrf_token %}
-{% if order.get_order_express_products != None %}
+{% if order.get_order_express_products %}
 <div class="container-fluid">
     <div class="col-12">
         <div class="container-fluid content-box p-4">
@@ -99,11 +99,11 @@
                                 <select name="express_time_express"  class="form-select width-200 mb-3">
                                     <option value= "0">انتخاب</option>
                                     {% for interval in intervals %}
-                                        {% if interval.start_time > now_hour %}
-                                            <option value= "{{interval.id}}">ارسال امروز از ساعت {{interval.start_time}} الی {{interval.end_time}}</option>
+                                        {% if interval.start_time > now_hour and interval.start_time != 100 and interval.start_time != 0 %}
+                                            <option value= "{{interval.id}}">ارسال امروز از ساعت {{interval.start_time}} الی {{interval.end_time}} + {{express_delivery_price}}</option>
                                         {% endif %}
                                     {% endfor %}
-                                    <option value= "0">ارسال عادی روز کاری بعدی</option>
+                                    
                                 </select>
                             </div>
                         </div>
@@ -112,14 +112,17 @@
                         <div class="bank-item p-4">
                             <h5 class="title-font mb-3 h6">ارسال معمولی</h5>
                             <div class="comment-item w-100 mt-4" for="floatingInputOstan">
-                                <div class="row mb-3">
+                                <div class="row">
                                     <div class="col-md-6 form_group">
                                     <!-- <label class="label-float fw-bold">روز ارسال <span class="text-danger">*</span></label> -->
                                     <p class="p-0 m-0">روز ارسال</p>
                                     <select name="express_day_normal"  class="form-select width-200 form-group">
                                         <option value= "0">انتخاب</option>
+                                        {% if order.get_order_normal_products != None %}
+                                        <option value= "همراه با کالاهای ارسال عادی">ارسال عادی همراه با سایر کالاهای ارسال عادی - رایگان</option>
+                                        {% endif %}
                                         {% for day in next_days %}
-                                        <option value= "{{day.date}}">ارسال روز {{day.day}} - {{day.date}}</option>
+                                        <option value= "{{day.date}}">ارسال روز {{day.day}} - {{day.date}} + {{normal_delivery_price}}</option>
                                         {% endfor %}
                                     </select>
                                     </div>
@@ -127,9 +130,14 @@
                                     <!-- <label class="label-float fw-bold">بازه زمانی ارسال <span class="text-danger">*</span></label> -->
                                     <p class="p-0 m-0">بازه زمانی ارسال</p>
                                     <select name="express_time_normal"  class="form-select width-200 form-group">
-                                        <option value= "0">انتخاب</option>
+                                        <option value= "{{default_delivery_id}}">انتخاب</option>
+                                        {% if order.get_order_normal_products != None %}
+                                        <option value= "{{merging_delivery_id}}">همزمان با سایر کالاهای ارسال عادی - رایگان</option>
+                                        {% endif %}
                                         {% for interval in intervals %}
+                                        {% if interval.start_time != 100 and interval.start_time != 0 %}
                                         <option value= "{{interval.id}}">ارسال از ساعت {{interval.start_time}} الی {{interval.end_time}}</option>
+                                        {% endif %}
                                         {% endfor %}
                                     </select>
                                     </div> 
@@ -144,7 +152,7 @@
 </div>
 
 {% endif %}
-{% if order.get_order_normal_products != None %}
+{% if order.get_order_normal_products %}
 <div class="container-fluid mt-4">
     <div class="col-12">
         <div class="container-fluid content-box p-4">
@@ -194,7 +202,7 @@
                                     <select name="normal_day" class="form-select width-200 form-group">
                                         <option value= "0">انتخاب</option>
                                         {% for day in next_days %}
-                                        <option value= "{{day.date}}">ارسال روز {{day.day}} - {{day.date}}</option>
+                                        <option value= "{{day.date}}">ارسال روز {{day.day}} - {{day.date}} + {{express_delivery_price}}</option>
                                         {% endfor %}
                                     </select>
                                     </div>
@@ -202,10 +210,13 @@
                                     <!-- <label class="label-float fw-bold">بازه زمانی ارسال <span class="text-danger">*</span></label> -->
                                     <p class="p-0 m-0">بازه زمانی ارسال</p>
                                     <select name="normal_time" class="form-select width-200 form-group">
-                                        <option value= "0">انتخاب</option>
+                                        <option value= "{{default_delivery_id}}">انتخاب</option>
                                         {% for interval in intervals %}
+                                        {% if interval.start_time != 100 and interval.start_time != 0 %}
                                         <option value= "{{interval.id}}">ارسال از ساعت {{interval.start_time}} الی {{interval.end_time}}</option>
+                                        {% endif %}
                                         {% endfor %}
+
                                     </select>
                                     </div> 
                                 </div>

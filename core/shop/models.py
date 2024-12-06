@@ -189,6 +189,7 @@ class Delivery(models.Model):
 	name = models.CharField(max_length = 250)
 	price = models.IntegerField()
 	min_cart_free = models.IntegerField(default=2000000) 
+	min_cart_free_active = models.BooleanField(default=False)
 
 	def __str__(self):
 		return f'{self.name} + {self.price} تومان '
@@ -749,17 +750,25 @@ class Order(models.Model):
 
 	def get_order_express_products(self):
 		order_express_products = []
-		products = self.get_selled_products()
-		for product in products:
+		selled_products = []
+		items = self.items.all()
+		for item in items:
+			product = item.variety.product
+			selled_products.append(product)
+		for product in selled_products:
 			if product.express == True:
 				order_express_products.append(product)
 		return order_express_products
 
 	def get_order_normal_products(self):
 		order_normal_products = []
-		products = self.get_selled_products()
-		for product in products:
-			if product.express != True:
+		selled_products = []
+		items = self.items.all()
+		for item in items:
+			product = item.variety.product
+			selled_products.append(product)
+		for product in selled_products:
+			if product.express == False:
 				order_normal_products.append(product)
 		return order_normal_products
 		
