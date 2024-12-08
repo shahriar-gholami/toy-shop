@@ -3440,7 +3440,7 @@ class OrderDeliveryOptionsView(View):
 						delivery_description = delivery_description+f'{item.variety.product.name} - تنوع: {item.variety.name.replace('default variety','ندارد')} - قیمت: {item.get_item_price():,} تومان - تعداد: {item.quantity} عدد - مجموع هزینه: {item.get_item_price()*item.quantity:,} تومان<br>'
 				delivery_description = delivery_description+'زمان تحویل: <br>'
 				delivery_description = delivery_description+f'{express_delivery} <br>'
-				if order.total_price <= Delivery.objects.get(name = 'ارسال اکسپرس').price:
+				if order.total_price <= express_delivery.min_cart_free or express_delivery.min_cart_free_active == True:
 					delivery_cost = delivery_cost + Delivery.objects.get(name = 'ارسال اکسپرس').price
 
 			if order.has_normal_items == True:
@@ -3451,7 +3451,7 @@ class OrderDeliveryOptionsView(View):
 				delivery_description = delivery_description+'زمان تحویل: <br>'
 				delivery_description = delivery_description+f'{normal_day} - ساعت {ExpressDeliveryInterval.objects.get(id = int(normal_time)).start_time} <br>'
 			
-			if order.total_price <= Delivery.objects.get(name = 'ارسال عادی').price:
+			if order.total_price <= normal_delivery.min_cart_free or normal_delivery.min_cart_free_active == True:
 				delivery_cost = delivery_cost + Delivery.objects.get(name = 'ارسال عادی').price
 			order.delivery_cost = delivery_cost
 			delivery_description = delivery_description + '---------------------------------------------<br>'
@@ -3463,7 +3463,12 @@ class OrderDeliveryOptionsView(View):
 			order.delivery_description = delivery_description
 			order.save()
 			return redirect('shop:order_final_check', order.id)
-			
+
+# class OtherCitiesDeliveryOptionsView(View):
+
+# 	far_delivery_method = Delivery.objects.get(name='سایر شهرها')
+
+
 
 class OrderFinalCheckView(View):
 
