@@ -995,9 +995,16 @@ class Services(models.Model):
 	originality = models.CharField(max_length=250, default = 'تحویل کالای اصل بدون کوچکترین مغایرت با توضیحات')
 	payments = models.CharField(max_length=250, default = 'درگاه پرداخت امن با پشتیبانی از تمامی کارت‌های بانکی')
 
+def brand_upload_path(instance):
+	logo_name = instance.name.replace(" ", "_")
+	timestamp = timezone.now().strftime("%Y%m%d")
+	filename = f"{logo_name}"
+	return f"{filename}"
+
 class Brand(models.Model):
 	store = models.ForeignKey(Store, on_delete=models.CASCADE)
 	name = models.CharField(max_length=250)
+	logo = models.ImageField(upload_to=brand_upload_path,null=True ,blank=True)
 
 	def __str__(self):
 		return self.name

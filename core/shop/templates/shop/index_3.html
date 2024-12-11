@@ -279,7 +279,7 @@
                 </div>
                 <div class="col-sm-4">
                     <div class="slider-title-link">
-                        <a href="{% url 'shop:product_list' %}" class="main-color-one-color font-16"> مشاهده همه <i
+                        <a href="" class="main-color-one-color font-16"> مشاهده همه <i
                                 class="bi bi-caret-left-fill"></i></a>
                     </div>
                 </div>
@@ -292,66 +292,38 @@
                 <div class="swiper-wrapper ">
                     {% for product in products %}
                     {% if product.off_active == True %}
+
                     <div class="swiper-slide">
-                        <div class="product-box item-box shadow-box ">
+                        <div class="product-box">
                             <a href="{% url to_products product.slug %}">
                                 <div class="product-box-image">
                                     <img src="{{product.get_main_image}}" alt="">
                                 </div>
-                                <div class="product-box-title mt-4">
-                                    <a href="{% url to_products product.slug %}"><h5 class="text-overflow-2">{{ product.name }}</h5></a>
+                                <div class="product-box-title">
+                                    <h5 class="text-overflow-2">{{ product.name }}</h5>
                                 </div>
-                                {% if product.off_active == True %}
-                                    {% if product.ref_class != None %}
-                                        <div >
-                                            <div class="d-flex align-items-center justify-content-sm-start justify-content-center">
-                                                <p class="mb-0 old-price font-22 text-muted-two text-decoration-line-through me-3">
-                                                    {{ product.get_class_price|intcomma }}</p>
-                                                <h6 class="font-30 title-font new-price main-color-one-color">{{product.sales_price|intcomma}}
-                                                    تومان</h6>
-                                            </div>
-                                        </div>
-                                    {% else %}
-                                        <div >
-                                            <div class="d-flex align-items-center justify-content-sm-start justify-content-center">
-                                                <p class="mb-0 old-price font-22 text-muted-two text-decoration-line-through me-3">
-                                                    {{ product.price|intcomma }}</p>
-                                                <h6 class="font-30 title-font new-price main-color-one-color">{{product.sales_price|intcomma}}
-                                                    تومان</h6>
-                                            </div>
-                                        </div>
-                                    {% endif %}
-                                {% else %}
-                                    {% if product.ref_class != None %}
-                                        <div >
-                                            <div class="d-flex align-items-center justify-content-sm-start justify-content-center">
-                                                
-                                                <h6 class="font-30 title-font new-price main-color-one-color">{{product.get_class_price|intcomma}}
-                                                    تومان</h6>
-                                            </div>
-                                        </div>
-                                    {% else %}
-                                        <div >
-                                            <div class="d-flex align-items-center justify-content-sm-start justify-content-center">
-                                                
-                                                <h6 class="font-30 title-font new-price main-color-one-color">{{product.price|intcomma}}
-                                                    تومان</h6>
-                                            </div>
-                                        </div>
-                                    {% endif %}
-                                {% endif %}
+                                <div class="product-box-price">
+                                    <div class="product-box-price-discount">
+                                        <span class="d-block badge main-color-one-bg text-white font-14 rounded-pill">تخفیف ویژه</span>
+                                        <del>{{product.price|intcomma}}</del>
+                                    </div>
+                                    <div class="product-box-price-price">
+                                        <h5 class="title-font main-color-green-color h2 mb-0">{{ product.sales_price|intcomma }}</h5>
+                                        <p class="mb-0 text-muted">تومان</p>
+                                    </div>
+                                </div>
                                 <div class="product-box-hover">
                                     <nav class="navbar navbar-expand justify-content-center">
                                         <ul class="navbar-nav align-items-center">
-                                            <li class="nav-item"><a href="{% url to_products product.slug %}"
+                                            <li class="nav-item"><a href=""
                                                                     class="nav-item product-box-hover-item me-3">مشاهده
                                                 محصول</a></li>
-                                            <!-- <li class="nav-item"><a href=""
+                                            <li class="nav-item"><a href=""
                                                                     class="nav-item product-box-hover-item product-box-hover-item-btn me-1"
                                                                     data-bs-toggle="tooltip" data-bs-placement="top"
                                                                     data-bs-title="افزودن به سبد خرید"><i
-                                                    class="bi bi-basket"></i></a></li> -->
-                                            <li class="nav-item"><a href="{% url 'shop:add_to_favorites' product_id=product.id ref='index' %}"
+                                                    class="bi bi-basket"></i></a></li>
+                                            <li class="nav-item"><a href=""
                                                                     class="nav-item product-box-hover-item product-box-hover-item-btn"
                                                                     data-bs-toggle="tooltip" data-bs-placement="top"
                                                                     data-bs-title="افزودن به علاقه ها"><i
@@ -362,6 +334,7 @@
                             </a>
                         </div>
                     </div>
+
                     {% endif %}
                     {% endfor %}
                     

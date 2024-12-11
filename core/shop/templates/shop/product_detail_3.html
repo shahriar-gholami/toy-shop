@@ -125,21 +125,16 @@
                     <div class="col-lg-8">
                         <div class="product-mete-title bottom-border">
                             <h3 class="title-font h4">{{ product.name }}</h3>
-                            <p class="mb-0 mt-3">{{product.slug}}</p>
+                            <!-- <p class="mb-0 mt-3">{{product.slug}}</p> -->
                         </div>
                         <div class="product-meta-overal my-3 bottom-border">
                             <div class="row gy-3 align-items-center">
-                                <div class="col-md-2">
-                                    <div class="label-site rounded-pill label-success">
-                                        <i class="bi bi-check-circle me-1"></i>
-                                        موجود در انبار
-                                    </div>
-                                </div>
+                                
                                 <div class="col-md-5">
                                     <div class="d-flex align-items-center">
                                         <span class="text-muted-two me-2">دسته بندی</span>
-                                        {% for category in product.category.all %}
-                                        <div class="label-site">
+                                        {% for category in product.category.all|slice:":2" %}
+                                        <div class="label-site rounded-pill p-2">
                                             <a href="{% url 'shop:category_products' category.slug %}">{{category.name}}</a>
                                         </div>
                                         {% endfor %}
@@ -157,6 +152,22 @@
                                     </div>
                                 </div>
                                 {% endif %}
+                                {% if brand.logo %}
+                                
+                                <div class="col-md-2">
+                                    <a href="{% url 'shop:special_brand_products' brand.name %}">
+                                        <div class="d-flex align-items-center panel-profile">
+                                            <img src="{{brand.logo.url}}" class="img-fluid img-profile-panel rounded me-3 shadow-md" alt="" height="35px">
+                                            <div class="d-grid gap-2">
+                                                <div class="d-flex align-items-center">
+                                                    <h6 class="font-14">{{brand.name}}</h6>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                                {% endif %}
                             </div>
                         </div>
                         <form method="post" action="{% url 'shop:add_to_cart'  product.id %}">
@@ -165,47 +176,33 @@
                         <div class="product-meta-feature bottom-border">
                             
                                 <div class="row gy-3">
-                                    <div class="col-lg-6">
+                                    <div class="col-lg-8">
                                         <div class="product-meta-feature-items">
                                             <h5 class="title font-16 mb-2">ویژگی های کالا</h5>
                                             <ul class="navbar-nav">
+                                                <li class="nav item"><strong class="text-danger"> {{age}}</strong></li>
                                                 {% for line in product.get_brief_features %}    
                                                 <li class="nav item"><strong> {{line|safe}}</strong></li>
                                                 {% endfor %}
                                             </ul>
                                         </div>
                                     </div>
-                                    <div class="col-lg-6">
+                                    <div class="col-lg-4">
                                         <div class="row gy-3 text-start">
                                             
                                             
-                                            <div class="col-lg-6">
+                                            <div class="col-lg-12">
                                                 <div class="product-meta-rating mt-2 text-lg-start text-start">
-                                                    <div class="label-success rounded-pill py-2 text-center">
+                                                    <div class="shadow-box rounded p-3 text-center m-4">
                                                         ارسال امن و سریع
-                                                        <i class="bi bi-truck ms-2"></i>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-6">
-                                                <div class="product-meta-rating mt-2 text-lg-start text-start">
-                                                    <div class="label-success rounded-pill py-2 text-center">
+                                                        <i class="bi bi-truck ms-2"></i><hr>
+                                                    
                                                         تضمین اصالت کالا
-                                                        <i class="bi bi-bookmark-star ms-2"></i>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-6">
-                                                <div class="product-meta-rating mt-2 text-lg-start text-start">
-                                                    <div class="label-success rounded-pill py-2 text-center">
+                                                        <i class="bi bi-bookmark-star ms-2"></i><hr>
+                                                    
                                                         پشتیبانی ۲۴ ساعته
-                                                        <i class="bi bi-clock ms-2"></i>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-6">
-                                                <div class="product-meta-rating mt-2 text-lg-start text-start">
-                                                    <div class="label-success rounded-pill py-2 text-center">
+                                                        <i class="bi bi-clock ms-2"></i><hr>
+                                                    
                                                         امکان عودت کالا
                                                         <i class="bi bi-arrow-repeat ms-2"></i>
                                                     </div>

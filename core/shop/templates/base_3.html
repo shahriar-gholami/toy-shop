@@ -61,7 +61,7 @@
                 <div class="header-logo">
                     <div class="image">
                         <a href="{% url 'shop:index'   %}">
-                            <img src="{{ store.get_logo_image }}" class="img-fluid" alt="" style="height: 60pt; width: 60pt;">
+                            <img class="rounded" src="{{ store.get_logo_image }}" class="img-fluid" alt="" style="height: 60pt; width: 60pt;">
                         </a>
                     </div>
                     <div class="description d-md-block d-none">
@@ -119,7 +119,7 @@
                         </div>
                         <div class="offcanvas-body">
                             <a href="" class="text-center d-block mb-3">
-                                <img src="{{ store.get_logo_image }}" alt="" class="img-fluid" width="200" height="65">
+                                <img class="rounded" src="{{ store.get_logo_image }}" alt="" class="img-fluid" width="200" height="65">
                             </a>
                             <ul class="rm-item-menu navbar-nav">
                                 <li class="nav-item bg-ul-f7"><a class="nav-link" href="{% url 'shop:index'  %}">خانه</a>
@@ -362,7 +362,7 @@
         <div class="row gy-4">
             <div class="col-lg-2">
                 <div class="footer-logo text-center">
-                    <img src="{{ store.get_logo_image }}" alt="{{store.name}} logo" style="width: 100px;">
+                    <img class="rounded" src="{{ store.get_logo_image }}" alt="{{store.name}} logo" style="width: 100px;">
                 </div>
                 <div class="footer-reutrned">
                     <h4 class="text-center">مرجوعی با احترام <br> پذیرفته میشود</h4>
@@ -436,7 +436,7 @@
                                                 {% if store.enamad_code != 'none' %}
                                                     {{store.enamad_code|safe}}
                                                 {% else %}
-                                                    <img alt="logo" src="https://marketplace-bucket.storage.iran.liara.space/test%20enamad.png" style="width: 120px; height: 120px">
+                                                    <img class="rounded" alt="logo" src="https://marketplace-bucket.storage.iran.liara.space/test%20enamad.png" style="width: 120px; height: 120px">
                                                 {% endif %}
                                         </div>
                                     </div>

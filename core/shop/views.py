@@ -962,7 +962,7 @@ class ProductListView(View):
 		items_per_page = 12
 		store = Store.objects.get(name=store_name)
 		categories = Category.objects.filter(store=store)
-		products = Product.objects.filter(store=store)
+		products = Product.objects.filter(verified = True)
 		paginator = Paginator(products, items_per_page)
 		page = request.GET.get('page', 1)
 		try:
@@ -977,7 +977,7 @@ class ProductListView(View):
 		price_ranges = PriceRange.objects.all()
 		colors = ProductColor.objects.all()
 		return render(request, f'{current_app_name}/product_list_{store.template_index}.html', 
-				{'products': [product for product in products if product.verified==True], 
+				{'products': products, 
 	 			'colors': colors,
 				'to_products':products_urls, 
 				'store_name':store_name, 
@@ -1171,7 +1171,7 @@ class FeaturedProductListView(View):
 	def get(self, request, source):
 		store = Store.objects.get(name=store_name)
 		categories = Category.objects.filter(store=store)
-		products = [product for product in Product.objects.filter(store=store) if product.verified == True]
+		products = Product.objects.filter(verified = True)
 		paginator = Paginator(products, 12)
 		page = request.GET.get('page', 1)
 		try:
@@ -1322,7 +1322,10 @@ class ProductDetailView(View):
 	def get(self, request, product_slug ):
 		store = Store.objects.get(name=store_name)
 		product = Product.objects.filter(slug = product_slug, store=store).first()
-		product.views = product.views + 1
+		if product.views:
+			product.views = product.views + 1
+		else:
+			product.views = 1
 		product.save()
 		varieties = Variety.objects.filter(product=product)
 		message = ''
@@ -1341,9 +1344,14 @@ class ProductDetailView(View):
 				message = f'شما در حال حاضر {cart_item.quantity} عدد از این کالا را در سبد خرید خود دارید.'
 		
 		add_to_cart_url = f'{current_app_name}:add-to-cart'
-		products = Product.objects.filter(store=store)
+		products = product.get_related_products()
+		brand = Brand.objects.get(name = product.brand)
+		if product.age_class > 0:
+			age = f'مناسب {product.age_class} سال به بالا'
+		if product.age_class < 0:
+			age = f'مناسب {product.age_class*(-1)} ماه به بالا'
 		return render(request, f'{current_app_name}/product_detail_{store.template_index}.html', 
-				{'services':services,'products':products,'product': product,'comments':comments ,'varieties':varieties,'form':form, 'message':message, 'add_to_cart':add_to_cart_url, 'store_name':store_name})
+				{'age':age,'brand':brand,'services':services,'products':products,'product': product,'comments':comments ,'varieties':varieties,'form':form, 'message':message, 'add_to_cart':add_to_cart_url, 'store_name':store_name})
 
 class ProductDeleteView(IsOwnerUserMixin, View):
 	
@@ -2833,7 +2841,6 @@ def download_and_save_images(image_urls, product_id):
 			image_name = product.name
 			image_filename = image_name
 			image = ProductImage(
-				store=store,
 				product=product,
 			)
 			image.image.save(image_filename, ContentFile(response.content))
@@ -2848,7 +2855,6 @@ def download_and_save_main_image(image_url, product_id):
 		image_name = product.name
 		image_filename = image_name
 		image = ProductImage(
-			store=store,
 			product=product,
 		)
 		image.image.save(image_filename, ContentFile(response.content))
@@ -2933,15 +2939,14 @@ class AddProductFromDigikalaView(View):
 						category = Category.objects.get(id = category_id)
 					new_product.category.add(category)
 					new_product.save()
-					images = images
-					download_and_save_main_image(main_image, new_product.id)
-					download_and_save_images(images, new_product.id)
-					default_variety = Variety.objects.create(
-						store = store,
-						name = 'default variety',
-						product = new_product, 
-						stock = 2,
-					)
+				images = images
+				download_and_save_main_image(main_image, new_product.id)
+				download_and_save_images(images, new_product.id)
+				default_variety = Variety.objects.create(
+					name = 'default variety',
+					product = new_product, 
+					stock = 2,
+				)
 		return redirect('shop:product_list')				
 					
 class SpecialProductListView(View):
@@ -3097,7 +3102,7 @@ class BrandProductListView(View):
 
 	def get(self, request, brand_name):
 		brand = Brand.objects.filter(name=brand_name).first()
-		products = [product for product in Product.objects.filter(brand=brand.name) if product.verified == True]
+		products = Product.objects.filter(brand=brand.name, verified = True)
 		items_per_page = 12
 		store = Store.objects.get(name=store_name)
 		categories = Category.objects.filter(store=store)
