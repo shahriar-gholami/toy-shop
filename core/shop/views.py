@@ -1916,14 +1916,14 @@ class ProductSearchView(View):
 		sizes = Size.objects.all()
 		price_ranges = PriceRange.objects.all()
 		categories = Category.objects.filter(store=store)
-		paginator = Paginator(products, 12)
-		page = request.GET.get('page', 1)
-		try:
-			products = paginator.page(page)
-		except PageNotAnInteger:
-			products = paginator.page(1)
-		except EmptyPage:
-			products = paginator.page(paginator.num_pages)
+		# paginator = Paginator(products, 12)
+		# page = request.GET.get('page', 1)
+		# try:
+		# 	products = paginator.page(page)
+		# except PageNotAnInteger:
+		# 	products = paginator.page(1)
+		# except EmptyPage:
+		# 	products = paginator.page(paginator.num_pages)
 		return render(request, f'{current_app_name}/product_list_{store.template_index}.html', {'products': products, 
 													'query': query, 
 													'to_products':products_urls, 

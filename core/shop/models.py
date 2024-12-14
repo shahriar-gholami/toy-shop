@@ -220,7 +220,7 @@ class Category(models.Model):
 		verbose_name_plural = 'categories'	
 
 	def get_absolute_url(self):
-		return reverse('shop:category_products', kwargs={'store_name': self.store.name, 'category_slug':self.slug})
+		return reverse('shop:category_products', kwargs={'category_slug':self.slug})
 
 	def get_sub_categories(self):
 		if self.is_sub == False:
