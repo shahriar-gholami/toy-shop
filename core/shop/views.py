@@ -1740,31 +1740,23 @@ class CouponApplyView(IsCustomerUserMixin, View):
 		if form.is_valid():
 			code = form.cleaned_data['code']
 			store = Store.objects.get(name = store_name)
-			coupon = Coupon.objects.filter(code__exact=code, store=store).first()
-			if coupon == None:
-				order.delivery_description = order.delivery_description + f'<p class="text-danger">کد تخفیف نامعتبر</p>' 
+			coupon = Coupon.objects.filter(code__exact=code).first()
+			if order.used_coupon == True:
+				order.delivery_description = order.delivery_description + f'<p class="text-danger">برای این سفارش قبلا کد تخفیف وارد شده است</p><br>' 
 				order.save()
 				return redirect(f'{current_app_name}:order_final_check', order_id)
-			
-			current_datetime = datetime.now()
-			jalali_datetime  = JalaliDatetime(current_datetime)
-			formatted_date = jalali_datetime.strftime('%Y/%m/%d')
-			if jalali_datetime.year>=coupon.get_from_year() and jalali_datetime.year<=coupon.get_to_year():
-				if jalali_datetime.month>=coupon.get_from_month() and jalali_datetime.month<=coupon.get_to_month():
-					if jalali_datetime.day>=coupon.get_from_day() and jalali_datetime.day<=coupon.get_to_day():
-						if order.used_coupon == True:
-							order.delivery_description = order.delivery_description + f'<p class="text-danger">برای این سفارش قبلا کد تخفیف وارد شده است</p>' 
-							order.save()
-							return redirect(f'{current_app_name}:order_final_check', order_id)
-						else:
-							order.total_price -= coupon.discount
-							order.used_coupon = True
-							order.delivery_description = order.delivery_description + f'<p class="text-danger">مبلغ نهایی پس از اعمال کد تخفیف: {order.total_price+order.delivery_cost:,} تومان</p>' 
-							order.save()
-						return redirect(f'{current_app_name}:order_final_check', order_id)
-			order.delivery_description = order.delivery_description + f'<p class="text-danger">کد وارد شده نامعتبر بوده و یا قبلا وارد شده است</p>' 
-			order.save()
-			return redirect(f'{current_app_name}:order_final_check', order_id)
+			if coupon == None:
+				order.delivery_description = order.delivery_description + f'<p class="text-danger">کد تخفیف نامعتبر</p><br>' 
+				order.save()
+				return redirect(f'{current_app_name}:order_final_check', order_id)
+			if coupon.is_valid():
+				order.total_price -= coupon.discount
+				order.used_coupon = True
+				order.delivery_description = order.delivery_description + f'<p class="text-success">مبلغ نهایی پس از اعمال کد تخفیف: {order.total_price+order.delivery_cost:,} تومان</p><br>' 
+				order.save()
+				return redirect(f'{current_app_name}:order_final_check', order_id)
+		order.delivery_description = order.delivery_description + f'<p class="text-danger">کد وارد شده نامعتبر بوده و یا قبلا وارد شده است</p><br>' 
+		order.save()
 		return redirect(f'{current_app_name}:order_final_check', order_id)
 	
 class DeliveryApplyView(IsCustomerUserMixin, View):
@@ -3377,9 +3369,8 @@ class OrderDeliveryOptionsView(View):
 			express_time_normal = form.cleaned_data['express_time_normal']
 			normal_day = form.cleaned_data['normal_day']
 			normal_time = form.cleaned_data['normal_time']
-			print('OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO')
-			print(form.cleaned_data)
-
+			normal_delivery = Delivery.objects.get(name= 'ارسال عادی')
+			express_delivery = Delivery.objects.get(name= 'ارسال اکسپرس')
 			if express_time_express != '0' and express_day_normal != '0' and express_day_normal != '':
 				form = OrderDeliveryOptionsForm
 				tehran_timezone = pytz.timezone('Asia/Tehran')
@@ -3394,8 +3385,6 @@ class OrderDeliveryOptionsView(View):
 					'Thursday': 'پنج‌شنبه',
 					'Friday': 'جمعه',
 				}
-				normal_delivery = Delivery.objects.get(name= 'ارسال عادی')
-				express_delivery = Delivery.objects.get(name= 'ارسال اکسپرس')
 				next_days = []
 				for i in range(1, 6):  # از فردا تا پنج روز بعد
 					future_date = today + timedelta(days=i)
@@ -3468,16 +3457,20 @@ class OrderDeliveryOptionsView(View):
 			order.delivery_description = delivery_description
 			order.save()
 			return redirect('shop:order_final_check', order.id)
-
-# class OtherCitiesDeliveryOptionsView(View):
-
-# 	far_delivery_method = Delivery.objects.get(name='سایر شهرها')
-
-
-
+		
 class OrderFinalCheckView(View):
 
 	def get(self, request, order_id):
+		result = ''
 		store = Store.objects.all().first()
 		order = Order.objects.get(id = order_id)
+		delivery_des = order.delivery_description
+		if 'text-success' in delivery_des:
+			lines = delivery_des.split('<br>')
+			for line in lines:
+				print(line)
+				if 'text-danger' not in line or 'مبلغ نهایی' in line:
+					result = result + f'<br> {line}'
+			order.delivery_description = result
+			order.save()
 		return render(request, f'{current_app_name}/order_final_check_{store.template_index}.html', {'store':store, 'order':order})

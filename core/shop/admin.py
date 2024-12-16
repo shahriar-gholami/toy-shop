@@ -5,6 +5,8 @@ from django import forms
 from django.contrib import admin
 from .models import Product, Category
 from utils import erase_stock_volume, update_slugs
+from django_jalali.admin.filters import JDateFieldListFilter
+
 
 
 
@@ -158,12 +160,16 @@ class SizeAdmin(admin.ModelAdmin):
 class PriceRangeAdmin(admin.ModelAdmin):
     list_display = ['min_value', 'max_value']
 
-class CouponAdmin(admin.ModelAdmin):
-    list_display = ['store', 'code', 'valid_from', 'valid_to', 'discount']
-    list_filter = ['store', 'valid_from', 'valid_to']
-    search_fields = ['code']
 
-admin.site.register(Coupon, CouponAdmin)
+@admin.register(Coupon)
+class CouponAdmin(admin.ModelAdmin):
+	list_display = ('code', 'start_date', 'end_date', 'discount', 'min_cart_volume')
+	list_filter = (
+		('start_date', JDateFieldListFilter),
+		('end_date', JDateFieldListFilter),
+	)
+	list_editable = ('start_date', 'end_date','discount', 'min_cart_volume')
+	search_fields = ('code',)
 
 
 class StoreLogoImageAdmin(admin.ModelAdmin):

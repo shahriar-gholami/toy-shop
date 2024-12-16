@@ -9,6 +9,10 @@ from ckeditor.fields import RichTextField
 from bs4 import BeautifulSoup
 import datetime
 from datetime import timedelta
+from jalali_date import datetime2jalali, date2jalali
+from django_jalali.db import models as jmodels
+from datetime import date
+
 
 class Store(models.Model):
 	name = models.CharField(max_length=250, unique=True)
@@ -571,89 +575,22 @@ class Cart(models.Model):
 		return f'{self.customer.phone_number}---{self.store}'
 
 class Coupon(models.Model):
-	store = models.ForeignKey(Store, on_delete=models.CASCADE)
-	code = models.CharField(max_length=30, unique=True)
-	valid_from = models.CharField(max_length=250,)
-	valid_to = models.CharField(max_length=250)
-	discount = models.IntegerField()
+	code = models.CharField(max_length=50, unique=True, verbose_name="کد کوپن")
+	start_date = jmodels.jDateField(verbose_name="تاریخ شروع", null=True, blank=True)
+	end_date = jmodels.jDateField(verbose_name="تاریخ پایان", null=True, blank=True)
+	discount = models.IntegerField(verbose_name="میزان تخفیف (تومان)", default=0)
+	min_cart_volume = models.IntegerField(verbose_name="حداقل مبلغ سبد خرید (تومان)", default=0)
 
-	def get_from_day(self):
-		from_time_words=self.valid_from.split()
-		if from_time_words[1] == 'شنبه':
-			from_time_day = int(from_time_words[2])
-		else:
-			from_time_day = int(from_time_words[1])
-		return from_time_day
-
-	def get_from_month(self):
-		months_dict = {
-						'فروردین': 1,
-						'اردیبهشت': 2,
-						'خرداد': 3,
-						'تیر': 4,
-						'مرداد': 5,
-						'شهریور': 6,
-						'مهر': 7,
-						'آبان': 8,
-						'آذر': 9,
-						'دی': 10,
-						'بهمن': 11,
-						'اسفند': 12
-					}
-		from_time_words=self.valid_from.split()
-		if from_time_words[2] in months_dict:
-			from_time_month = months_dict[from_time_words[2]]
-		elif from_time_words[3] in months_dict:
-			from_time_month = months_dict[from_time_words[3]]
-		return from_time_month
-
-	def get_from_year(self):
-		from_time_words=self.valid_from.split()
-		if from_time_words[3].isdigit():
-			from_time_year = int(from_time_words[3])
-		else:
-			from_time_year = int(from_time_words[4])
-		return from_time_year
-
-	def get_to_day(self):
-		to_time_words=self.valid_to.split()
-		if to_time_words[1] == 'شنبه':
-			to_time_day = int(to_time_words[2])
-		else:
-			to_time_day = int(to_time_words[1])
-		return to_time_day
-
-	def get_to_month(self):
-		months_dict = {
-						'فروردین': 1,
-						'اردیبهشت': 2,
-						'خرداد': 3,
-						'تیر': 4,
-						'مرداد': 5,
-						'شهریور': 6,
-						'مهر': 7,
-						'آبان': 8,
-						'آذر': 9,
-						'دی': 10,
-						'بهمن': 11,
-						'اسفند': 12
-					}
-		to_time_words=self.valid_to.split()
-		if to_time_words[2] in months_dict:
-			to_time_month = months_dict[to_time_words[2]]
-		elif to_time_words[3] in months_dict:
-			to_time_month = months_dict[to_time_words[3]]
-		return to_time_month
-
-	def get_to_year(self):
-		to_time_words=self.valid_to.split()
-		if to_time_words[3].isdigit():
-			to_time_year = int(to_time_words[3])
-		else:
-			to_time_year = int(to_time_words[4])
-		return to_time_year
-
-
+	def is_valid(self):
+		"""بررسی می‌کند که آیا کوپن در بازه زمانی معتبر است یا نه."""
+		today = date2jalali(date.today())  # تاریخ امروز به فرمت شمسی
+		if self.start_date and self.end_date:
+			return self.start_date <= today <= self.end_date
+		elif self.start_date:
+			return self.start_date <= today
+		elif self.end_date:
+			return today <= self.end_date
+		return False
 
 	def __str__(self):
 		return self.code
