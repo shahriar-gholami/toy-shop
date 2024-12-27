@@ -7,11 +7,13 @@ from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from ckeditor.fields import RichTextField
 from bs4 import BeautifulSoup
-import datetime
+import jdatetime
 from datetime import timedelta
-from jalali_date import datetime2jalali, date2jalali
 from django_jalali.db import models as jmodels
 from datetime import date
+
+def date2jalali(g_date):
+    return jdatetime.date.fromgregorian(date=g_date) if g_date else None
 
 
 class Store(models.Model):

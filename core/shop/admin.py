@@ -5,10 +5,8 @@ from django import forms
 from django.contrib import admin
 from .models import Product, Category
 from utils import erase_stock_volume, update_slugs
+import django_jalali.admin as jadmin
 from django_jalali.admin.filters import JDateFieldListFilter
-
-
-
 
 @admin.register(ProductRefClass)
 class ProductRefClassAdmin(admin.ModelAdmin):

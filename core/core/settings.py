@@ -27,6 +27,8 @@ ALLOWED_HOSTS =  ['127.0.0.1', '195.146.32.236']
 INSTALLED_APPS = [
     # 'admin_interface',
     # 'colorfield',
+    'django_jalali',
+    'jdatetime',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -131,6 +133,11 @@ TIME_ZONE = 'Asia/Tehran'
 
 USE_I18N = True
 USE_TZ = True
+
+JALALI_DATE_DEFAULTS = {
+    "js_lib_url": "https://cdn.jsdelivr.net/npm/persian-datepicker@1.2.0/dist/js/persian-datepicker.min.js",
+    "css_lib_url": "https://cdn.jsdelivr.net/npm/persian-datepicker@1.2.0/dist/css/persian-datepicker.min.css",
+}
 
 
 # Static files (CSS, JavaScript, Images)

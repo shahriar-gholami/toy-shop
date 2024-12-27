@@ -47,7 +47,7 @@ class IndexView(View):
 
 	def get(self, request):
 		current_page = request.path
-		store = Store.objects.get(name=store_name)
+		store = Store.objects.all().first()
 		slides = Slide.objects.filter(store=store)
 		small_banners = Banner.objects.filter(store=store, size='small')
 		big_banners = Banner.objects.filter(store=store, size='big')
@@ -58,6 +58,7 @@ class IndexView(View):
 		featured_categories = FeaturedCategories.objects.filter(store = store).first()
 		most_viewed_products = Product.objects.order_by('-views')[:8]
 		return render(request, f'{current_app_name}/index_{store.template_index}.html', {'services':services,
+																				   'store':store,
 																				   'posts':posts,
 																				   'featured_categories':featured_categories,
 																				   'to_products':to_products ,

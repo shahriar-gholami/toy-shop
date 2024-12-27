@@ -12,11 +12,28 @@
     gtag('config', 'G-3LRSH37XQV');
     </script>
 
-    {% block meta %}
-    <!-- META DATA -->
+    <meta charset="UTF-8">
+    <meta content='width=device-width, initial-scale=1.0, user-scalable=0' name='viewport'>
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta name="description" content="{{ store.meta_description }}">
+    <meta content="PicoSite" name="author">
+    <meta name="keywords" content="{{store.meta_keywords}}">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="{{store.get_canonical}}">
 
+    <!-- Open Graph tags -->
+    <meta property="og:title" content="{{store.meta_og_title}}">
+    <meta property="og:description" content="{{meta_og_description}}">
+    <meta property="og:image" content="{{store.get_logo_image}}" rel="shortcut icon" type="image/x-icon">
+    <meta property="og:url" content="{{store.get_canonical}}">
+    <meta property="og:type" content="website">
 
-    {% endblock %}
+    <!-- Twitter Card tags -->
+    <meta name="twitter:card" content="Summary Card with Large Image">
+    <meta name="twitter:title" content="{{store.meta_tc_title}}">
+    <meta name="twitter:description" content="{{store.meta_tc_description}}">
+    <meta name="twitter:image" content="{{store.get_logo_image}}">
+    
 
     <!-- FAVICON -->
     <link href="{{ store.get_logo_image }}" rel="shortcut icon" type="image/x-icon"/>
