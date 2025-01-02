@@ -162,9 +162,9 @@ AWS_ACCESS_KEY_ID = 'pg5rqlmr2u8e5uln'
 AWS_SECRET_ACCESS_KEY = 'b652628d-924d-494a-a281-37d324b7b6ab'
 AWS_S3_ENDPOINT_URL = 'https://storage.iran.liara.space'
 AWS_STORAGE_BUCKET_NAME = 'marketplace-bucket'
-AWS_SERVICE_NAME = 's3'
 AWS_S3_FILE_OVERWRITE = False
-AWS_LOCAL_STORAGE = f'{BASE_DIR}/aws/'
+AWS_DEFAULT_ACL = None
+AWS_QUERYSTRING_AUTH = False
 
 CKEDITOR_CONFIGS = {
     'default': {

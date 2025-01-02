@@ -41,7 +41,7 @@ description = "توضیحات مربوط به تراکنش را در این قس
 
 store_name = Store.objects.all().first().name
 current_app_name = apps.get_containing_app_config(__name__).name
-
+store = Store.objects.all().first()
 
 class IndexView(View):
 
@@ -665,9 +665,9 @@ class UploadProductImagesView(IsOwnerUserMixin, View):
 			if alt_name == None:
 				alt_name = f'{product.name}'
 			images = request.FILES.getlist('images')
-			store = Store.objects.get(name=store_name)
+			store = Store.objects.all().first()
 			for image in images:
-				ProductImage.objects.create(alt_name=alt_name, image=image, product=product, store=store)
+				ProductImage.objects.create(alt_name=alt_name, image=image, product=product)
 				new_upload = UploadedImages.objects.create(
 				store = store,
 				image = image,
@@ -1584,7 +1584,7 @@ class CustomerloginView(View):
 				customer.save()
 				login(request, user)
 				cart, created = Cart.objects.get_or_create(customer = customer, store = store)
-				varieties = Variety.objects.filter(store=store)
+				varieties = Variety.objects.all()
 				varieties_id_list = []
 				for variety in varieties:
 					varieties_id_list.append(str(variety.id))

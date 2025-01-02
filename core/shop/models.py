@@ -13,7 +13,7 @@ from django_jalali.db import models as jmodels
 from datetime import date
 
 def date2jalali(g_date):
-    return jdatetime.date.fromgregorian(date=g_date) if g_date else None
+	return jdatetime.date.fromgregorian(date=g_date) if g_date else None
 
 
 class Store(models.Model):
@@ -484,24 +484,25 @@ class Product(models.Model):
 	def __str__(self):
 		return f'{self.store} - {self.name}'
 	
+import os
+from django.utils.timezone import now
+
 def image_upload_path(instance, filename):
 	product_name = instance.product.name.replace(" ", "_")
-	timestamp = timezone.now().strftime("%Y%m%d_%H%M%S")
+	print('kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk')
+	print(product_name)
+	timestamp = now().strftime("%Y%m%d")
 	filename = f"{timestamp}_{filename}"
-	return f"{instance.product.store}/{product_name}/{filename}"
+	return os.path.join("shahrtoy", product_name, filename)
 
-def logo_upload_path(instance, filename):
-	logo_name = instance.alt_name.replace(" ", "_")
-	timestamp = timezone.now().strftime("%Y%m%d_%H%M%S")
-	filename = f"{logo_name}_{filename}"
-	return f"{instance.store.name}/{filename}"
 
 class ProductImage(models.Model):
 	alt_name = models.CharField(max_length=2000, null=True, blank=True)
 	product = models.ForeignKey(Product, on_delete=models.CASCADE)
 	custom_name = models.CharField(max_length=2000, blank=True, null=True)
-	image = models.ImageField(upload_to=image_upload_path, default='media/11.png')
+	image = models.ImageField(upload_to='shahrtoy/products/', default='media/11.png')
 	created = models.DateTimeField(auto_now_add=True)
+
 
 	class Meta:
 		ordering = ('created',)
@@ -512,9 +513,15 @@ class ProductImage(models.Model):
 	def save(self, *args, **kwargs):
 		if not self.custom_name:
 			product_name = self.product.name.replace(" ", "_")
-			timestamp = timezone.now().strftime("%Y%m%d_%H%M%S")
+			timestamp = timezone.now().strftime("%Y%m%d")
 			self.custom_name = f"{product_name}_{timestamp}"
 		super().save(*args, **kwargs)
+
+def logo_upload_path(instance, filename):
+	logo_name = instance.alt_name.replace(" ", "_")
+	timestamp = timezone.now().strftime("%Y%m%d")
+	filename = f"{logo_name}_{filename}"
+	return f"shahrtoy/logo/{filename}"
 
 class StoreLogoImage(models.Model):
 	store = models.ForeignKey(Store, on_delete=models.CASCADE)
@@ -744,9 +751,9 @@ class ContactMessage(models.Model):
 
 def slide_upload_path(instance, filename):
 	slide_name = instance.alt_name.replace(" ", "_")
-	timestamp = timezone.now().strftime("%Y%m%d_%H%M%S")
+	timestamp = timezone.now().strftime("%Y%m%d")
 	filename = f"{slide_name}_{filename}"
-	return f"{instance.store.name}/{filename}"
+	return f"shahrtoy/slides/{filename}"
 
 class Slide(models.Model):
 
@@ -771,7 +778,7 @@ def banner_upload_path(instance, filename):
 	banner_name = instance.alt_name.replace(" ", "_")
 	timestamp = timezone.now().strftime("%Y%m%d_%H%M%S")
 	filename = f"{banner_name}_{filename}"
-	return f"{instance.store.name}/{filename}"
+	return f"shahrtoy/banners/{filename}"
 
 class Banner(models.Model):
 
@@ -873,7 +880,7 @@ def thumbnail_upload_path(instance, filename):
 	thumbnail_name = instance.alt_name.replace(" ", "_")
 	timestamp = timezone.now().strftime("%Y%m%d_%H%M%S")
 	filename = f"{thumbnail_name}_{filename}"
-	return f"{instance.store.name}/{filename}"
+	return f"shahrtoy/post/thumbnails/{filename}"
 
 class PostThumbnail(models.Model):
 	store = models.ForeignKey(Store, on_delete=models.CASCADE)
@@ -897,9 +904,9 @@ class UploadedImages(models.Model):
 	image = models.ImageField()
 
 def category_upload_path(instance, filename):
-	category_name = instance.alt_name.replace(" ", "_")
+	category_name = instance.category.name.replace(" ", "_")
 	filename = f"{category_name}_{filename}"
-	return f"{instance.store.name}/{filename}"
+	return f"shahrtoy/category/{filename}"
 
 class CategoryImage(models.Model):
 
@@ -938,7 +945,7 @@ def brand_upload_path(instance):
 	logo_name = instance.name.replace(" ", "_")
 	timestamp = timezone.now().strftime("%Y%m%d")
 	filename = f"{logo_name}"
-	return f"{filename}"
+	return f"shahrtoy/brands/{filename}"
 
 class Brand(models.Model):
 	store = models.ForeignKey(Store, on_delete=models.CASCADE)
