@@ -4,16 +4,9 @@
 
 
 
-{% block title %}صفحه نخست{% endblock %}
+{% block title %}شهر اسباب بازی{% endblock %}
 {% block content %}
-{% if store.has_domain == True %}
-<script>
-    // Replace the common part of the URL with an empty string
-    var currentUrl = window.location.href;
-    var newUrl = currentUrl.replace('/shop/{{store.name}}/', '/');
-    history.replaceState(null, null, newUrl);
-</script>
-{% endif %}
+
 
 <!-- start main slider -->
 

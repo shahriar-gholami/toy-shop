@@ -1221,7 +1221,7 @@ class AddToFavoritesView(View):
 
 	def get(self, request, product_id, ref, *args, **kwargs):
 		if isinstance(request.user, AnonymousUser):
-			return redirect(f'{current_app_name}:customer_authentication', store_name)
+			return redirect(f'{current_app_name}:customer_authentication')
 		store = Store.objects.get(name=store_name)
 		product = Product.objects.get(id=product_id)
 		phone = request.user.phone_number
