@@ -26,7 +26,7 @@
 <meta name="twitter:image" content="{{store.get_logo_image}}">
 {% endblock %}
 
-{% block title %}صفحه نخست{% endblock %}
+{% block title %}{{store.index_title}}{% endblock %}
 {% block content %}
 {% if store.has_domain == True %}
 <script>
