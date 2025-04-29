@@ -2,7 +2,7 @@ Khayyam
 jdatetime
 django_jalali
 django==4.2.8
-django-decouple==2.1
+django-decouple
 djangorestframework==3.14.0
 filelock==3.13.1
 markdown==3.5.1
